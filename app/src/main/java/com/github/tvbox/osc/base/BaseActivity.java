@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.Math;
 
 import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
@@ -194,8 +195,10 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
     protected static BitmapDrawable globalWp = null;
 
     public void changeWallpaper(boolean force) {
-        if (!force && globalWp != null)
+        if (!force && globalWp != null) {
             getWindow().setBackgroundDrawable(globalWp);
+            return;
+        }
         try {
             File wp = new File(getFilesDir().getAbsolutePath() + "/wp");
             if (wp.exists()) {
@@ -209,13 +212,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
                 int picWidth = 1080;
                 int scaleX = imageWidth / picWidth;
                 int scaleY = imageHeight / picHeight;
-                int scale = 1;
-                if (scaleX > scaleY && scaleY >= 1) {
-                    scale = scaleX;
-                }
-                if (scaleX < scaleY && scaleX >= 1) {
-                    scale = scaleY;
-                }
+                int scale = Math.max(Math.max(scaleX, scaleY), 1);
                 opts.inJustDecodeBounds = false;
                 // 采样率
                 opts.inSampleSize = scale;
@@ -227,9 +224,10 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
             throwable.printStackTrace();
             globalWp = null;
         }
-        if (globalWp != null)
+        if (globalWp != null) {
             getWindow().setBackgroundDrawable(globalWp);
-        else
+        } else {
             getWindow().setBackgroundDrawableResource(R.drawable.app_bg);
+        }
     }
 }

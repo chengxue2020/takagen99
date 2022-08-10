@@ -173,7 +173,7 @@ public class PlayActivity extends BaseActivity {
                 String preProgressKey = progressKey;
                 PlayActivity.this.playNext();
                 if (rmProgress && preProgressKey != null)
-                    CacheManager.delete(MD5.string2MD5(preProgressKey));
+                    CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
             }
 
             @Override
@@ -541,7 +541,7 @@ public class PlayActivity extends BaseActivity {
         playUrl(null, null);
         String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex;
         //重新播放清除现有进度
-        if (reset) {CacheManager.delete(MD5.string2MD5(progressKey));}
+        if (reset) {CacheManager.delete(MD5.string2MD5(progressKey), 0);}
         if(vs.url.startsWith("tvbox-drive://")) {
             mController.showParse(false);
             HashMap<String, String> headers = null;
