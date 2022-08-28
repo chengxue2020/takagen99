@@ -105,4 +105,8 @@
     <string name="act_player">Player</string>
     <string name="act_system">System</string>
 
+    // Fast Search Page //
+    <string name="fs_show_all">All</string>
+    <string name="fs_results">Results</string>
+
 </resources>

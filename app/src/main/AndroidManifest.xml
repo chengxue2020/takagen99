@@ -68,6 +68,10 @@
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="sensorLandscape" />
         <activity
+            android:name=".ui.activity.FastSearchActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="sensorLandscape" />
+        <activity
             android:name=".ui.activity.DriveActivity"
             android:screenOrientation="sensorLandscape" />
         <activity

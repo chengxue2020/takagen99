@@ -3,6 +3,7 @@ package com.github.tvbox.osc.player.controller;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -106,7 +107,13 @@ public class VodController extends BaseController {
                         animateB.setFillAfter(true);
                         mBottomRoot.startAnimation(animateB);
                         mBottomRoot.setVisibility(GONE);
-                        mBottomRoot.clearAnimation();;
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mBottomRoot.clearAnimation();;
+                            }
+                        }, 1000);
                         break;
                     }
                     case 1004: { // 设置速度
