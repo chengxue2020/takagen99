@@ -19,6 +19,7 @@
     <string name="hm_file">File</string>
     <string name="hm_fav">Star</string>
     <string name="hm_setting">Menu</string>
+    <string name="hm_hist_del">Removed from History</string>
 
     // Play Detail Page //
     <string name="det_play">Play</string>
