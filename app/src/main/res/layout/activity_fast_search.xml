@@ -75,9 +75,9 @@
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:visibility="invisible"
-                app:tv_horizontalSpacingWithMargins="@dimen/vs_20"
+                app:tv_horizontalSpacingWithMargins="@dimen/vs_5"
                 app:tv_selectedItemIsCentered="true"
-                app:tv_verticalSpacingWithMargins="@dimen/vs_20" />
+                app:tv_verticalSpacingWithMargins="@dimen/vs_5" />
 
             <com.owen.tvrecyclerview.widget.TvRecyclerView
                 android:id="@+id/mGridViewFilter"

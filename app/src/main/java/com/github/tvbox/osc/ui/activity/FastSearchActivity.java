@@ -60,12 +60,7 @@ public class FastSearchActivity extends BaseActivity {
     private TvRecyclerView mGridViewWord;
     private TvRecyclerView mGridViewWordFenci;
     SourceViewModel sourceViewModel;
-    //    private EditText etSearch;
-//    private TextView tvSearch;
-//    private TextView tvClear;
-//    private SearchKeyboard keyboard;
-//    private TextView tvAddress;
-//    private ImageView ivQRCode;
+
     private SearchWordAdapter searchWordAdapter;
     private FastSearchAdapter searchAdapter;
     private FastSearchAdapter searchAdapterFilter;
@@ -94,7 +89,6 @@ public class FastSearchActivity extends BaseActivity {
             } catch (Exception e) {
                 Toast.makeText(FastSearchActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
             }
-
         }
     };
 
@@ -175,7 +169,7 @@ public class FastSearchActivity extends BaseActivity {
             }
         });
 
-        mGridView.setHasFixedSize(true);
+        // mGridView.setHasFixedSize(true);
         mGridView.setLayoutManager(new V7GridLayoutManager(this.mContext, isBaseOnWidth() ? 4 : 5));
 
         searchAdapter = new FastSearchAdapter();
@@ -203,8 +197,7 @@ public class FastSearchActivity extends BaseActivity {
             }
         });
 
-
-        mGridViewFilter.setLayoutManager(new V7GridLayoutManager(this.mContext, 5));
+        mGridViewFilter.setLayoutManager(new V7GridLayoutManager(this.mContext, isBaseOnWidth() ? 4 : 5));
         searchAdapterFilter = new FastSearchAdapter();
         mGridViewFilter.setAdapter(searchAdapterFilter);
         searchAdapterFilter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -326,7 +319,7 @@ public class FastSearchActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshEvent event) {
         if (mSearchTitle != null) {
-            mSearchTitle.setText(String.format(getString(R.string.fs_results) + "(%d/%d)", finishedCount, spNames.size()));
+            mSearchTitle.setText(String.format(getString(R.string.fs_results) + " (%d/%d)", finishedCount, spNames.size()));
         }
         if (event.type == RefreshEvent.TYPE_SEARCH_RESULT) {
             try {
@@ -385,7 +378,6 @@ public class FastSearchActivity extends BaseActivity {
         searchRequestList.remove(home);
         searchRequestList.add(0, home);
 
-
         ArrayList<String> siteKey = new ArrayList<>();
         ArrayList<String> hots = new ArrayList<>();
 
@@ -410,7 +402,6 @@ public class FastSearchActivity extends BaseActivity {
                     } catch (Exception e) {
 
                     }
-
                     updateSearchResultCount(1);
                 }
             });
