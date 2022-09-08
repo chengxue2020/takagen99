@@ -739,17 +739,6 @@ public class DetailActivity extends BaseActivity {
             if (playFragment.onBackPressed())
                 return;
             toggleFullPreview();
-            // takagen99 : If 3-Buttons NavBar, hide Navbar.
-            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) && isEdgeToEdgeEnabled(mContext) == 0) {
-                int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-                uiOptions &= ~View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-                uiOptions &= ~View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-                uiOptions &= ~View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-                uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-                uiOptions &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
-                uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-                getWindow().getDecorView().setSystemUiVisibility(uiOptions);
-            }
             mGridView.requestFocus();
             return;
         }
@@ -791,9 +780,6 @@ public class DetailActivity extends BaseActivity {
     boolean fullWindows = false;
     ViewGroup.LayoutParams windowsPreview = null;
     ViewGroup.LayoutParams windowsFull = null;
-    ViewGroup playerParent = null;
-    View playerRoot = null;
-    ViewGroup llLayoutParent = null;
 
     void toggleFullPreview() {
         if (windowsPreview == null) {
@@ -816,16 +802,20 @@ public class DetailActivity extends BaseActivity {
         tvCollect.setFocusable(!fullWindows);
         tvQuickSearch.setFocusable(!fullWindows);
 
-        // Hide navbar only when video playing, for convenience when using 3 buttons navbar
-        if (fullWindows && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-            uiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            uiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-            uiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-            uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-            uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-            uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+        // Hide navbar only when video playing on full window, else show navbar
+        if (fullWindows) {
+            vidHideSysBar();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+                uiOptions &= ~View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                uiOptions &= ~View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+                uiOptions &= ~View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+                uiOptions &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
+                uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+                getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+            }
         }
     }
 }
