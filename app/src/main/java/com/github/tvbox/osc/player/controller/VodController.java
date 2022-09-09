@@ -684,6 +684,7 @@ public class VodController extends BaseController {
     private boolean simSlideStart = false;
     private int simSeekPosition = 0;
     private long simSlideOffset = 0;
+    private int tapDirection;
 
     public void tvSlideStop() {
         if (!simSlideStart)
@@ -838,6 +839,37 @@ public class VodController extends BaseController {
             showBottom();
         } else {
             hideBottom();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        // check if left or middle or right screen
+        int threeScreen = PlayerUtils.getScreenWidth(getContext(), true) / 3;
+
+        if (e.getX() > 0 && e.getX() < threeScreen) {
+            // left side <<<<<
+            tapDirection = -1;
+            // middle
+        } else if ((e.getX() > threeScreen) && (e.getX() < (threeScreen * 2))) {
+            // middle
+            tapDirection = 0;
+        } else if (e.getX() > (threeScreen * 2)) {
+            // right side >>>>>
+            tapDirection = 1;
+        }
+        if (tapDirection == 0 || isPaused) {
+            togglePlay();
+        } else {
+            int duration = (int) mControlWrapper.getDuration();
+            int currentPosition = (int) mControlWrapper.getCurrentPosition();
+            // Fast Forward or Backward by 10 seconds
+            int position = (int) (10000.0f * tapDirection) + currentPosition;
+            if (position > duration) position = duration;
+            if (position < 0) position = 0;
+            updateSeekUI(currentPosition, position, duration);
+            mControlWrapper.seekTo((int) position);
         }
         return true;
     }

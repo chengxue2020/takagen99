@@ -280,29 +280,29 @@
         tools:visibility="visible">
 
         <LinearLayout
-            android:layout_width="@dimen/vs_240"
-            android:layout_height="@dimen/vs_160"
-            android:layout_gravity="center"
+            android:id="@+id/ll_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/vs_100"
+
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/vs_60"
+            android:layout_marginEnd="@dimen/vs_50"
+            android:layout_marginRight="@dimen/vs_50"
             android:background="@drawable/shape_user_pause"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="@dimen/vs_60"
-                android:layout_height="@dimen/vs_60"
-                android:layout_gravity="center"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:src="@drawable/play_pause" />
+            android:gravity="center|right"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_pause_progress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/vs_20"
+                android:layout_marginStart="@dimen/vs_20"
+                android:layout_marginLeft="@dimen/vs_20"
+                android:layout_marginEnd="@dimen/vs_10"
+                android:layout_marginRight="@dimen/vs_10"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:shadowColor="@color/color_99000000"
@@ -314,6 +314,17 @@
                 android:textSize="@dimen/ts_26"
                 android:textStyle="bold"
                 tools:text="100" />
+
+            <ImageView
+                android:layout_width="@dimen/vs_60"
+                android:layout_height="@dimen/vs_60"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/vs_20"
+                android:layout_marginRight="@dimen/vs_20"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:src="@drawable/play_pause" />
+
         </LinearLayout>
 
     </FrameLayout>
@@ -341,31 +352,29 @@
 
     <LinearLayout
         android:id="@+id/tv_progress_container"
-        android:layout_width="@dimen/vs_240"
-        android:layout_height="@dimen/vs_160"
-        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/vs_100"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/vs_60"
+        android:layout_marginEnd="@dimen/vs_50"
+        android:layout_marginRight="@dimen/vs_50"
         android:background="@drawable/shape_user_pause"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:gravity="center|right"
+        android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
-
-        <ImageView
-            android:id="@+id/tv_progress_icon"
-            android:layout_width="@dimen/vs_60"
-            android:layout_height="@dimen/vs_60"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            tools:src="@drawable/play_rewind" />
 
         <TextView
             android:id="@+id/tv_progress_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/vs_20"
+            android:layout_marginStart="@dimen/vs_20"
+            android:layout_marginLeft="@dimen/vs_20"
+            android:layout_marginEnd="@dimen/vs_10"
+            android:layout_marginRight="@dimen/vs_10"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:shadowColor="@color/color_99000000"
@@ -376,6 +385,17 @@
             android:textSize="@dimen/ts_26"
             android:textStyle="bold"
             tools:text="100" />
+
+        <ImageView
+            android:id="@+id/tv_progress_icon"
+            android:layout_width="@dimen/vs_60"
+            android:layout_height="@dimen/vs_60"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/vs_20"
+            android:layout_marginRight="@dimen/vs_20"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            tools:src="@drawable/play_rewind" />
 
     </LinearLayout>
 
