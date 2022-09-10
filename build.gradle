@@ -21,7 +21,8 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
-        maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
+        //https://download.01.org/crosswalk/releases/crosswalk/android/maven2 改成http://9xi4o.tk/maven2 就可以打包成功了
+        maven { url 'http://9xi4o.tk/maven2' }
     }
 }
 
