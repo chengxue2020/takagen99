@@ -388,7 +388,7 @@ public abstract class BaseVideoController extends FrameLayout
     /**
      * 播放和暂停
      */
-    protected void togglePlay() {
+    public void togglePlay() {
         mControlWrapper.togglePlay();
     }
 

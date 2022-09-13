@@ -1,18 +1,14 @@
 apply plugin: 'com.android.application'
 
-def static buildTime() {
-    return new Date().format("yyyyMMdd-HHmm", TimeZone.getTimeZone("GMT+08:00"))
-}
-
 android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId 'com.github.tvbox.takagen99'
+        applicationId 'com.github.tvbox.osc.tk'
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "takagen99".concat("_").concat(buildTime())//根据打包日期生成版本号
+        versionName '1.0.0'
         multiDexEnabled true
         //设置room的Schema的位置
         javaCompileOptions {
@@ -79,9 +75,8 @@ android {
 
 dependencies {
     api fileTree(dir: "libs", include: ["*.jar"])
-
     // for WebDAV
-    implementation ('com.github.thegrizzlylabs:sardine-android:0.5') {
+    implementation('com.github.thegrizzlylabs:sardine-android:0.5') {
         exclude group: 'com.squareup.okhttp3'
     }
     implementation 'com.github.NanoHttpd.nanohttpd:nanohttpd:nanohttpd-project-2.3.1'
@@ -112,9 +107,7 @@ dependencies {
 
     implementation project(":player")
 
-    implementation('org.xwalk:xwalk_shared_library:23.53.589.4') {
-        exclude group: 'com.android.support'
-    }
+    implementation files('libs\\xwalk_shared_library-23.53.589.4.aar')
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'com.owen:tv-recyclerview:3.0.0'
 
