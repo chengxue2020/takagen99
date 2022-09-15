@@ -671,8 +671,8 @@ public class VodController extends BaseController {
         Calendar date = Calendar.getInstance();
         long t = date.getTimeInMillis();
         Date afterAdd = new Date(t + TimeRemaining);
-        SimpleDateFormat timeEnd = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
-        mTimeEnd.setText("Ends at " + timeEnd.format(afterAdd));
+        SimpleDateFormat timeEnd = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+        mTimeEnd.setText("结束时间：" + timeEnd.format(afterAdd));
 
         mCurrentTime.setText(PlayerUtils.stringForTime(position));
         mTotalTime.setText(PlayerUtils.stringForTime(duration));
