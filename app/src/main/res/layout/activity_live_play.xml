@@ -600,7 +600,7 @@
     <!--右上角动态状态栏-->
     <RelativeLayout
         android:id="@+id/ll_right_top_loading"
-        android:layout_width="270px"
+        android:layout_width="160dp"
         android:layout_height="100px"
         android:layout_gravity="center|right|top"
         android:layout_marginTop="40px"
@@ -631,11 +631,11 @@
 
         <com.github.tvbox.osc.ui.tv.widget.MarqueeTextView
             android:id="@+id/tv_right_top_channel_name"
-            android:layout_width="170px"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:ellipsize="marquee"
-            android:gravity="center"
+            android:gravity="center|right"
             android:marqueeRepeatLimit="marquee_forever"
             android:paddingStart="10px"
             android:paddingLeft="10px"
@@ -647,11 +647,12 @@
 
         <TextView
             android:id="@+id/tv_right_top_tipnetspeed"
-            android:layout_width="170px"
-            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:layout_height="14dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_marginBottom="0dp"
+            android:gravity="center|right"
             android:paddingStart="10px"
             android:paddingLeft="10px"
             android:paddingBottom="15px"
