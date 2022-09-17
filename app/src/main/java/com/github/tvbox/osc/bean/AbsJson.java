@@ -143,6 +143,7 @@ public class AbsJson implements Serializable {
             }
             video.urlBean = urlBean;
             video.des = vod_content;// <![CDATA[权来]
+            video.tag = vod_tag;
             return video;
         }
     }

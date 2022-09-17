@@ -411,6 +411,10 @@ public class HomeActivity extends BaseActivity {
         BaseLazyFragment baseLazyFragment = this.fragments.get(i);
         if (baseLazyFragment instanceof GridFragment) {
             View view = this.sortFocusView;
+            GridFragment grid = (GridFragment) baseLazyFragment;
+            if (grid.restoreView()) {
+                return;
+            }// 还原上次保存的UI内容
             if (view != null && !view.isFocused()) {
                 this.sortFocusView.requestFocus();
             } else if (this.sortFocused != 0) {

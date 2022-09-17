@@ -78,32 +78,33 @@ public class MyEpgAdapter extends BaseAdapter {
             if (new Date().compareTo(((Epginfo) data.get(i)).startdateTime) >= 0 && new Date().compareTo(((Epginfo) data.get(i)).enddateTime) <= 0) {
                 shiyi.setVisibility(View.VISIBLE);
                 shiyi.setBackgroundColor(Color.YELLOW);
+                shiyi.setBackgroundColor(Color.YELLOW);
                 shiyi.setText("直播");
                 shiyi.setTextColor(Color.RED);
             } else if (new Date().compareTo(((Epginfo) data.get(i)).enddateTime) > 0) {
-//                shiyi.setVisibility(View.VISIBLE);
-//                shiyi.setBackgroundColor(Color.BLUE);
-//                shiyi.setTextColor(Color.WHITE);
-//                shiyi.setText("回看");
+                shiyi.setVisibility(View.VISIBLE);
+                shiyi.setBackgroundColor(Color.BLUE);
+                shiyi.setTextColor(Color.WHITE);
+                shiyi.setText("回看");
             } else if (new Date().compareTo(((Epginfo) data.get(i)).startdateTime) < 0) {
-//                shiyi.setVisibility(View.VISIBLE);
-//                shiyi.setBackgroundColor(Color.GRAY);
-//                shiyi.setTextColor(Color.BLACK);
-//                shiyi.setText("预约");
+                shiyi.setVisibility(View.VISIBLE);
+                shiyi.setBackgroundColor(Color.GRAY);
+                shiyi.setTextColor(Color.BLACK);
+                shiyi.setText("预约");
             } else {
                 shiyi.setVisibility(View.GONE);
             }
 
             textview.setText(data.get(i).title);
-            timeview.setText(data.get(i).start + "--" + data.get(i).end);
+            timeview.setText(data.get(i).start + " - " + data.get(i).end);
             textview.setTextColor(Color.WHITE);
             timeview.setTextColor(Color.WHITE);
             Log.e("roinlong", "getView: " + i);
             if (ShiyiSelection == false) {
                 if (i == this.defaultSelection) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
-                    textview.setTextColor(Color.rgb(0, 153, 255));
-                    timeview.setTextColor(Color.rgb(0, 153, 255));
+                    textview.setTextColor(context.getResources().getColor(R.color.color_FF0057));
+                    timeview.setTextColor(context.getResources().getColor(R.color.color_FF0057));
                     textview.setFreezesText(true);
                     timeview.setFreezesText(true);
                 } else {

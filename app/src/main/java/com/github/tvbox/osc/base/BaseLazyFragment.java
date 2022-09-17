@@ -246,13 +246,13 @@ public abstract class BaseLazyFragment extends Fragment implements CustomAdapt {
     protected abstract void init();
 
     protected void setLoadSir(View view) {
-        if (mLoadService == null) {
-            mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
-                @Override
-                public void onReload(View v) {
-                }
-            });
-        }
+        //    if (mLoadService == null) {
+        mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+            }
+        });
+        //    }
     }
 
     protected void showLoading() {
