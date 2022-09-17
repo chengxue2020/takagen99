@@ -90,3 +90,4 @@ lint/tmp/
 /LTDecodeNew3.exe
 app/schemas/com.github.tvbox.osc.data.AppDataBase/2.json
 .idea/render.experimental.xml
+.idea/misc.xml
