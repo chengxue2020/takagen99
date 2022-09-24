@@ -4,9 +4,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Frank/Documents/GitHub/takagen99 - 20220809/app/src/main/res/layout/player_vod_control_view.xml" value="0.1" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/drawable/play_audio-.xml" value="0.259" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/activity_collect.xml" value="0.176" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/activity_detail.xml" value="0.1" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/activity_history.xml" value="0.24230072463768115" />
         <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/activity_live_play.xml" value="0.536" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/activity_play.xml" value="0.1" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/activity_setting.xml" value="0.24230072463768115" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/dialog_about.xml" value="0.144" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/dialog_api.xml" value="0.24230072463768115" />
         <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/dialog_live_password.xml" value="0.1" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/epglist_item.xml" value="0.1" />
         <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/player_live_control_view.xml" value="0.176" />
+        <entry key="..\:/Users/Frank/Documents/GitHub/takagen99/app/src/main/res/layout/player_vod_control_view.xml" value="0.1" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable-xhdpi/box_controller_bottom_bg.xml" value="0.141" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable/button_dialog_main.xml" value="0.141" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable/shape_play_bottom.xml" value="0.141" />
