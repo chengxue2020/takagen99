@@ -285,7 +285,5 @@
         android:layout_marginStart="@dimen/vs_50"
         android:layout_marginLeft="@dimen/vs_50"
         android:layout_marginTop="@dimen/vs_10"
-        android:clickable="true"
-        android:focusable="false"
         android:visibility="gone" />
 </FrameLayout>

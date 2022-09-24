@@ -110,4 +110,8 @@
     <string name="fs_show_all">All</string>
     <string name="fs_results">Results</string>
 
+    // VOD //
+    <string name="vod_audio">Select Audio Track</string>
+    <string name="vod_no_audio">No Audio Track</string>
+
 </resources>

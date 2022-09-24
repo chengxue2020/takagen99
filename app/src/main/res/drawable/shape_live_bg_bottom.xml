@@ -7,9 +7,9 @@
 <!--                android:topLeftRadius="50mm" android:topRightRadius="50mm"/>-->
             <gradient
                 android:angle="90"
-                android:endColor="@android:color/transparent"
+                android:endColor="@color/color_6C3D3D3D"
                 android:centerColor="@color/color_E6000000"
-                android:startColor="@color/color_FF000000" />
+                android:startColor="@color/color_E6000000" />
         </shape>
     </item>
 </selector>

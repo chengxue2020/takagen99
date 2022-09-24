@@ -110,4 +110,8 @@
     <string name="fs_show_all">全部显示</string>
     <string name="fs_results">搜索</string>
 
+    // VOD //
+    <string name="vod_audio">切换音轨</string>
+    <string name="vod_no_audio">没有音轨</string>
+
 </resources>

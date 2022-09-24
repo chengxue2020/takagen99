@@ -76,20 +76,20 @@ public class MyEpgAdapter extends BaseAdapter {
         wqddg_AudioWaveView.setVisibility(View.GONE);
         if (i < data.size()) {
             if (new Date().compareTo(((Epginfo) data.get(i)).startdateTime) >= 0 && new Date().compareTo(((Epginfo) data.get(i)).enddateTime) <= 0) {
-                shiyi.setVisibility(View.VISIBLE);
-                shiyi.setBackgroundColor(Color.YELLOW);
-                shiyi.setBackgroundColor(Color.YELLOW);
-                shiyi.setText("直播");
-                shiyi.setTextColor(Color.RED);
+                shiyi.setVisibility(View.GONE);
+//                shiyi.setBackgroundColor(Color.YELLOW);
+//                shiyi.setBackgroundColor(Color.YELLOW);
+//                shiyi.setText("直播");
+//                shiyi.setTextColor(Color.RED);
             } else if (new Date().compareTo(((Epginfo) data.get(i)).enddateTime) > 0) {
                 shiyi.setVisibility(View.VISIBLE);
-                shiyi.setBackgroundColor(Color.BLUE);
-                shiyi.setTextColor(Color.WHITE);
+                shiyi.setBackgroundColor(context.getResources().getColor(R.color.color_353744));
+                shiyi.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
                 shiyi.setText("回看");
             } else if (new Date().compareTo(((Epginfo) data.get(i)).startdateTime) < 0) {
                 shiyi.setVisibility(View.VISIBLE);
-                shiyi.setBackgroundColor(Color.GRAY);
-                shiyi.setTextColor(Color.BLACK);
+                shiyi.setBackgroundColor(context.getResources().getColor(R.color.color_3D3D3D));
+                shiyi.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
                 shiyi.setText("预约");
             } else {
                 shiyi.setVisibility(View.GONE);
