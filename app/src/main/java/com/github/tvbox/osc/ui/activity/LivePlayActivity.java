@@ -255,10 +255,12 @@ public class LivePlayActivity extends BaseActivity {
         initLiveSettingGroupList();
     }
 
+    boolean PIP = Hawk.get(HawkConfig.PIC_IN_PIC, false);
+
     // takagen99 : Enter PIP if supported
     @Override
     public void onUserLeaveHint() {
-        if (supportsPiPMode()) {
+        if (supportsPiPMode() && PIP) {
             // Hide controls when entering PIP
             mHandler.post(mHideChannelListRun);
             mHandler.post(mHideChannelInfoRun);

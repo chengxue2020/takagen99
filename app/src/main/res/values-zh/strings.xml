@@ -53,6 +53,7 @@
     <string name="mn_play_decode">IJK解码</string>
     <string name="mn_search">搜索展示</string>
     <string name="mn_ratio">画面缩放</string>
+    <string name="mn_pip">画中画</string>
     <string name="mn_preview">窗口预览</string>
     <string name="mn_webview">嗅探Webview</string>
     <string name="mn_render">渲染方式</string>

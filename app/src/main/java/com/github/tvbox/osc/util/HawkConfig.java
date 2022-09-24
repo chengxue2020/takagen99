@@ -33,6 +33,7 @@ public class HawkConfig {
     public static final String LIVE_SHOW_TIME = "live_show_time";
     public static final String HOME_SHOW_SOURCE = "show_source";
     public static final String HOME_LOCALE = "language"; // 0 中文 1 英文
+    public static final String PIC_IN_PIC = "pic_in_pic"; // true = on, false = off
 
 
     public static boolean isDebug(){

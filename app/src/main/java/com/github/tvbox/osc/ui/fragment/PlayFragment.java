@@ -254,7 +254,9 @@ public class PlayFragment extends BaseLazyFragment {
 
                     @Override
                     public String getDisplay(TrackInfoBean val) {
-                        return val.index + " : " + val.language;
+//                        return val.index + " : " + val.language;
+                        String str = val.name.substring(val.name.substring(0, val.name.indexOf(",")).length()+1).trim();
+                        return val.index + " : " + str;
                     }
                 }, new DiffUtil.ItemCallback<TrackInfoBean>() {
                     @Override
