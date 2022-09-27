@@ -272,7 +272,7 @@ public class PlayActivity extends BaseActivity {
                     @Override
                     public String getDisplay(TrackInfoBean val) {
 //                        return val.index + " : " + val.language;
-                        String str = val.name.substring(val.name.substring(0, val.name.indexOf(",")).length()+1).trim();
+                        String str = val.name.substring(val.name.substring(0, val.name.indexOf(",")).length() + 1).trim();
                         return val.index + " : " + str;
                     }
                 }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -1010,7 +1010,7 @@ public class PlayActivity extends BaseActivity {
     private XWalkWebClient mX5WebClient;
     private WebView mSysWebView;
     private SysWebClient mSysWebClient;
-    private Map<String, Boolean> loadedUrls = new HashMap<>();
+    private final Map<String, Boolean> loadedUrls = new HashMap<>();
     private boolean loadFound = false;
 
     void loadWebView(String url) {
