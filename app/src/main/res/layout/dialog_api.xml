@@ -32,7 +32,7 @@
                 android:layout_width="@dimen/vs_480"
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.5"
-                android:textColor="@color/color_CC000000"
+                android:textColor="@color/color_FF000000"
                 android:textSize="@dimen/ts_24"
                 tools:text="1111111111111111111111111111111111111111111111111111" />
 
@@ -101,7 +101,7 @@
                     android:paddingTop="@dimen/vs_10"
                     android:paddingRight="@dimen/vs_2"
                     android:paddingBottom="@dimen/vs_10"
-                    android:textColor="@color/color_CC000000"
+                    android:textColor="@color/color_E6000000"
                     android:textColorHint="@color/color_6C3D3D3D"
                     android:textSize="@dimen/ts_26" />
 

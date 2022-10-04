@@ -319,7 +319,9 @@ public class FastSearchActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshEvent event) {
         if (mSearchTitle != null) {
-            mSearchTitle.setText(String.format(getString(R.string.fs_results) + " (%d/%d)", finishedCount, spNames.size()));
+//            mSearchTitle.setText(String.format(getString(R.string.fs_results) + " : %d/%d", finishedCount, spNames.size()));
+            finishedCount = searchAdapter.getData().size();
+            mSearchTitle.setText(String.format(getString(R.string.fs_results) + " : %d", finishedCount));
         }
         if (event.type == RefreshEvent.TYPE_SEARCH_RESULT) {
             try {
@@ -391,7 +393,6 @@ public class FastSearchActivity extends BaseActivity {
             this.spNames.put(bean.getName(), bean.getKey());
             allRunCount.incrementAndGet();
         }
-        updateSearchResultCount(0);
 
         for (String key : siteKey) {
             searchExecutorService.execute(new Runnable() {
@@ -402,15 +403,9 @@ public class FastSearchActivity extends BaseActivity {
                     } catch (Exception e) {
 
                     }
-                    updateSearchResultCount(1);
                 }
             });
         }
-    }
-
-    synchronized private void updateSearchResultCount(int n) {
-        finishedCount += n;
-        if (finishedCount > spNames.size()) finishedCount = spNames.size();
     }
 
     // 向过滤栏添加有结果的spname

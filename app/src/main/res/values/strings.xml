@@ -110,7 +110,7 @@
 
     // Fast Search Page //
     <string name="fs_show_all">All</string>
-    <string name="fs_results">Results</string>
+    <string name="fs_results">Search Results</string>
 
     // VOD //
     <string name="vod_audio">Select Audio Track</string>

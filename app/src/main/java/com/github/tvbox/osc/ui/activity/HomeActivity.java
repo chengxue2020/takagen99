@@ -190,15 +190,11 @@ public class HomeActivity extends BaseActivity {
                 if (direction != View.FOCUS_DOWN) {
                     return false;
                 }
-                isDownOrUp = true;
                 BaseLazyFragment baseLazyFragment = fragments.get(sortFocused);
                 if (!(baseLazyFragment instanceof GridFragment)) {
                     return false;
                 }
-                if (!((GridFragment) baseLazyFragment).isLoad()) {
-                    return true;
-                }
-                return false;
+                return !((GridFragment) baseLazyFragment).isLoad();
             }
         });
         setLoadSir(this.contentLayout);

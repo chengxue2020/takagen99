@@ -20,9 +20,14 @@
             android:gravity="center"
             android:lineSpacingExtra="@dimen/ts_50"
             android:lineSpacingMultiplier="0"
+            android:shadowColor="@color/color_FF000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
             android:text="下载XWalkView运行组件"
-            android:textColor="@color/color_CC000000"
-            android:textSize="@dimen/ts_24" />
+            android:textColor="@color/color_FFFFFF"
+            android:textSize="@dimen/ts_24"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/downXWalk"

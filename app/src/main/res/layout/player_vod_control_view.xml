@@ -800,7 +800,30 @@
                 android:textSize="@dimen/ts_16" />
 
             <LinearLayout
-                android:id="@+id/audio_track_select"
+                android:id="@+id/play_subtitle"
+                android:layout_width="@dimen/vs_50"
+                android:layout_height="@dimen/vs_45"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
+                android:background="@drawable/button_dialog_vod"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/vs_28"
+                    android:layout_height="@dimen/vs_28"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_subtitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/play_audio"
                 android:layout_width="@dimen/vs_50"
                 android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
@@ -947,5 +970,13 @@
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ddtap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_player_tap"
+        android:orientation="horizontal"
+        android:visibility="invisible"/>
 
 </FrameLayout>

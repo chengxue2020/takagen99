@@ -18,10 +18,15 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:paddingTop="@dimen/vs_10"
+            android:shadowColor="@color/color_FF000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
             android:text="搜索(0/0)"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/ts_22" />
+            android:textSize="@dimen/ts_22"
+            android:textStyle="bold" />
 
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/mGridViewWordFenci"

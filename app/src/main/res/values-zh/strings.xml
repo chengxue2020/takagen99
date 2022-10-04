@@ -110,7 +110,7 @@
 
     // Fast Search Page //
     <string name="fs_show_all">全部显示</string>
-    <string name="fs_results">搜索</string>
+    <string name="fs_results">搜索结果</string>
 
     // VOD //
     <string name="vod_audio">切换音轨</string>

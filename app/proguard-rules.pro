@@ -221,3 +221,5 @@
 -dontwarn com.undcover.freedom.pyramid.**
 -keep public class com.chaquo.python.** { *; }
 -dontwarn com.chaquo.python.**
+
+-keep class com.google.gson.**{*;}
