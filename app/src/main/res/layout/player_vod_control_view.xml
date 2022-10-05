@@ -316,6 +316,7 @@
                 tools:text="100" />
 
             <ImageView
+                android:id="@+id/tv_pause_icon"
                 android:layout_width="@dimen/vs_60"
                 android:layout_height="@dimen/vs_60"
                 android:layout_gravity="center"

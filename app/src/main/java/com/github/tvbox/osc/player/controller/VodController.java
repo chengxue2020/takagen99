@@ -202,6 +202,7 @@ public class VodController extends BaseController {
 
     // pause container
     FrameLayout mProgressTop;
+    ImageView mPauseIcon;
     LinearLayout mTapSeek;
 
     // progress container
@@ -265,6 +266,7 @@ public class VodController extends BaseController {
 
         // pause container
         mProgressTop = findViewById(R.id.tv_pause_container);
+        mPauseIcon = findViewById(R.id.tv_pause_icon);
         mTapSeek = findViewById(R.id.ll_ddtap);
 
         // progress container
@@ -943,22 +945,36 @@ public class VodController extends BaseController {
     }
 
     // takagen99 : Add long press to fast forward x3 speed
+    private boolean fromLongPress;
+
     @Override
     public void onLongPress(MotionEvent e) {
-        mProgressTop.setVisibility(VISIBLE);
-        mSpeed = 3.0f;
-        setPlaySpeed(mSpeed);
+        if (!isPaused) {
+            fromLongPress = true;
+            circularReveal(mTapSeek, 1);
+            // Set Fast Forward Icon
+            mProgressTop.setVisibility(VISIBLE);
+            mPauseIcon.setImageResource(R.drawable.play_ffwd);
+            // Set x3 Speed
+            mSpeed = 3.0f;
+            setPlaySpeed(mSpeed);
+        }
     }
 
     // takagen99 : On release long press, resume x1 speed
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_UP) {
-            if (!isPaused) {
+            if (fromLongPress) {
+                // Set back to Pause Icon
                 mProgressTop.setVisibility(INVISIBLE);
+                mPauseIcon.setImageResource(R.drawable.play_pause);
+                // Set back Speed to x1
+                mSpeed = 1.0f;
+                setPlaySpeed(mSpeed);
+                mplayerFFImg.setImageDrawable(dFFwd);
+                fromLongPress = false;
             }
-            mSpeed = 1.0f;
-            setPlaySpeed(mSpeed);
         }
         return super.onTouchEvent(e);
     }
