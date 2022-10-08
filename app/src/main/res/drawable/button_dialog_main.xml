@@ -3,19 +3,19 @@
     <item android:state_focused="true" android:state_pressed="true">
         <shape>
             <corners android:radius="@dimen/vs_5" />
-            <solid android:color="@color/color_353744" />
+            <solid android:color="@color/color_B36C0025" />
         </shape>
     </item>
     <item android:state_focused="false" android:state_pressed="true">
         <shape>
             <corners android:radius="@dimen/vs_5" />
-            <solid android:color="@color/color_353744" />
+            <solid android:color="@color/color_B36C0025" />
         </shape>
     </item>
     <item android:state_focused="true">
         <shape>
             <corners android:radius="@dimen/vs_5" />
-            <solid android:color="@color/color_353744" />
+            <solid android:color="@color/color_B36C0025" />
         </shape>
     </item>
     <item android:state_focused="false" android:state_pressed="false">

@@ -115,5 +115,15 @@
     // VOD //
     <string name="vod_audio">切换音轨</string>
     <string name="vod_no_audio">没有音轨</string>
+    <string name="vod_sub_option">字幕选项</string>
+    <string name="vod_sub_sel">切换内置字幕</string>
+    <string name="vod_sub_na">没有内置字幕</string>
+    <string name="vod_sub_int">内置</string>
+    <string name="vod_sub_ext">外置</string>
+    <string name="vod_sub_remote">搜索</string>
+    <string name="vod_sub_size">大小</string>
+    <string name="vod_sub_delay">延迟</string>
+    <string name="vod_sub_search">搜索</string>
+    <string name="vod_sub_off">字幕已关闭</string>
 
 </resources>

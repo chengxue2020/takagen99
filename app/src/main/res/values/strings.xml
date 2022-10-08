@@ -115,5 +115,15 @@
     // VOD //
     <string name="vod_audio">Select Audio Track</string>
     <string name="vod_no_audio">No Audio Track</string>
+    <string name="vod_sub_option">Subtitle Options</string>
+    <string name="vod_sub_sel">Select Subtitle</string>
+    <string name="vod_sub_na">No Internal Subtitle</string>
+    <string name="vod_sub_int">Internal</string>
+    <string name="vod_sub_ext">External</string>
+    <string name="vod_sub_remote">Search</string>
+    <string name="vod_sub_size">Size</string>
+    <string name="vod_sub_delay">Delay</string>
+    <string name="vod_sub_search">Search</string>
+    <string name="vod_sub_off">Subtitle Off</string>
 
 </resources>

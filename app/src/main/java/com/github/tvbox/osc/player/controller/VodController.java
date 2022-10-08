@@ -22,8 +22,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.transition.TransitionManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -34,10 +36,15 @@ import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.player.thirdparty.Kodi;
 import com.github.tvbox.osc.player.thirdparty.MXPlayer;
 import com.github.tvbox.osc.player.thirdparty.ReexPlayer;
+import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
+import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
+import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
+import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.PlayerHelper;
+import com.github.tvbox.osc.util.SubtitleHelper;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
@@ -47,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -234,6 +242,7 @@ public class VodController extends BaseController {
     TextView mPlayerTxt;
     TextView mPlayerIJKBtn;
     LinearLayout mSubtitleBtn;
+    public SimpleSubtitleView mSubtitleView;
     LinearLayout mAudioTrackBtn;
     TextView mPlayerTimeStartBtn;
     TextView mPlayerTimeSkipBtn;
@@ -294,6 +303,7 @@ public class VodController extends BaseController {
         mPlayerTxt = findViewById(R.id.play_player_txt);
         mPlayerIJKBtn = findViewById(R.id.play_ijk);
         mSubtitleBtn = findViewById(R.id.play_subtitle);
+        mSubtitleView = findViewById(R.id.subtitle_view);
         mAudioTrackBtn = findViewById(R.id.play_audio);
         mPlayerTimeStartBtn = findViewById(R.id.play_time_start);
         mPlayerTimeSkipBtn = findViewById(R.id.play_time_end);
@@ -306,6 +316,9 @@ public class VodController extends BaseController {
         // initialize view
         mTopRoot.setVisibility(INVISIBLE);
         mBottomRoot.setVisibility(INVISIBLE);
+
+        // initialize subtitle
+        initSubtitleInfo();
 
         mGridView.setLayoutManager(new V7LinearLayoutManager(getContext(), 0, false));
         ParseAdapter parseAdapter = new ParseAdapter();
@@ -484,36 +497,93 @@ public class VodController extends BaseController {
             }
         });
         // Button : CHANGE player type ------------------------------------
+//        mPlayerBtn.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    int playerType = mPlayerConfig.getInt("pl");
+//                    boolean playerVail = false;
+//                    do {
+//                        playerType++;
+//                        if (playerType <= 2) {
+//                            playerVail = true;
+//                        } else if (playerType == 10) {
+//                            playerVail = mxPlayerExist;
+//                        } else if (playerType == 11) {
+//                            playerVail = reexPlayerExist;
+//                        } else if (playerType == 12) {
+//                            playerVail = KodiExist;
+//                        } else if (playerType > 12) {
+//                            playerType = 0;
+//                            playerVail = true;
+//                        }
+//                    } while (!playerVail);
+//                    mPlayerConfig.put("pl", playerType);
+//                    updatePlayerCfgView();
+//                    listener.updatePlayerCfg();
+//                    listener.replay(false);
+//                    // hideBottom();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                mPlayerBtn.requestFocus();
+//            }
+//        });
         mPlayerBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                FastClickCheckUtil.check(view);
                 try {
-                    int playerType = mPlayerConfig.getInt("pl");
-                    boolean playerVail = false;
-                    do {
-                        playerType++;
-                        if (playerType <= 2) {
-                            playerVail = true;
-                        } else if (playerType == 10) {
-                            playerVail = mxPlayerExist;
-                        } else if (playerType == 11) {
-                            playerVail = reexPlayerExist;
-                        } else if (playerType == 12) {
-                            playerVail = KodiExist;
-                        } else if (playerType > 12) {
-                            playerType = 0;
-                            playerVail = true;
+                    int defaultPos = mPlayerConfig.getInt("pl");
+                    ArrayList<Integer> players = new ArrayList<>();
+                    players.add(0);
+                    players.add(1);
+                    players.add(2);
+                    if (mxPlayerExist) {
+                        players.add(10);
+                    }
+                    if (reexPlayerExist) {
+                        players.add(11);
+                    }
+                    if (KodiExist) {
+                        players.add(12);
+                    }
+                    SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
+                    dialog.setTip(HomeActivity.getRes().getString(R.string.dia_player));
+                    dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+                        @Override
+                        public void click(Integer value, int pos) {
+                            try {
+                                dialog.cancel();
+                                int thisPlayType = players.get(pos);
+                                mPlayerConfig.put("pl", thisPlayType);
+                                updatePlayerCfgView();
+                                listener.updatePlayerCfg();
+                                listener.replay(false);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                    } while (!playerVail);
-                    mPlayerConfig.put("pl", playerType);
-                    updatePlayerCfgView();
-                    listener.updatePlayerCfg();
-                    listener.replay(false);
-                    // hideBottom();
+
+                        @Override
+                        public String getDisplay(Integer val) {
+                            return PlayerHelper.getPlayerName(val);
+                        }
+                    }, new DiffUtil.ItemCallback<Integer>() {
+                        @Override
+                        public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                            return oldItem.intValue() == newItem.intValue();
+                        }
+
+                        @Override
+                        public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                            return oldItem.intValue() == newItem.intValue();
+                        }
+                    }, players, defaultPos);
+                    dialog.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mPlayerBtn.requestFocus();
             }
         });
         // Button : IJK select software or hardware decoding --------------------
@@ -542,6 +612,34 @@ public class VodController extends BaseController {
                     e.printStackTrace();
                 }
                 mPlayerIJKBtn.requestFocus();
+            }
+        });
+        // Button : Subtitle selection ----------------------------------------
+        mSubtitleBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FastClickCheckUtil.check(view);
+                listener.selectSubtitle();
+            }
+        });
+        mSubtitleBtn.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mSubtitleView.setVisibility(View.GONE);
+                mSubtitleView.destroy();
+                mSubtitleView.clearSubtitleCache();
+                mSubtitleView.isInternal = false;
+                hideBottom();
+                Toast.makeText(getContext(), HomeActivity.getRes().getString(R.string.vod_sub_off), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        // Button : AUDIO track selection --------------------------------------
+        mAudioTrackBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FastClickCheckUtil.check(view);
+                listener.selectAudioTrack();
             }
         });
         // Button : SKIP time start -----------------------------------------
@@ -634,23 +732,11 @@ public class VodController extends BaseController {
                 return true;
             }
         });
-//        mSubtitleBtn.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FastClickCheckUtil.check(view);
-//                listener.selectSubtitle();
-//                hideBottom();
-//            }
-//        });
-        // Button : AUDIO track selection --------------------------------------
-        mAudioTrackBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FastClickCheckUtil.check(view);
-                listener.selectAudioTrack();
-            }
-        });
+    }
 
+    void initSubtitleInfo() {
+        int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
+        mSubtitleView.setTextSize(subtitleTextSize);
     }
 
     @Override
@@ -708,6 +794,8 @@ public class VodController extends BaseController {
 
         void playPre();
 
+        void prepared();
+
         void changeParse(ParseBean pb);
 
         void updatePlayerCfg();
@@ -715,6 +803,8 @@ public class VodController extends BaseController {
         void replay(boolean replay);
 
         void errReplay();
+
+        void selectSubtitle();
 
         void selectAudioTrack();
     }
@@ -835,6 +925,7 @@ public class VodController extends BaseController {
                 listener.errReplay();
                 break;
             case VideoView.STATE_PREPARED:
+                listener.prepared();
                 // takagen99 : Add Video Resolution
                 if (mControlWrapper.getVideoSize().length >= 2) {
                     mPlayerResolution.setText(mControlWrapper.getVideoSize()[0] + " x " + mControlWrapper.getVideoSize()[1]);

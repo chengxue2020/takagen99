@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.github.tvbox.osc.base.App;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 public class MXPlayer {
@@ -77,34 +78,33 @@ public class MXPlayer {
         if (packageInfo == null)
             return false;
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setPackage(packageInfo.packageName);
-        intent.setClassName(packageInfo.packageName, packageInfo.activityName);
-
-        intent.setData(Uri.parse(url));
-        intent.putExtra("title", title);
-        if (headers != null && headers.size() > 0) {
-            String[] hds = new String[headers.size() * 2];
-            int idx = 0;
-            for (String hk : headers.keySet()) {
-                hds[idx] = hk;
-                hds[idx + 1] = headers.get(hk).trim();
-                idx += 2;
-            }
-            intent.putExtra("headers", headers);
-        }
-
-        if (subtitle != null && !subtitle.isEmpty()) {
-            Parcelable[] parcels = new Parcelable[1];
-            parcels[0] = Uri.parse(subtitle);
-            intent.putExtra("subs", parcels);
-            intent.putExtra("subs.enable", parcels);
-        }
-
         try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setPackage(packageInfo.packageName);
+            intent.setClassName(packageInfo.packageName, packageInfo.activityName);
+            if (headers != null && headers.size() > 0) {
+                url = url + "|";
+                int idx = 0;
+                for (String hk : headers.keySet()) {
+                    url += hk + "=" + URLEncoder.encode(headers.get(hk), "UTF-8");
+                    if (idx < headers.keySet().size() -1) {
+                        url += "&";
+                    }
+                    idx ++;
+                }
+            }
+            intent.setData(Uri.parse(url));
+            intent.putExtra("title", title);
+
+            if (subtitle != null && !subtitle.isEmpty()) {
+                Parcelable[] parcels = new Parcelable[1];
+                parcels[0] = Uri.parse(subtitle);
+                intent.putExtra("subs", parcels);
+                intent.putExtra("subs.enable", parcels);
+            }
             activity.startActivity(intent);
             return true;
-        } catch (ActivityNotFoundException ex) {
+        } catch (Exception ex) {
             Log.e(TAG, "Can't run MX Player(Pro)", ex);
             return false;
         }

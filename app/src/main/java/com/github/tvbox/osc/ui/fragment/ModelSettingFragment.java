@@ -126,6 +126,114 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 tvDebugOpen.setText(Hawk.get(HawkConfig.DEBUG_OPEN, false) ? "打开" : "关闭");
             }
         });
+
+        // Input Source URL ------------------------------------------------------------------------
+        findViewById(R.id.llApi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                ApiDialog dialog = new ApiDialog(mActivity);
+                EventBus.getDefault().register(dialog);
+                dialog.setOnListener(new ApiDialog.OnListener() {
+                    @Override
+                    public void onchange(String api) {
+                        Hawk.put(HawkConfig.API_URL, api);
+                        tvApi.setText(api);
+                    }
+                });
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ((BaseActivity) mActivity).hideSysBar();
+                        EventBus.getDefault().unregister(dialog);
+                    }
+                });
+                dialog.show();
+            }
+        });
+        // 1. HOME Configuration ---------------------------------------------------------------- //
+        // Select Home Source ------------------------------------
+        findViewById(R.id.llHomeApi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                List<SourceBean> sites = ApiConfig.get().getSourceBeanList();
+                if (sites.size() > 0) {
+                    SelectDialog<SourceBean> dialog = new SelectDialog<>(mActivity);
+                    dialog.setTip(getString(R.string.dia_source));
+                    dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
+                        @Override
+                        public void click(SourceBean value, int pos) {
+                            ApiConfig.get().setSourceBean(value);
+                            tvHomeApi.setText(ApiConfig.get().getHomeSourceBean().getName());
+                        }
+
+                        @Override
+                        public String getDisplay(SourceBean val) {
+                            return val.getName();
+                        }
+                    }, new DiffUtil.ItemCallback<SourceBean>() {
+                        @Override
+                        public boolean areItemsTheSame(@NonNull @NotNull SourceBean oldItem, @NonNull @NotNull SourceBean newItem) {
+                            return oldItem == newItem;
+                        }
+
+                        @Override
+                        public boolean areContentsTheSame(@NonNull @NotNull SourceBean oldItem, @NonNull @NotNull SourceBean newItem) {
+                            return oldItem.getKey().equals(newItem.getKey());
+                        }
+                    }, sites, sites.indexOf(ApiConfig.get().getHomeSourceBean()));
+                    dialog.show();
+                }
+            }
+        });
+        // Switch to show / hide source header --------------------------
+        findViewById(R.id.llHomeShow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                Hawk.put(HawkConfig.HOME_SHOW_SOURCE, !Hawk.get(HawkConfig.HOME_SHOW_SOURCE, false));
+                tvHomeShow.setText(Hawk.get(HawkConfig.HOME_SHOW_SOURCE, true) ? "开启" : "关闭");
+            }
+        });
+        // Select Home Display Type : Douban / Recommended / History -----
+        findViewById(R.id.llHomeRec).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                int defaultPos = Hawk.get(HawkConfig.HOME_REC, 0);
+                ArrayList<Integer> types = new ArrayList<>();
+                types.add(0);
+                types.add(1);
+                types.add(2);
+                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
+                dialog.setTip(getString(R.string.dia_hm_type));
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+                    @Override
+                    public void click(Integer value, int pos) {
+                        Hawk.put(HawkConfig.HOME_REC, value);
+                        tvHomeRec.setText(getHomeRecName(value));
+                    }
+
+                    @Override
+                    public String getDisplay(Integer val) {
+                        return getHomeRecName(val);
+                    }
+                }, new DiffUtil.ItemCallback<Integer>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+                }, types, defaultPos);
+                dialog.show();
+            }
+        });
+        // History to Keep ------------------------------------------
         findViewById(R.id.llHomeNum).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,168 +273,107 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
-        findViewById(R.id.llParseWebVew).setOnClickListener(new View.OnClickListener() {
+        // 2. PLAYER Configuration -------------------------------------------------------------- //
+        // Switch for Preview Window -------------------------------
+        findViewById(R.id.showPreview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                boolean useSystem = !Hawk.get(HawkConfig.PARSE_WEBVIEW, true);
-                Hawk.put(HawkConfig.PARSE_WEBVIEW, useSystem);
-                tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
-                if (!useSystem) {
-                    Toast.makeText(mContext, "注意: XWalkView只适用于部分低Android版本，Android5.0以上推荐使用系统自带", Toast.LENGTH_LONG).show();
-                    XWalkInitDialog dialog = new XWalkInitDialog(mContext);
-                    dialog.setOnListener(new XWalkInitDialog.OnListener() {
-                        @Override
-                        public void onchange() {
-                        }
-                    });
-                    dialog.show();
-                }
+                Hawk.put(HawkConfig.SHOW_PREVIEW, !Hawk.get(HawkConfig.SHOW_PREVIEW, true));
+                tvShowPreviewText.setText(Hawk.get(HawkConfig.SHOW_PREVIEW, true) ? "开启" : "关闭");
             }
         });
-        findViewById(R.id.llBackup).setOnClickListener(new View.OnClickListener() {
+        // Select Screen Ratio -------------------------------------
+        findViewById(R.id.llScale).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                BackupDialog dialog = new BackupDialog(mActivity);
+                int defaultPos = Hawk.get(HawkConfig.PLAY_SCALE, 0);
+                ArrayList<Integer> players = new ArrayList<>();
+                players.add(0);
+                players.add(1);
+                players.add(2);
+                players.add(3);
+                players.add(4);
+                players.add(5);
+                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
+                dialog.setTip(getString(R.string.dia_ratio));
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+                    @Override
+                    public void click(Integer value, int pos) {
+                        Hawk.put(HawkConfig.PLAY_SCALE, value);
+                        tvScale.setText(PlayerHelper.getScaleName(value));
+                    }
+
+                    @Override
+                    public String getDisplay(Integer val) {
+                        return PlayerHelper.getScaleName(val);
+                    }
+                }, new DiffUtil.ItemCallback<Integer>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+                }, players, defaultPos);
                 dialog.show();
             }
         });
-        findViewById(R.id.llAbout).setOnClickListener(new View.OnClickListener() {
+        // Switch to ON / OFF Picture-In-Picture -------------------------
+        findViewById(R.id.llPIP).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                AboutDialog dialog = new AboutDialog(mActivity);
+                Hawk.put(HawkConfig.PIC_IN_PIC, !Hawk.get(HawkConfig.PIC_IN_PIC, false));
+                tvPIP.setText(Hawk.get(HawkConfig.PIC_IN_PIC, true) ? "开启" : "关闭");
+            }
+        });
+        // Select PLAYER Type --------------------------------------------
+        findViewById(R.id.llPlay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                int defaultPos = Hawk.get(HawkConfig.PLAY_TYPE, 0);
+                ArrayList<Integer> players = new ArrayList<>();
+                players.add(0);
+                players.add(1);
+                players.add(2);
+                players.add(10);
+                players.add(11);
+                players.add(12);
+                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
+                dialog.setTip(getString(R.string.dia_player));
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+                    @Override
+                    public void click(Integer value, int pos) {
+                        Hawk.put(HawkConfig.PLAY_TYPE, value);
+                        tvPlay.setText(PlayerHelper.getPlayerName(value));
+                        PlayerHelper.init();
+                    }
+
+                    @Override
+                    public String getDisplay(Integer val) {
+                        return PlayerHelper.getPlayerName(val);
+                    }
+                }, new DiffUtil.ItemCallback<Integer>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+                }, players, defaultPos);
                 dialog.show();
             }
         });
-        findViewById(R.id.llWp).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                if (!ApiConfig.get().wallpaper.isEmpty())
-                    Toast.makeText(mContext, getString(R.string.mn_wall_load), Toast.LENGTH_SHORT).show();
-                    OkGo.<File>get(ApiConfig.get().wallpaper).execute(new FileCallback(requireActivity().getFilesDir().getAbsolutePath(), "wp") {
-                        @Override
-                        public void onSuccess(Response<File> response) {
-                            ((BaseActivity) requireActivity()).changeWallpaper(true);
-                        }
-
-                        @Override
-                        public void onError(Response<File> response) {
-                            super.onError(response);
-                        }
-
-                        @Override
-                        public void downloadProgress(Progress progress) {
-                            super.downloadProgress(progress);
-                        }
-                    });
-            }
-        });
-        findViewById(R.id.llWpRecovery).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                File wp = new File(requireActivity().getFilesDir().getAbsolutePath() + "/wp");
-                if (wp.exists())
-                    wp.delete();
-                ((BaseActivity) requireActivity()).changeWallpaper(true);
-            }
-        });
-        findViewById(R.id.llHomeApi).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                List<SourceBean> sites = ApiConfig.get().getSourceBeanList();
-                if (sites.size() > 0) {
-                    SelectDialog<SourceBean> dialog = new SelectDialog<>(mActivity);
-                    dialog.setTip(getString(R.string.dia_source));
-                    dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
-                        @Override
-                        public void click(SourceBean value, int pos) {
-                            ApiConfig.get().setSourceBean(value);
-                            tvHomeApi.setText(ApiConfig.get().getHomeSourceBean().getName());
-                        }
-
-                        @Override
-                        public String getDisplay(SourceBean val) {
-                            return val.getName();
-                        }
-                    }, new DiffUtil.ItemCallback<SourceBean>() {
-                        @Override
-                        public boolean areItemsTheSame(@NonNull @NotNull SourceBean oldItem, @NonNull @NotNull SourceBean newItem) {
-                            return oldItem == newItem;
-                        }
-
-                        @Override
-                        public boolean areContentsTheSame(@NonNull @NotNull SourceBean oldItem, @NonNull @NotNull SourceBean newItem) {
-                            return oldItem.getKey().equals(newItem.getKey());
-                        }
-                    }, sites, sites.indexOf(ApiConfig.get().getHomeSourceBean()));
-                    dialog.show();
-                }
-            }
-        });
-        findViewById(R.id.llDns).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                int dohUrl = Hawk.get(HawkConfig.DOH_URL, 0);
-
-                SelectDialog<String> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip(getString(R.string.dia_dns));
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<String>() {
-                    @Override
-                    public void click(String value, int pos) {
-                        tvDns.setText(OkGoHelper.dnsHttpsList.get(pos));
-                        Hawk.put(HawkConfig.DOH_URL, pos);
-                        String url = OkGoHelper.getDohUrl(pos);
-                        OkGoHelper.dnsOverHttps.setUrl(url.isEmpty() ? null : HttpUrl.get(url));
-                        IjkMediaPlayer.toggleDotPort(pos > 0);
-                    }
-
-                    @Override
-                    public String getDisplay(String val) {
-                        return val;
-                    }
-                }, new DiffUtil.ItemCallback<String>() {
-                    @Override
-                    public boolean areItemsTheSame(@NonNull @NotNull String oldItem, @NonNull @NotNull String newItem) {
-                        return oldItem.equals(newItem);
-                    }
-
-                    @Override
-                    public boolean areContentsTheSame(@NonNull @NotNull String oldItem, @NonNull @NotNull String newItem) {
-                        return oldItem.equals(newItem);
-                    }
-                }, OkGoHelper.dnsHttpsList, dohUrl);
-                dialog.show();
-            }
-        });
-        findViewById(R.id.llApi).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                ApiDialog dialog = new ApiDialog(mActivity);
-                EventBus.getDefault().register(dialog);
-                dialog.setOnListener(new ApiDialog.OnListener() {
-                    @Override
-                    public void onchange(String api) {
-                        Hawk.put(HawkConfig.API_URL, api);
-                        tvApi.setText(api);
-                    }
-                });
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        ((BaseActivity) mActivity).hideSysBar();
-                        EventBus.getDefault().unregister(dialog);
-                    }
-                });
-                dialog.show();
-            }
-        });
+        // Select DECODER Type --------------------------------------------
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -371,85 +418,28 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
-        findViewById(R.id.llScale).setOnClickListener(new View.OnClickListener() {
+        // 3. SYSTEM Configuration -------------------------------------------------------------- //
+        // Select Webview ---------------------------------------------
+        findViewById(R.id.llParseWebVew).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                int defaultPos = Hawk.get(HawkConfig.PLAY_SCALE, 0);
-                ArrayList<Integer> players = new ArrayList<>();
-                players.add(0);
-                players.add(1);
-                players.add(2);
-                players.add(3);
-                players.add(4);
-                players.add(5);
-                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip(getString(R.string.dia_ratio));
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
-                    @Override
-                    public void click(Integer value, int pos) {
-                        Hawk.put(HawkConfig.PLAY_SCALE, value);
-                        tvScale.setText(PlayerHelper.getScaleName(value));
-                    }
-
-                    @Override
-                    public String getDisplay(Integer val) {
-                        return PlayerHelper.getScaleName(val);
-                    }
-                }, new DiffUtil.ItemCallback<Integer>() {
-                    @Override
-                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-
-                    @Override
-                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-                }, players, defaultPos);
-                dialog.show();
+                boolean useSystem = !Hawk.get(HawkConfig.PARSE_WEBVIEW, true);
+                Hawk.put(HawkConfig.PARSE_WEBVIEW, useSystem);
+                tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
+                if (!useSystem) {
+                    Toast.makeText(mContext, "注意: XWalkView只适用于部分低Android版本，Android5.0以上推荐使用系统自带", Toast.LENGTH_LONG).show();
+                    XWalkInitDialog dialog = new XWalkInitDialog(mContext);
+                    dialog.setOnListener(new XWalkInitDialog.OnListener() {
+                        @Override
+                        public void onchange() {
+                        }
+                    });
+                    dialog.show();
+                }
             }
         });
-        findViewById(R.id.llPlay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                int defaultPos = Hawk.get(HawkConfig.PLAY_TYPE, 0);
-                ArrayList<Integer> players = new ArrayList<>();
-                players.add(0);
-                players.add(1);
-                players.add(2);
-                players.add(10);
-                players.add(11);
-                players.add(12);
-                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip(getString(R.string.dia_player));
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
-                    @Override
-                    public void click(Integer value, int pos) {
-                        Hawk.put(HawkConfig.PLAY_TYPE, value);
-                        tvPlay.setText(PlayerHelper.getPlayerName(value));
-                        PlayerHelper.init();
-                    }
-
-                    @Override
-                    public String getDisplay(Integer val) {
-                        return PlayerHelper.getPlayerName(val);
-                    }
-                }, new DiffUtil.ItemCallback<Integer>() {
-                    @Override
-                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-
-                    @Override
-                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-                }, players, defaultPos);
-                dialog.show();
-            }
-        });
+        // Select System Render ( Surface/Texture View ) ---------------------
         findViewById(R.id.llRender).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -486,42 +476,89 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
-        findViewById(R.id.llHomeRec).setOnClickListener(new View.OnClickListener() {
+        // Select DNS ---------------------------------------------
+        findViewById(R.id.llDns).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                int defaultPos = Hawk.get(HawkConfig.HOME_REC, 0);
-                ArrayList<Integer> types = new ArrayList<>();
-                types.add(0);
-                types.add(1);
-                types.add(2);
-                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip(getString(R.string.dia_hm_type));
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+                int dohUrl = Hawk.get(HawkConfig.DOH_URL, 0);
+
+                SelectDialog<String> dialog = new SelectDialog<>(mActivity);
+                dialog.setTip(getString(R.string.dia_dns));
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<String>() {
                     @Override
-                    public void click(Integer value, int pos) {
-                        Hawk.put(HawkConfig.HOME_REC, value);
-                        tvHomeRec.setText(getHomeRecName(value));
+                    public void click(String value, int pos) {
+                        tvDns.setText(OkGoHelper.dnsHttpsList.get(pos));
+                        Hawk.put(HawkConfig.DOH_URL, pos);
+                        String url = OkGoHelper.getDohUrl(pos);
+                        OkGoHelper.dnsOverHttps.setUrl(url.isEmpty() ? null : HttpUrl.get(url));
+                        IjkMediaPlayer.toggleDotPort(pos > 0);
                     }
 
                     @Override
-                    public String getDisplay(Integer val) {
-                        return getHomeRecName(val);
+                    public String getDisplay(String val) {
+                        return val;
                     }
-                }, new DiffUtil.ItemCallback<Integer>() {
+                }, new DiffUtil.ItemCallback<String>() {
                     @Override
-                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
+                    public boolean areItemsTheSame(@NonNull @NotNull String oldItem, @NonNull @NotNull String newItem) {
+                        return oldItem.equals(newItem);
                     }
 
                     @Override
-                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
+                    public boolean areContentsTheSame(@NonNull @NotNull String oldItem, @NonNull @NotNull String newItem) {
+                        return oldItem.equals(newItem);
                     }
-                }, types, defaultPos);
+                }, OkGoHelper.dnsHttpsList, dohUrl);
                 dialog.show();
             }
         });
+        // Select Backup / Restore -------------------------------------
+        findViewById(R.id.llBackup).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                BackupDialog dialog = new BackupDialog(mActivity);
+                dialog.show();
+            }
+        });
+        // Load Wallpaper from URL -------------------------------------
+        findViewById(R.id.llWp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                if (!ApiConfig.get().wallpaper.isEmpty())
+                    Toast.makeText(mContext, getString(R.string.mn_wall_load), Toast.LENGTH_SHORT).show();
+                OkGo.<File>get(ApiConfig.get().wallpaper).execute(new FileCallback(requireActivity().getFilesDir().getAbsolutePath(), "wp") {
+                    @Override
+                    public void onSuccess(Response<File> response) {
+                        ((BaseActivity) requireActivity()).changeWallpaper(true);
+                    }
+
+                    @Override
+                    public void onError(Response<File> response) {
+                        super.onError(response);
+                    }
+
+                    @Override
+                    public void downloadProgress(Progress progress) {
+                        super.downloadProgress(progress);
+                    }
+                });
+            }
+        });
+        // Restore Default Wallpaper from system -------------------------
+        findViewById(R.id.llWpRecovery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                File wp = new File(requireActivity().getFilesDir().getAbsolutePath() + "/wp");
+                if (wp.exists())
+                    wp.delete();
+                ((BaseActivity) requireActivity()).changeWallpaper(true);
+            }
+        });
+        // Select Search Display Results ( Text or Picture ) -------------
         findViewById(R.id.llSearchView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -557,43 +594,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
-        SettingActivity.callback = new SettingActivity.DevModeCallback() {
-            @Override
-            public void onChange() {
-                findViewById(R.id.llDebug).setVisibility(View.VISIBLE);
-            }
-        };
-
-        findViewById(R.id.showPreview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                Hawk.put(HawkConfig.SHOW_PREVIEW, !Hawk.get(HawkConfig.SHOW_PREVIEW, true));
-                tvShowPreviewText.setText(Hawk.get(HawkConfig.SHOW_PREVIEW, true) ? "开启" : "关闭");
-            }
-        });
-
-        // takagen99 : switch to on / off Picture-In-Picture
-        findViewById(R.id.llPIP).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                Hawk.put(HawkConfig.PIC_IN_PIC, !Hawk.get(HawkConfig.PIC_IN_PIC, false));
-                tvPIP.setText(Hawk.get(HawkConfig.PIC_IN_PIC, true) ? "开启" : "关闭");
-            }
-        });
-
-        // takagen99 : switch to show / hide source header
-        findViewById(R.id.llHomeShow).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                Hawk.put(HawkConfig.HOME_SHOW_SOURCE, !Hawk.get(HawkConfig.HOME_SHOW_SOURCE, false));
-                tvHomeShow.setText(Hawk.get(HawkConfig.HOME_SHOW_SOURCE, true) ? "开启" : "关闭");
-            }
-        });
-
-        // takagen99 : add choose English / Chinese
+        // Select App Language ( English / Chinese ) -----------------
         findViewById(R.id.llLocale).setOnClickListener(new View.OnClickListener() {
             private int chkLang = Hawk.get(HawkConfig.HOME_LOCALE, 0);
             @Override
@@ -646,6 +647,22 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
+        // About App -----------------------------------------------
+        findViewById(R.id.llAbout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                AboutDialog dialog = new AboutDialog(mActivity);
+                dialog.show();
+            }
+        });
+
+        SettingActivity.callback = new SettingActivity.DevModeCallback() {
+            @Override
+            public void onChange() {
+                findViewById(R.id.llDebug).setVisibility(View.VISIBLE);
+            }
+        };
 
     }
 
