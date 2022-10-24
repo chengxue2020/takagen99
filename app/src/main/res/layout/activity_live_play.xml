@@ -181,13 +181,32 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/divEPG"
-            android:layout_width="@dimen/vs_380"
+            android:layout_width="@dimen/vs_480"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
             android:visibility="gone">
+
+            <com.owen.tvrecyclerview.widget.TvRecyclerView
+                android:id="@+id/mEpgDateGridView"
+                android:layout_width="@dimen/vs_120"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/vs_10"
+                android:layout_marginLeft="@dimen/vs_10"
+                android:layout_marginTop="@dimen/vs_10"
+                android:layout_marginBottom="@dimen/vs_10"
+                android:divider="@null"
+                android:fadeScrollbars="false"
+                android:focusable="true"
+                android:listSelector="@drawable/item_bg_selector_right"
+                android:paddingLeft="@dimen/vs_5"
+                android:paddingTop="@dimen/vs_5"
+                android:paddingBottom="@dimen/vs_5"
+                android:textColor="@color/color_FFFFFF"
+                app:tv_selectedItemIsCentered="true"
+                app:tv_verticalSpacingWithMargins="10mm" />
 
             <com.github.tvbox.osc.ui.tv.widget.ChannelListView
                 android:id="@+id/lv_epg"
@@ -197,7 +216,7 @@
                 android:divider="@null"
                 android:fadeScrollbars="false"
                 android:listSelector="@drawable/item_bg_selector_right"
-                android:padding="@dimen/vs_10"
+                android:padding="@dimen/vs_5"
                 android:scrollbars="none" />
 
             <TextView
@@ -211,7 +230,7 @@
                 android:visibility="gone" />
 
 
-        </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

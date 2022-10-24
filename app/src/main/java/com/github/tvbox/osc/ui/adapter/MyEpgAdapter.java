@@ -1,9 +1,6 @@
 package com.github.tvbox.osc.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +11,22 @@ import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.ui.tv.widget.AudioWaveView;
 import com.github.tvbox.osc.ui.tv.widget.Epginfo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 public class MyEpgAdapter extends BaseAdapter {
 
     private List<Epginfo> data;
-    private Context context;
+    private final Context context;
     public static float fontSize = 20;
     private int defaultSelection = 0;
     private int defaultShiyiSelection = 0;
     private boolean ShiyiSelection = false;
+    private String shiyiDate = null;
+    private String currentEpgDate = null;
+    private int focusSelection = -1;
+    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public MyEpgAdapter(List<Epginfo> data, Context context, int i, boolean t) {
         this.data = data;
@@ -33,13 +35,27 @@ public class MyEpgAdapter extends BaseAdapter {
         this.ShiyiSelection = t;
     }
 
+    public void updateData(Date epgDate, List<Epginfo> data) {
+        currentEpgDate = timeFormat.format(epgDate);
+        focusSelection = -1;
+        defaultSelection = -1;
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     public void setSelection(int i) {
         this.defaultSelection = i;
         notifyDataSetChanged();
     }
 
+    public void setFocusSelection(int focusSelection) {
+        notifyDataSetChanged();
+        this.focusSelection = focusSelection;
+    }
+
     public void setShiyiSelection(int i, boolean t) {
         this.defaultShiyiSelection = i;
+        this.shiyiDate = t ? currentEpgDate : null;
         ShiyiSelection = t;
         notifyDataSetChanged();
     }
@@ -55,8 +71,8 @@ public class MyEpgAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public Epginfo getItem(int i) {
+        return data.get(i);
     }
 
     @Override
@@ -75,18 +91,18 @@ public class MyEpgAdapter extends BaseAdapter {
         AudioWaveView wqddg_AudioWaveView = (AudioWaveView) view.findViewById(R.id.wqddg_AudioWaveView);
         wqddg_AudioWaveView.setVisibility(View.GONE);
         if (i < data.size()) {
-            if (new Date().compareTo(((Epginfo) data.get(i)).startdateTime) >= 0 && new Date().compareTo(((Epginfo) data.get(i)).enddateTime) <= 0) {
-                shiyi.setVisibility(View.GONE);
-//                shiyi.setBackgroundColor(Color.YELLOW);
-//                shiyi.setBackgroundColor(Color.YELLOW);
-//                shiyi.setText("直播");
-//                shiyi.setTextColor(Color.RED);
-            } else if (new Date().compareTo(((Epginfo) data.get(i)).enddateTime) > 0) {
+            Epginfo info = data.get(i);
+            if (new Date().compareTo(info.startdateTime) >= 0 && new Date().compareTo(info.enddateTime) <= 0) {
+                shiyi.setVisibility(View.VISIBLE);
+                shiyi.setBackgroundColor(context.getResources().getColor(R.color.color_32364E));
+                shiyi.setText("直播");
+                shiyi.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
+            } else if (new Date().compareTo(info.enddateTime) > 0) {
                 shiyi.setVisibility(View.VISIBLE);
                 shiyi.setBackgroundColor(context.getResources().getColor(R.color.color_353744));
                 shiyi.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
                 shiyi.setText("回看");
-            } else if (new Date().compareTo(((Epginfo) data.get(i)).startdateTime) < 0) {
+            } else if (new Date().compareTo(info.startdateTime) < 0) {
                 shiyi.setVisibility(View.VISIBLE);
                 shiyi.setBackgroundColor(context.getResources().getColor(R.color.color_3D3D3D));
                 shiyi.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
@@ -97,10 +113,10 @@ public class MyEpgAdapter extends BaseAdapter {
 
             textview.setText(data.get(i).title);
             timeview.setText(data.get(i).start + " - " + data.get(i).end);
-            textview.setTextColor(Color.WHITE);
-            timeview.setTextColor(Color.WHITE);
-            Log.e("roinlong", "getView: " + i);
+            textview.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
+            timeview.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
             if (ShiyiSelection == false) {
+                Date now = new Date();
                 if (i == this.defaultSelection) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                     textview.setTextColor(context.getResources().getColor(R.color.color_FF0057));
@@ -113,13 +129,13 @@ public class MyEpgAdapter extends BaseAdapter {
             } else {
                 if (i == this.defaultSelection || i == this.defaultShiyiSelection) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
-                    textview.setTextColor(Color.rgb(0, 153, 255));
-                    timeview.setTextColor(Color.rgb(0, 153, 255));
+                    textview.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
+                    timeview.setTextColor(context.getResources().getColor(R.color.color_FFFFFF));
                     textview.setFreezesText(true);
                     timeview.setFreezesText(true);
                     shiyi.setText("回看中");
-                    shiyi.setTextColor(Color.RED);
-                    shiyi.setBackgroundColor(Color.rgb(12, 255, 0));
+                    shiyi.setTextColor(context.getResources().getColor(R.color.color_FF0057));
+                    shiyi.setBackgroundColor(context.getResources().getColor(R.color.color_26FFFFF));
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                 } else {
                     wqddg_AudioWaveView.setVisibility(View.GONE);
