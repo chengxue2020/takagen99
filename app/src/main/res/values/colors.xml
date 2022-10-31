@@ -2,27 +2,42 @@
 <resources>
     <color name="color_FFB800">#FF6600</color>
     <color name="color_FF0057">#FF0057</color>
-    <color name="color_80FF0057">#66FF0057</color>
-    <color name="color_B36C0025">#B36C0025</color>
-    <color name="color_32364E">#32364E</color>
-    <color name="color_6632364E">#6632364E</color>
-    <color name="color_353744">#353744</color>
-    <color name="color_E6181E28">#E6181E28</color>
-    <color name="color_3D3D3D">#3D3D3D</color>
-    <color name="color_6C3D3D3D">#6C3D3D3D</color>
-    <color name="color_803D3D3D">#803D3D3D</color>
-    <color name="color_F26A6A6A">#F26A6A6A</color>
-    <color name="color_26FFFFF">#26FFFFFF</color>
-    <color name="color_66FFFFF">#66FFFFFF</color>
-    <color name="color_BBFFFFFF">#BBFFFFFF</color>
-    <color name="color_CCFFFFFF">#CCFFFFFF</color>
-    <color name="color_FFFFFF">#FFFFFFFF</color>
-    <color name="color_66000000">#66000000</color>
-    <color name="color_99000000">#99000000</color>
-    <color name="color_CC000000">#CC000000</color>
-    <color name="color_E6000000">#E6000000</color>
-    <color name="color_FF000000">#FF000000</color>
+    <color name="color_FF0057_80">#CCFF0057</color>
+    <color name="color_FF0057_70">#B3FF0057</color>
+    <color name="color_FF0057_40">#66FF0057</color>
 
+    <!-- Main Dialog Button BG -->
+    <color name="color_6C0025_70">#B36C0025</color>
+
+    <!-- EPG Colors -->
+    <color name="color_32364E">#32364E</color>
+    <color name="color_32364E_80">#CC32364E</color>
+    <color name="color_32364E_40">#6632364E</color>
+    <color name="color_3D3D3D">#3D3D3D</color>
+    <color name="color_3D3D3D_45">#733D3D3D</color>
+    <color name="color_3D3D3D_50">#803D3D3D</color>
+
+    <!-- Live Menu BG (left / right) -->
+    <color name="color_181E28_90">#E6181E28</color>
+
+    <!-- Main Dialog BG -->
+    <color name="color_6A6A6A_95">#F26A6A6A</color>
+
+    <color name="color_FFFFFF">#FFFFFF</color>
+    <color name="color_FFFFFF_80">#CCFFFFFF</color>
+    <color name="color_FFFFFF_70">#B3FFFFFF</color>
+    <color name="color_FFFFFF_50">#80FFFFFF</color>
+    <color name="color_FFFFFF_40">#66FFFFFF</color>
+    <color name="color_FFFFFF_15">#26FFFFFF</color>
+
+    <color name="color_FF000000">#FF000000</color>
+    <color name="color_000000_90">#E6000000</color>
+    <color name="color_000000_80">#CC000000</color>
+    <color name="color_000000_70">#B3000000</color>
+    <color name="color_000000_60">#99000000</color>
+    <color name="color_000000_40">#66000000</color>
+
+    <!-- Unused Subtitle Text -->
     <color name="color_FFB6C1">#FFB6C1</color>
     <color name="color_6CFFFFFF">#6CFFFFFF</color>
 </resources>

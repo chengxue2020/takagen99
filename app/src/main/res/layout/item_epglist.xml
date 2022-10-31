@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:gravity="bottom"
+    android:id="@+id/cl_epg"
+    android:background="@drawable/shape_live_select"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/vs_10"
+    android:layout_marginBottom="@dimen/vs_10"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingTop="@dimen/vs_5"
+    android:paddingBottom="@dimen/vs_5" >
+
+    <LinearLayout
+        android:id="@+id/touch"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_epg_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/vs_5"
+            android:paddingRight="@dimen/vs_5"
+            android:textSize="@dimen/vs_15" />
+
+        <com.github.tvbox.osc.ui.tv.widget.MarqueeTextView
+            android:id="@+id/tv_epg_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:gravity="center|left"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingLeft="@dimen/vs_5"
+            android:paddingRight="@dimen/vs_5"
+            android:singleLine="true"
+            android:textSize="@dimen/ts_18" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="@dimen/vs_100"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/vs_5"
+        android:paddingRight="@dimen/vs_5">
+
+        <TextView
+            android:id="@+id/shiyi"
+            android:layout_width="@dimen/vs_80"
+            android:layout_height="@dimen/vs_25"
+            android:layout_gravity="center|center_vertical"
+            android:layout_margin="@dimen/vs_2"
+            android:background="@drawable/shape_setting_model_focus"
+            android:gravity="center"
+            android:text="回看"
+            android:textColor="@color/color_FFFFFF"
+            android:textSize="@dimen/vs_15" />
+
+        <com.github.tvbox.osc.ui.tv.widget.AudioWaveView
+            android:id="@+id/wqddg_AudioWaveView"
+            android:layout_width="@dimen/vs_70"
+            android:layout_height="@dimen/vs_20"
+            android:layout_gravity="center|center_vertical"
+            android:layout_margin="@dimen/vs_2"
+            android:padding="@dimen/vs_5" />
+    </LinearLayout>
+
+</LinearLayout>

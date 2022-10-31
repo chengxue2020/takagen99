@@ -27,7 +27,7 @@
             android:gravity="center"
             android:lineSpacingMultiplier="1.5"
             android:textAlignment="gravity"
-            android:textColor="@color/color_CC000000"
+            android:textColor="@color/color_000000_80"
             android:textSize="@dimen/ts_24"
             tools:text="1111111111111111111111111111111111111111111111111111" />
     </LinearLayout>

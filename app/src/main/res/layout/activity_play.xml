@@ -39,6 +39,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/vs_50"
         android:text="Now Loading"
-        android:textColor="@color/color_CCFFFFFF"
+        android:textColor="@color/color_FFFFFF_80"
         android:textSize="@dimen/ts_24" />
 </FrameLayout>

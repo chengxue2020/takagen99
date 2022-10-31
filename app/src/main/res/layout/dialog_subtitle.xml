@@ -187,7 +187,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
-                    android:shadowColor="@color/color_CC000000"
+                    android:shadowColor="@color/color_000000_80"
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowRadius="2"

@@ -139,12 +139,25 @@ public class HistoryActivity extends BaseActivity {
                 }
             }
         });
+        historyAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                FastClickCheckUtil.check(view);
+                VodInfo vodInfo = historyAdapter.getData().get(position);
+                historyAdapter.remove(position);
+                RoomDataManger.deleteVodRecord(vodInfo.sourceKey, vodInfo);
+                return true;
+            }
+        });
     }
 
     private void initData() {
         List<VodInfo> allVodRecord = RoomDataManger.getAllVodRecord(100);
         List<VodInfo> vodInfoList = new ArrayList<>();
         for (VodInfo vodInfo : allVodRecord) {
+            if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty()) {
+                vodInfo.note = "上次看到" + vodInfo.playNote;
+            }
             vodInfoList.add(vodInfo);
         }
         historyAdapter.setNewData(vodInfoList);

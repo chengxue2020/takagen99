@@ -47,7 +47,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="@dimen/vs_2"
                     android:layout_marginRight="@dimen/vs_2"
-                    android:background="@color/color_CC000000"
+                    android:background="@color/color_000000_80"
                     android:maxWidth="@dimen/vs_60"
                     android:padding="@dimen/vs_1"
                     android:singleLine="true"
@@ -81,7 +81,7 @@
             android:layout_marginEnd="@dimen/vs_10"
             android:layout_marginRight="@dimen/vs_10"
             android:text="MM/dd/yyyy"
-            android:textColor="@color/color_BBFFFFFF"
+            android:textColor="@color/color_FFFFFF_70"
             android:textSize="@dimen/ts_16"
             android:visibility="gone" />
 

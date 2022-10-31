@@ -9,6 +9,7 @@ import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.bean.LiveEpgDate;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class LiveEpgDateAdapter extends BaseQuickAdapter<LiveEpgDate, BaseViewHolder> {
@@ -26,11 +27,11 @@ public class LiveEpgDateAdapter extends BaseQuickAdapter<LiveEpgDate, BaseViewHo
         tvGroupName.setText(item.getDatePresented());
         tvGroupName.setBackgroundColor(Color.TRANSPARENT);
         if (item.getIndex() == selectedIndex && item.getIndex() != focusedIndex) {
-            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_FFFFFF));
+            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_FF0057));
         } else if (item.getIndex() == selectedIndex && item.getIndex() == focusedIndex) {
             tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_FFFFFF));
         } else {
-            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_66FFFFF));
+            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_FFFFFF));
         }
     }
 
@@ -49,11 +50,13 @@ public class LiveEpgDateAdapter extends BaseQuickAdapter<LiveEpgDate, BaseViewHo
     }
 
     public void setFocusedIndex(int focusedIndex) {
-        int preSelectedIndex = this.selectedIndex;
+        int preFocusedIndex = this.focusedIndex;
         this.focusedIndex = focusedIndex;
-        if (preSelectedIndex != -1)
-            notifyItemChanged(preSelectedIndex);
+        if (preFocusedIndex != -1)
+            notifyItemChanged(preFocusedIndex);
         if (this.focusedIndex != -1)
             notifyItemChanged(this.focusedIndex);
+        else if (this.selectedIndex != -1)
+            notifyItemChanged(this.selectedIndex);
     }
 }

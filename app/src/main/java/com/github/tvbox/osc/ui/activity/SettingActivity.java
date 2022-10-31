@@ -84,7 +84,7 @@ public class SettingActivity extends BaseActivity {
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 if (itemView != null) {
                     TextView tvName = itemView.findViewById(R.id.tvName);
-                    tvName.setTextColor(getResources().getColor(R.color.color_BBFFFFFF));
+                    tvName.setTextColor(getResources().getColor(R.color.color_FFFFFF_70));
                 }
             }
 

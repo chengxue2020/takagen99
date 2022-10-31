@@ -21,7 +21,7 @@
         android:shadowDy="0"
         android:shadowRadius="5"
         android:textAlignment="gravity"
-        android:textColor="@color/color_CC000000"
+        android:textColor="@color/color_000000_80"
         android:textSize="@dimen/ts_24"
         android:textStyle="bold"
         tools:text="11111111111" />

@@ -21,7 +21,7 @@
             android:lineSpacingExtra="@dimen/ts_50"
             android:lineSpacingMultiplier="0"
             android:textAlignment="gravity"
-            android:textColor="@color/color_CC000000"
+            android:textColor="@color/color_000000_80"
             android:textSize="@dimen/ts_24"
             tools:text="1111111111111111111111111111111111111111111111111111" />
 

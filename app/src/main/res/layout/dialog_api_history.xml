@@ -20,7 +20,7 @@
             android:padding="@dimen/vs_20"
             android:singleLine="true"
             android:text="11111111"
-            android:textColor="@color/color_CC000000"
+            android:textColor="@color/color_000000_80"
             android:textSize="@dimen/ts_26"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

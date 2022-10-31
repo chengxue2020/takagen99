@@ -19,7 +19,7 @@
             android:focusableInTouchMode="false"
             android:gravity="left"
             android:text="其他数据源中的相关资源, 没有找到可以尝试选词重搜"
-            android:textColor="@color/color_CC000000"
+            android:textColor="@color/color_000000_80"
             android:textSize="@dimen/ts_22" />
 
         <com.owen.tvrecyclerview.widget.TvRecyclerView

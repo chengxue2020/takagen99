@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="@dimen/vs_180"
         android:layout_height="match_parent"
-        android:background="@color/color_6632364E"
+        android:background="@color/color_32364E_40"
         android:orientation="vertical"
         android:paddingLeft="@dimen/vs_10"
         android:paddingTop="@dimen/vs_20"

@@ -652,12 +652,18 @@ public class VodController extends BaseController {
                 mHandler.removeCallbacks(mHideBottomRunnable);
                 mHandler.postDelayed(mHideBottomRunnable, 10000);
                 try {
-                    int step = Hawk.get(HawkConfig.PLAY_TIME_STEP, 5);
-                    int st = mPlayerConfig.getInt("st");
-                    st += step;
-                    if (st > 60 * 10)
-                        st = 0;
-                    mPlayerConfig.put("st", st);
+//                    int step = Hawk.get(HawkConfig.PLAY_TIME_STEP, 5);
+//                    int st = mPlayerConfig.getInt("st");
+//                    st += step;
+//                    if (st > 60 * 10)
+//                        st = 0;          600 = 10 mins
+
+                    // takagen99: Reference FongMi to get exact opening skip time
+                    int current = (int) mControlWrapper.getCurrentPosition();
+                    int duration = (int) mControlWrapper.getDuration();
+                    if (current > duration / 2) return;
+                    mPlayerConfig.put("st",current/1000);
+
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                 } catch (JSONException e) {
@@ -686,12 +692,18 @@ public class VodController extends BaseController {
                 mHandler.removeCallbacks(mHideBottomRunnable);
                 mHandler.postDelayed(mHideBottomRunnable, 10000);
                 try {
-                    int step = Hawk.get(HawkConfig.PLAY_TIME_STEP, 5);
-                    int et = mPlayerConfig.getInt("et");
-                    et += step;
-                    if (et > 60 * 10)
-                        et = 0;
-                    mPlayerConfig.put("et", et);
+//                    int step = Hawk.get(HawkConfig.PLAY_TIME_STEP, 5);
+//                    int et = mPlayerConfig.getInt("et");
+//                    et += step;
+//                    if (et > 60 * 10)
+//                        et = 0;
+
+                    // takagen99: Reference FongMi to get exact ending skip time
+                    int current = (int) mControlWrapper.getCurrentPosition();
+                    int duration = (int) mControlWrapper.getDuration();
+                    if (current < duration / 2) return;
+                    mPlayerConfig.put("et", (duration - current)/1000);
+
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                 } catch (JSONException e) {
