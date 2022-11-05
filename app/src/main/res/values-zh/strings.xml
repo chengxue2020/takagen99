@@ -10,8 +10,8 @@
     <string name="hm_retry">重试</string>
     <string name="hm_cancel">取消</string>
     <string name="hm_exit">再按一次返回键退出应用</string>
-    <string name="hm_date1">yyyy年 MM月 dd日</string>
-    <string name="hm_date2">EE HH:mm</string>
+    <string name="hm_date1">MM月dd日</string>
+    <string name="hm_date2">EE HH:mm aa</string>
     <string name="hm_hist">历史</string>
     <string name="hm_live">直播</string>
     <string name="hm_search">搜索</string>
@@ -67,6 +67,7 @@
     <string name="dia_source">请选择数据源</string>
     <string name="dia_hm_type">请选择列表数据</string>
     <string name="dia_history">历史条数保留</string>
+    <string name="dia_history_list">历史配置列表</string>
     <string name="dia_player">请选择默认播放器</string>
     <string name="dia_decode">请选择IJK解码</string>
     <string name="dia_search">请选择搜索视图</string>
@@ -79,6 +80,7 @@
 
     // Settings Backup Restore Page //
     <string name="set_bkup_ok">备份成功!</string>
+    <string name="set_bkup_del">备份删除</string>
     <string name="set_bkup_fail">备份失败!</string>
     <string name="set_bkup_fail_hk">备份Hawk失败!</string>
     <string name="set_bkup_fail_db">DB文件不存在!</string>
