@@ -10,7 +10,7 @@
     <string name="hm_retry">Retry</string>
     <string name="hm_cancel">Cancel</string>
     <string name="hm_exit">Press BACK again to EXIT</string>
-    <string name="hm_date1">dd MMM yyyy</string>
+    <string name="hm_date1">dd MMM</string>
     <string name="hm_date2">EE hh:mm aa</string>
     <string name="hm_hist">History</string>
     <string name="hm_live">Live</string>
@@ -67,6 +67,7 @@
     <string name="dia_source">Select Source</string>
     <string name="dia_hm_type">Select Display Type</string>
     <string name="dia_history">Select History to Keep</string>
+    <string name="dia_history_list">Configuration History List</string>
     <string name="dia_player">Select Player Type</string>
     <string name="dia_decode">Select IJK Decoder</string>
     <string name="dia_search">Select Search Mode</string>
@@ -79,6 +80,7 @@
 
     // Settings Backup Restore Page //
     <string name="set_bkup_ok">Backup Success</string>
+    <string name="set_bkup_del">Backup Deleted</string>
     <string name="set_bkup_fail">Backup Fail</string>
     <string name="set_bkup_fail_hk">Backup Fail (Hawk)</string>
     <string name="set_bkup_fail_db">Backup Fail (DB)</string>

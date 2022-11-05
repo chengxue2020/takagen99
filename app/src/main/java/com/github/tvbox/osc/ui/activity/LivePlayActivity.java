@@ -1451,14 +1451,6 @@ public class LivePlayActivity extends BaseActivity {
             Date day = new Date();
             SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
             tvTime.setText(df.format(day));
-            Date now = new Date();
-            if (liveEpgDateAdapter != null && liveEpgDateAdapter.getData().size() > 0 &&
-                    now.compareTo(liveEpgDateAdapter.getData().get(0).getDateParamVal()) >= 0) {
-                initEpgDateView();
-                if (!isSHIYI && epgdata.size() > 0) {
-                    getEpg(liveEpgDateAdapter.getData().get(0).getDateParamVal());
-                }
-            }
             mHandler.postDelayed(this, 1000);
         }
     };

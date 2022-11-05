@@ -34,8 +34,7 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="@dimen/vs_10"
-        android:src="@drawable/icon_delete"
-        android:visibility="gone" />
+        android:src="@drawable/icon_delete" />
 
 </LinearLayout>
 

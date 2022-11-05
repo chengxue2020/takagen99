@@ -21,7 +21,7 @@
 
         <View
             android:layout_width="4dp"
-            android:layout_height="25dp"
+            android:layout_height="22dp"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/vs_10"
             android:layout_marginRight="@dimen/vs_10"

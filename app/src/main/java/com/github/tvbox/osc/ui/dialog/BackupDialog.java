@@ -38,7 +38,7 @@ public class BackupDialog extends BaseDialog {
     public BackupDialog(@NonNull @NotNull Context context) {
         super(context);
         setContentView(R.layout.dialog_backup);
-        TvRecyclerView tvRecyclerView = ((TvRecyclerView) findViewById(R.id.list));
+        TvRecyclerView tvRecyclerView = findViewById(R.id.list);
         BackupAdapter adapter = new BackupAdapter();
         tvRecyclerView.setAdapter(adapter);
         adapter.setNewData(allBackup());
@@ -47,6 +47,9 @@ public class BackupDialog extends BaseDialog {
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (view.getId() == R.id.tvName) {
                     restore((String) adapter.getItem(position));
+                } else if (view.getId() == R.id.tvDel) {
+                    delete((String) adapter.getItem(position));
+                    adapter.setNewData(allBackup());
                 }
             }
         });
@@ -190,4 +193,16 @@ public class BackupDialog extends BaseDialog {
             Toast.makeText(getContext(), HomeActivity.getRes().getString(R.string.set_bkup_fail), Toast.LENGTH_SHORT).show();
         }
     }
+
+    void delete(String dir) {
+        try {
+            String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+            File backup = new File(root + "/tvbox_backup/" + dir);
+            FileUtils.recursiveDelete(backup);
+            Toast.makeText(getContext(), HomeActivity.getRes().getString(R.string.set_bkup_del), Toast.LENGTH_SHORT).show();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 }
