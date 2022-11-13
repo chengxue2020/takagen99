@@ -854,7 +854,6 @@ public class PlayActivity extends BaseActivity {
         }
         if (!hasNext) {
             Toast.makeText(this, "已经是最后一集了", Toast.LENGTH_SHORT).show();
-            this.onBackPressed();
             return;
         }
         if (mVodInfo.reverseSort) {

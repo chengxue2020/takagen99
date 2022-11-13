@@ -72,11 +72,11 @@
 
                 <TextView
                     android:id="@+id/tv_MPBS_top_hide"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|right"
-                    android:layout_marginEnd="@dimen/vs_2"
-                    android:layout_marginRight="@dimen/vs_2"
+                    android:layout_marginStart="@dimen/vs_5"
+                    android:layout_marginLeft="@dimen/vs_5"
                     android:gravity="right"
                     android:shadowColor="@color/color_FF000000"
                     android:shadowDx="0"
@@ -192,11 +192,11 @@
 
                 <TextView
                     android:id="@+id/tv_MPBS_top"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|right"
-                    android:layout_marginEnd="@dimen/vs_2"
-                    android:layout_marginRight="@dimen/vs_2"
+                    android:layout_marginStart="@dimen/vs_5"
+                    android:layout_marginLeft="@dimen/vs_5"
                     android:gravity="right"
                     android:shadowColor="@color/color_FF000000"
                     android:shadowDx="0"
@@ -548,7 +548,7 @@
 
             <TextView
                 android:id="@+id/curr_time"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/vs_20_"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/ts_50"
@@ -558,7 +558,7 @@
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="3"
-                android:text="00:00"
+                android:text="00:00:00"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -591,7 +591,7 @@
 
             <TextView
                 android:id="@+id/total_time"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/vs_20_"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/vs_10"
@@ -601,7 +601,7 @@
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="3"
-                android:text="00:00"
+                android:text="00:00:00"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
         </LinearLayout>
@@ -1009,6 +1009,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/shape_player_tap"
         android:orientation="horizontal"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
 </FrameLayout>

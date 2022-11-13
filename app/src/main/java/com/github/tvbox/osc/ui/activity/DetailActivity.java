@@ -174,8 +174,11 @@ public class DetailActivity extends BaseActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.previewPlayer, playFragment).commit();
             getSupportFragmentManager().beginTransaction().show(playFragment).commitAllowingStateLoss();
             tvPlay.setText(getString(R.string.det_expand));
+            tvPlay.setVisibility(View.GONE);
+        } else {
+            tvPlay.setVisibility(View.VISIBLE);
+            tvPlay.requestFocus();
         }
-        tvPlay.requestFocus();
         tvSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -478,7 +481,7 @@ public class DetailActivity extends BaseActivity {
                     if (vodInfo.seriesMap != null && vodInfo.seriesMap.size() > 0) {
                         mGridViewFlag.setVisibility(View.VISIBLE);
                         mGridView.setVisibility(View.VISIBLE);
-                        tvPlay.setVisibility(View.VISIBLE);
+//                        tvPlay.setVisibility(View.VISIBLE);
                         mEmptyPlayList.setVisibility(View.GONE);
 
                         VodInfo vodInfoRecord = RoomDataManger.getVodInfo(sourceKey, vodId);
@@ -520,6 +523,7 @@ public class DetailActivity extends BaseActivity {
                             jumpToPlay();
                             llPlayerFragmentContainer.setVisibility(View.VISIBLE);
                             llPlayerFragmentContainerBlock.setVisibility(View.VISIBLE);
+                            llPlayerFragmentContainerBlock.requestFocus();
                         }
                         // startQuickSearch();
                     } else {

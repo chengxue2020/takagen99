@@ -1,6 +1,6 @@
 package com.github.tvbox.osc.player.controller;
 
-import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTimeVod;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -123,6 +123,10 @@ public class VodController extends BaseController {
                                 .setInterpolator(new DecelerateInterpolator())
                                 .setListener(null);
                         mBottomRoot.requestFocus();
+                        if (isKeyUp) {
+                            mPlayerTimeStartBtn.requestFocus();
+                            isKeyUp = false;
+                        }
                         break;
                     }
                     case 1003: { // 隐藏底部菜单
@@ -353,7 +357,7 @@ public class VodController extends BaseController {
                 long duration = mControlWrapper.getDuration();
                 long newPosition = (duration * progress) / seekBar.getMax();
                 if (mCurrentTime != null)
-                    mCurrentTime.setText(stringForTime((int) newPosition));
+                    mCurrentTime.setText(stringForTimeVod((int) newPosition));
             }
 
             @Override
@@ -468,11 +472,17 @@ public class VodController extends BaseController {
                 mHandler.postDelayed(mHideBottomRunnable, 10000);
                 try {
                     float speed = (float) mPlayerConfig.getDouble("sp");
-                    speed += 0.25f;
+                    // increase speed by 0.25 OR by 1.00 if > 3
+                    if (speed >= 3) {
+                        speed += 1.0f;
+                    } else {
+                        speed += 0.25f;
+                    }
+                    // set back speed to 0.50 after > 5
                     if (speed == 1) {
 //                        mPlayerFFwd.setCompoundDrawablesWithIntrinsicBounds(dFFwd, null, null, null);
                         mplayerFFImg.setImageDrawable(dFFwd);
-                    } else if (speed > 3) {
+                    } else if (speed > 5) {
                         speed = 0.5f;
                     }
                     mPlayerConfig.put("sp", speed);
@@ -872,8 +882,8 @@ public class VodController extends BaseController {
         SimpleDateFormat timeEnd = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         mTimeEnd.setText("结束时间：" + timeEnd.format(afterAdd));
 
-        mCurrentTime.setText(PlayerUtils.stringForTime(position));
-        mTotalTime.setText(PlayerUtils.stringForTime(duration));
+        mCurrentTime.setText(PlayerUtils.stringForTimeVod(position));
+        mTotalTime.setText(PlayerUtils.stringForTimeVod(duration));
         if (duration > 0) {
             mSeekBar.setEnabled(true);
             int pos = (int) (position * 1.0 / duration * mSeekBar.getMax());
@@ -1006,6 +1016,7 @@ public class VodController extends BaseController {
 
     // takagen99 : Check Pause
     private boolean isPaused = false;
+    private boolean isKeyUp = false;
 
     @Override
     public boolean onKeyEvent(KeyEvent event) {
@@ -1035,8 +1046,14 @@ public class VodController extends BaseController {
                     }
                     return true;
                 }
-//            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {   // takagen99 : Up to show
-            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                // takagen99 : Key Up to focus Start Time Skip
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                if (!isBottomVisible()) {
+                    showBottom();
+                    isKeyUp = true;
+                    return true;
+                }
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                 if (!isBottomVisible()) {
                     showBottom();
                     return true;

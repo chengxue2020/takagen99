@@ -241,7 +241,7 @@ public class PlayFragment extends BaseLazyFragment {
 
     //设置字幕
     void setSubtitle(String path) {
-        if (path != null && path .length() > 0) {
+        if (path != null && path.length() > 0) {
             // 设置字幕
             mController.mSubtitleView.setVisibility(View.GONE);
             mController.mSubtitleView.setSubtitlePath(path);
@@ -263,14 +263,17 @@ public class PlayFragment extends BaseLazyFragment {
             public void setTextSize(int size) {
                 mController.mSubtitleView.setTextSize(size);
             }
+
             @Override
             public void setSubtitleDelay(int milliseconds) {
                 mController.mSubtitleView.setSubtitleDelay(milliseconds);
             }
+
             @Override
             public void selectInternalSubtitle() {
                 selectMyInternalSubtitle();
             }
+
             @Override
             public void setTextStyle(int style) {
                 setSubtitleViewTextStyle(style);
@@ -296,9 +299,9 @@ public class PlayFragment extends BaseLazyFragment {
                         });
                     }
                 });
-                if(mVodInfo.playFlag.contains("Ali")||mVodInfo.playFlag.contains("parse")){
+                if (mVodInfo.playFlag.contains("Ali") || mVodInfo.playFlag.contains("parse")) {
                     searchSubtitleDialog.setSearchWord(mVodInfo.playNote);
-                }else {
+                } else {
                     searchSubtitleDialog.setSearchWord(mVodInfo.name);
                 }
                 searchSubtitleDialog.show();
@@ -341,7 +344,7 @@ public class PlayFragment extends BaseLazyFragment {
         }
         TrackInfo trackInfo = null;
         if (mediaPlayer instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
         }
 //        if (trackInfo == null) {
 //            Toast.makeText(mContext, "没有内置字幕", Toast.LENGTH_SHORT).show();
@@ -368,7 +371,7 @@ public class PlayFragment extends BaseLazyFragment {
                         mController.mSubtitleView.destroy();
                         mController.mSubtitleView.clearSubtitleCache();
                         mController.mSubtitleView.isInternal = true;
-                        ((IjkMediaPlayer)mediaPlayer).setTrack(value.index);
+                        ((IjkMediaPlayer) mediaPlayer).setTrack(value.index);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -408,7 +411,7 @@ public class PlayFragment extends BaseLazyFragment {
         }
         TrackInfo trackInfo = null;
         if (mediaPlayer instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
         }
         if (trackInfo == null) {
             Toast.makeText(mContext, getString(R.string.vod_no_audio), Toast.LENGTH_SHORT).show();
@@ -428,7 +431,7 @@ public class PlayFragment extends BaseLazyFragment {
                     mediaPlayer.pause();
                     long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
                     if (mediaPlayer instanceof IjkMediaPlayer) {
-                        ((IjkMediaPlayer)mediaPlayer).setTrack(value.index);
+                        ((IjkMediaPlayer) mediaPlayer).setTrack(value.index);
                     }
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -556,11 +559,11 @@ public class PlayFragment extends BaseLazyFragment {
     private void initSubtitleView() {
         TrackInfo trackInfo = null;
         if (mVideoView.getMediaPlayer() instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)(mVideoView.getMediaPlayer())).getTrackInfo();
+            trackInfo = ((IjkMediaPlayer) (mVideoView.getMediaPlayer())).getTrackInfo();
             if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
                 mController.mSubtitleView.hasInternal = true;
             }
-            ((IjkMediaPlayer)(mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
+            ((IjkMediaPlayer) (mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
                 @Override
                 public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
                     if (mController.mSubtitleView.isInternal) {
@@ -573,11 +576,11 @@ public class PlayFragment extends BaseLazyFragment {
         }
         mController.mSubtitleView.bindToMediaPlayer(mVideoView.getMediaPlayer());
         mController.mSubtitleView.setPlaySubtitleCacheKey(subtitleCacheKey);
-        String subtitlePathCache = (String)CacheManager.getCache(MD5.string2MD5(subtitleCacheKey));
+        String subtitlePathCache = (String) CacheManager.getCache(MD5.string2MD5(subtitleCacheKey));
         if (subtitlePathCache != null && !subtitlePathCache.isEmpty()) {
             mController.mSubtitleView.setSubtitlePath(subtitlePathCache);
         } else {
-            if (playSubtitle != null && playSubtitle .length() > 0) {
+            if (playSubtitle != null && playSubtitle.length() > 0) {
                 mController.mSubtitleView.setSubtitlePath(playSubtitle);
             } else {
                 if (mController.mSubtitleView.hasInternal) {
@@ -765,7 +768,6 @@ public class PlayFragment extends BaseLazyFragment {
         }
         if (!hasNext) {
             Toast.makeText(requireContext(), "已经是最后一集了", Toast.LENGTH_SHORT).show();
-            this.onBackPressed();
             return;
         }
         mVodInfo.playIndex++;
@@ -809,7 +811,7 @@ public class PlayFragment extends BaseLazyFragment {
 
         stopParse();
         if (mVideoView != null) mVideoView.release();
-        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
+        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex + "-" + vs.name + "-subt";
         String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex;
         //重新播放清除现有进度
         if (reset) {

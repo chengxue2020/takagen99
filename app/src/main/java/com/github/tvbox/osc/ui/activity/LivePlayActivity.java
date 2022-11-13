@@ -30,6 +30,7 @@ import com.github.tvbox.osc.bean.LiveSettingGroup;
 import com.github.tvbox.osc.bean.LiveSettingItem;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.controller.LiveController;
+import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.ui.adapter.LiveChannelGroupAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveChannelItemAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveEpgAdapter;
@@ -37,6 +38,7 @@ import com.github.tvbox.osc.ui.adapter.LiveEpgDateAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveSettingGroupAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveSettingItemAdapter;
 import com.github.tvbox.osc.ui.dialog.LivePasswordDialog;
+import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -218,7 +220,17 @@ public class LivePlayActivity extends BaseActivity {
         } else {
             mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
             mHandler.removeCallbacks(mUpdateNetSpeedRun);
+            exit();
+        }
+    }
+
+    private long mExitTime = 0;
+    private void exit() {
+        if (System.currentTimeMillis() - mExitTime < 2000) {
             super.onBackPressed();
+        } else {
+            mExitTime = System.currentTimeMillis();
+            Toast.makeText(mContext, getString(R.string.hm_exit_live), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -916,7 +928,7 @@ public class LivePlayActivity extends BaseActivity {
 //        SimpleDateFormat datePresentFormat = new SimpleDateFormat("dd-MMM", Locale.ENGLISH);
         SimpleDateFormat datePresentFormat = new SimpleDateFormat("EEEE", Locale.SIMPLIFIED_CHINESE);
         calendar.add(Calendar.DAY_OF_MONTH, -6);
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             Date dateIns = calendar.getTime();
             LiveEpgDate epgDate = new LiveEpgDate();
             epgDate.setIndex(i);
@@ -928,6 +940,8 @@ public class LivePlayActivity extends BaseActivity {
                 epgDate.setDatePresented("今天");
             } else if (i == 7) {
                 epgDate.setDatePresented("明天");
+            } else if (i == 8) {
+                epgDate.setDatePresented("后天");
             } else {
                 epgDate.setDatePresented(datePresentFormat.format(dateIns));
             }

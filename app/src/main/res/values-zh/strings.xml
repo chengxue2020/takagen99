@@ -10,6 +10,7 @@
     <string name="hm_retry">重试</string>
     <string name="hm_cancel">取消</string>
     <string name="hm_exit">再按一次返回键退出应用</string>
+    <string name="hm_exit_live">再按一次返回键退出直播</string>
     <string name="hm_date1">MM月dd日</string>
     <string name="hm_date2">EE HH:mm aa</string>
     <string name="hm_hist">历史</string>

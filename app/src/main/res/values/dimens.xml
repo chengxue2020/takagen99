@@ -6,6 +6,7 @@
     <dimen name="ts_20">20mm</dimen>
     <dimen name="ts_22">22mm</dimen>
     <dimen name="ts_24">24mm</dimen>
+    <dimen name="ts_25">25mm</dimen>
     <dimen name="ts_26">26mm</dimen>
     <dimen name="ts_28">28mm</dimen>
     <dimen name="ts_30">30mm</dimen>
@@ -54,6 +55,7 @@
     <dimen name="vs_200">200mm</dimen>
     <dimen name="vs_214">214mm</dimen>
     <dimen name="vs_220">220mm</dimen>
+    <dimen name="vs_225">225mm</dimen>
     <dimen name="vs_240">240mm</dimen>
     <dimen name="vs_260">260mm</dimen>
     <dimen name="vs_280">280mm</dimen>
@@ -67,6 +69,7 @@
     <dimen name="vs_440">440mm</dimen>
     <dimen name="vs_460">460mm</dimen>
     <dimen name="vs_480">480mm</dimen>
+    <dimen name="vs_530">530mm</dimen>
     <dimen name="vs_600">600mm</dimen>
     <dimen name="vs_720">720mm</dimen>
     <dimen name="vs_850">850mm</dimen>
