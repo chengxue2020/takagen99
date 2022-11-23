@@ -147,7 +147,7 @@ public class LivePlayActivity extends BaseActivity {
     protected void init() {
 
         // takagen99 : Hide only when video playing
-        vidHideSysBar();
+        hideSystemUI(false);
 
         EventBus.getDefault().register(this);
         setLoadSir(findViewById(R.id.live_root));

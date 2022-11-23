@@ -21,6 +21,7 @@
     <string name="hm_fav">收藏</string>
     <string name="hm_setting">设置</string>
     <string name="hm_hist_del">已删除当前记录</string>
+    <string name="hm_cache_del">已删除缓存</string>
 
     // Play Detail Page //
     <string name="det_play">播放</string>

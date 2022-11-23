@@ -21,6 +21,7 @@
     <string name="hm_fav">Favorite</string>
     <string name="hm_setting">Menu</string>
     <string name="hm_hist_del">Removed from History</string>
+    <string name="hm_cache_del">Cache Cleared</string>
 
     // Play Detail Page //
     <string name="det_play">Play</string>

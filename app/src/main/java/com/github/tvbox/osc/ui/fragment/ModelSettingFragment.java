@@ -146,7 +146,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        ((BaseActivity) mActivity).hideSysBar();
+                        ((BaseActivity) mActivity).hideSystemUI(true);
                         EventBus.getDefault().unregister(dialog);
                     }
                 });

@@ -10,10 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.DisplayMetrics;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +32,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.Math;
 
 import me.jessyan.autosize.AutoSizeCompat;
 import me.jessyan.autosize.internal.CustomAdapt;
@@ -83,7 +80,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
     @Override
     protected void onResume() {
         super.onResume();
-        hideSysBar();
+        hideSystemUI(true);
         changeWallpaper(false);
     }
 
@@ -123,6 +120,37 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
             uiOptions |= View.SYSTEM_UI_FLAG_FULLSCREEN;
             uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+        }
+    }
+
+    public void hideSystemUI(boolean shownavbar) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int uiVisibility = getWindow().getDecorView().getSystemUiVisibility();
+            uiVisibility |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            uiVisibility |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
+            uiVisibility |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            uiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;
+            uiVisibility |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            if (!shownavbar) {
+                uiVisibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+                uiVisibility |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+            }
+            getWindow().getDecorView().setSystemUiVisibility(uiVisibility);
+            // set content behind navigation bar
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+    }
+
+    public void showSystemUI() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int uiVisibility = getWindow().getDecorView().getSystemUiVisibility();
+            uiVisibility &= ~View.SYSTEM_UI_FLAG_LOW_PROFILE;
+            uiVisibility &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
+            uiVisibility &= ~View.SYSTEM_UI_FLAG_IMMERSIVE;
+            uiVisibility &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            uiVisibility &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            uiVisibility &= ~View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+            getWindow().getDecorView().setSystemUiVisibility(uiVisibility);
         }
     }
 

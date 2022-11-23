@@ -53,6 +53,7 @@ import com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager;
 import com.github.tvbox.osc.ui.tv.widget.ViewObj;
 import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
@@ -65,6 +66,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -208,11 +210,22 @@ public class HomeActivity extends BaseActivity {
                 return !((GridFragment) baseLazyFragment).isLoad();
             }
         });
-        // Button : TVBOX >> Go into Android Main Settings ------------
+        // Button : TVBOX >> Go into Source Select / Longclick to delete Cache --
         tvName.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Settings.ACTION_SETTINGS));
+            public void onClick(View v) {
+                dataInitOk = false;
+                jarInitOk = true;
+                showSiteSwitch();
+            }
+        });
+        tvName.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                File dir = mContext.getCacheDir();
+                FileUtils.recursiveDelete(dir);
+                Toast.makeText(HomeActivity.this, getString(R.string.hm_cache_del), Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
         // Button : Wifi >> Go into Android Wifi Settings -------------
@@ -550,21 +563,6 @@ public class HomeActivity extends BaseActivity {
             }
         }
     };
-
-//    private void test() {
-//        if (sortChange) {
-//            sortChange = false;
-//            if (sortFocused != currentSelected) {
-//                currentSelected = sortFocused;
-//                mViewPager.setCurrentItem(sortFocused, true);
-//                if (sortFocused == 0) {
-//                    changeTop(false);
-//                } else {
-//                    changeTop(true);
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {

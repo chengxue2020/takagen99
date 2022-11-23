@@ -6,6 +6,70 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/dialog_volume"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/vs_50"
+        android:background="@drawable/shape_user_pause"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:tag="dialog_volume"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/volume_progressbar"
+            style="@style/video_vertical_progressBar"
+            android:layout_width="5dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:max="100"
+            android:tag="progressbar_volume" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.8"
+            android:src="@drawable/play_volume" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_bright"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:layout_margin="@dimen/vs_50"
+        android:background="@drawable/shape_user_pause"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:tag="dialog_brightness"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/volume_progressbar"
+            style="@style/video_vertical_progressBar"
+            android:layout_width="5dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:max="100"
+            android:tag="progressbar_brightness" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.8"
+            android:src="@drawable/play_brightness" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/top_container_hide"
         android:layout_width="match_parent"
         android:layout_height="@dimen/vs_120"
@@ -305,26 +369,45 @@
             android:gravity="center|right"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_pause_progress_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/vs_20"
                 android:layout_marginLeft="@dimen/vs_20"
                 android:layout_marginEnd="@dimen/vs_10"
                 android:layout_marginRight="@dimen/vs_10"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:shadowColor="@color/color_000000_60"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="5"
-                android:tag="vod_control_pause_t"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/ts_26"
-                android:textStyle="bold"
-                tools:text="100" />
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_pause_progress_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:shadowColor="@color/color_000000_60"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="5"
+                    android:tag="vod_control_pause_t"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/ts_26"
+                    android:textStyle="bold"
+                    tools:text="100" />
+
+                <ProgressBar
+                    android:id="@+id/video_pausebar"
+                    style="@style/video_horizontal_progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center|top"
+                    android:max="100"
+                    android:tag="pausebar_video" />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/tv_pause_icon"
@@ -378,25 +461,43 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/tv_progress_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/vs_20"
             android:layout_marginLeft="@dimen/vs_20"
             android:layout_marginEnd="@dimen/vs_10"
             android:layout_marginRight="@dimen/vs_10"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:shadowColor="@color/color_000000_60"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/ts_26"
-            android:textStyle="bold"
-            tools:text="100" />
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:shadowColor="@color/color_000000_60"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_26"
+                android:textStyle="bold"
+                tools:text="100" />
+
+            <ProgressBar
+                android:id="@+id/video_progressbar"
+                style="@style/video_horizontal_progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center|top"
+                android:max="100"
+                android:tag="progressbar_video" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/tv_progress_icon"
@@ -942,7 +1043,6 @@
                 tools:visibility="gone" />
 
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/parse_root"

@@ -20,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,10 +73,16 @@ public class VodController extends BaseController {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
                         mProgressRoot.setVisibility(VISIBLE);
+                        if (isPaused) {
+                            mProgressTop.setVisibility(GONE);
+                        }
                         break;
                     }
                     case 1001: { // seek 关闭
                         mProgressRoot.setVisibility(GONE);
+                        if (isPaused) {
+                            mProgressTop.setVisibility(VISIBLE);
+                        }
                         break;
                     }
                     case 1002: { // 显示底部菜单
@@ -223,6 +230,8 @@ public class VodController extends BaseController {
     LinearLayout mProgressRoot;
     ImageView mProgressIcon;
     TextView mProgressText;
+    ProgressBar mDialogVideoProgressBar;
+    ProgressBar mDialogVideoPauseBar;
 
     // bottom container
     LinearLayout mBottomRoot;
@@ -290,6 +299,8 @@ public class VodController extends BaseController {
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
+        mDialogVideoProgressBar = findViewWithTag("progressbar_video");
+        mDialogVideoPauseBar = findViewWithTag("pausebar_video");
 
         // bottom container
         mBottomRoot = findViewById(R.id.bottom_container);
@@ -941,10 +952,32 @@ public class VodController extends BaseController {
             mProgressIcon.setImageResource(R.drawable.play_rewind);
         }
         mProgressText.setText(PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
+
+        // takagen99: Update Minibar
+        int percent = (int) (((double) seekTo / (double) duration) * 100);
+        mDialogVideoPauseBar.setProgress(percent);
+        mDialogVideoProgressBar.setProgress(percent);
+
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
     }
+
+    // takagen99: (Optional) Hide Bottom Control if trigger Brightness / Volume Slider
+//    @Override
+//    protected void slideToChangeBrightness(float deltaY) {
+//        if (isBottomVisible()) {
+//            hideBottom();
+//        }
+//        super.slideToChangeBrightness(deltaY);
+//    }
+//    @Override
+//    protected void slideToChangeVolume(float deltaY) {
+//        if (isBottomVisible()) {
+//            hideBottom();
+//        }
+//        super.slideToChangeVolume(deltaY);
+//    }
 
     @Override
     protected void onPlayStateChanged(int playState) {
