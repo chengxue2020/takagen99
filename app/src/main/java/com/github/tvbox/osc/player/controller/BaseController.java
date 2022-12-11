@@ -416,7 +416,7 @@ public abstract class BaseController extends BaseVideoController implements Gest
         msg.obj = "亮度 " + percent + "%";
         mHandler.sendMessage(msg);
         mHandler.removeMessages(204);
-        mHandler.sendEmptyMessageDelayed(204, 1000);
+        mHandler.sendEmptyMessageDelayed(204, 600);
     }
 
     protected void slideToChangeVolume(float deltaY) {
@@ -440,7 +440,7 @@ public abstract class BaseController extends BaseVideoController implements Gest
         msg.obj = "音量 " + percent + "%";
         mHandler.sendMessage(msg);
         mHandler.removeMessages(202);
-        mHandler.sendEmptyMessageDelayed(202, 1000);
+        mHandler.sendEmptyMessageDelayed(202, 600);
     }
 
     @Override

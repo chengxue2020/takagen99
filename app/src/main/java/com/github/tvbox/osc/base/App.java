@@ -10,6 +10,7 @@ import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LocaleHelper;
 import com.github.tvbox.osc.util.OkGoHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
+import com.github.tvbox.osc.util.js.JSEngine;
 import com.kingja.loadsir.core.LoadSir;
 import com.orhanobut.hawk.Hawk;
 import com.undcover.freedom.pyramid.PythonLoader;
@@ -50,6 +51,9 @@ public class App extends MultiDexApplication {
 
         // Add Pyramid support
         PythonLoader.getInstance().setApplication(this);
+
+        // Add JS support
+        JSEngine.getInstance().create();
     }
 
     private void initParams() {
@@ -82,6 +86,12 @@ public class App extends MultiDexApplication {
         if (!Hawk.contains(key)) {
             Hawk.put(key, value);
         }
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        JSEngine.getInstance().destroy();
     }
 
 }

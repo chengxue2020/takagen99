@@ -125,7 +125,7 @@ public class DefaultConfig {
                     "http((?!http).)*?netease\\.com/file/.*"
     );
     public static boolean isVideoFormat(String url) {
-        if (url.contains("=http") || url.contains("=https") || url.contains("=https%3a%2f") || url.contains("=http%3a%2f")) {
+        if (url.contains("=http")) {
             return false;
         }
         if (snifferMatch.matcher(url).find()) {

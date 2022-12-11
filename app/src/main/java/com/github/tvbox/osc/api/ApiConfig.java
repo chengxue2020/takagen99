@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.github.catvod.crawler.JarLoader;
+import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
 import com.github.catvod.crawler.SpiderNull;
 import com.github.tvbox.osc.R;
@@ -68,6 +69,7 @@ public class ApiConfig {
     private final SourceBean emptyHome = new SourceBean();
 
     private final JarLoader jarLoader = new JarLoader();
+    private final JsLoader jsLoader = new JsLoader();
 
     private final String userAgent = "okhttp/3.15";
 
@@ -117,10 +119,10 @@ public class ApiConfig {
         return json;
     }
 
-    private static byte[] getImgJar(String body){
+    private static byte[] getImgJar(String body) {
         Pattern pattern = Pattern.compile("[A-Za-z0]{8}\\*\\*");
         Matcher matcher = pattern.matcher(body);
-        if(matcher.find()){
+        if (matcher.find()) {
             body = body.substring(body.indexOf(matcher.group()) + 10);
             return Base64.decode(body, Base64.DEFAULT);
         }
@@ -257,7 +259,7 @@ public class ApiConfig {
                         if (cache.exists())
                             cache.delete();
                         FileOutputStream fos = new FileOutputStream(cache);
-                        if(isJarInImg) {
+                        if (isJarInImg) {
                             String respData = response.body().string();
                             byte[] imgJar = getImgJar(respData);
                             fos.write(imgJar);
@@ -540,6 +542,11 @@ public class ApiConfig {
     }
 
     public Spider getCSP(SourceBean sourceBean) {
+
+        // Getting js api
+        if (sourceBean.getApi().endsWith(".js") || sourceBean.getApi().contains(".js?")) {
+            return jsLoader.getSpider(sourceBean.getKey(), sourceBean.getApi(), sourceBean.getExt(), sourceBean.getJar());
+        }
 
         // Getting Pyramid api
         if (sourceBean.getApi().startsWith("py_")) {

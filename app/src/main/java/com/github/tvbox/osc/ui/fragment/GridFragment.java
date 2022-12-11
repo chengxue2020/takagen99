@@ -217,8 +217,8 @@ public class GridFragment extends BaseLazyFragment {
                         focusedView = view;
                         changeView(video.id);
                     } else {
-                        if (video.id.isEmpty() || video.id.startsWith("msearch:")) {
-                            jumpActivity(SearchActivity.class, bundle);
+                        if(video.id == null || video.id.isEmpty() || video.id.startsWith("msearch:")){
+                            jumpActivity(FastSearchActivity.class, bundle);
                         } else {
                             jumpActivity(DetailActivity.class, bundle);
                         }
@@ -317,5 +317,10 @@ public class GridFragment extends BaseLazyFragment {
         }
         if (gridFilterDialog != null)
             gridFilterDialog.show();
+    }
+
+    public void forceRefresh() {
+        page = 1;
+        initData();
     }
 }

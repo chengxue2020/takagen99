@@ -1047,7 +1047,7 @@
         <LinearLayout
             android:id="@+id/parse_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/vs_40"
             android:layout_marginBottom="@dimen/vs_10"
             android:orientation="horizontal"
             android:visibility="gone"

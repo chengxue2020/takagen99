@@ -135,7 +135,12 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                     Bundle bundle = new Bundle();
                     bundle.putString("id", vod.id);
                     bundle.putString("sourceKey", vod.sourceKey);
-                    jumpActivity(DetailActivity.class, bundle);
+                    if (vod.id.startsWith("msearch:")) {
+                        bundle.putString("title", vod.name);
+                        jumpActivity(FastSearchActivity.class, bundle);
+                    } else {
+                        jumpActivity(DetailActivity.class, bundle);
+                    }
                 } else {
                     Intent newIntent = new Intent(mContext, SearchActivity.class);
                     newIntent.putExtra("title", vod.name);
@@ -253,7 +258,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         return result;
     }
 
-    private View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
+    private final View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             if (hasFocus)

@@ -200,6 +200,12 @@ public class HomeActivity extends BaseActivity {
         });
         this.mGridView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
             public final boolean onInBorderKeyEvent(int direction, View view) {
+                if(direction == View.FOCUS_UP){
+                    BaseLazyFragment baseLazyFragment = fragments.get(sortFocused);
+                    if ((baseLazyFragment instanceof GridFragment) ) {// 弹出筛选
+                        ((GridFragment) baseLazyFragment).forceRefresh();
+                    }
+                }
                 if (direction != View.FOCUS_DOWN) {
                     return false;
                 }
