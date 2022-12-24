@@ -30,7 +30,6 @@ import com.github.tvbox.osc.bean.LiveSettingGroup;
 import com.github.tvbox.osc.bean.LiveSettingItem;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.controller.LiveController;
-import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.ui.adapter.LiveChannelGroupAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveChannelItemAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveEpgAdapter;
@@ -38,7 +37,6 @@ import com.github.tvbox.osc.ui.adapter.LiveEpgDateAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveSettingGroupAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveSettingItemAdapter;
 import com.github.tvbox.osc.ui.dialog.LivePasswordDialog;
-import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -86,6 +84,8 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tvNetSpeed;
     private LinearLayout tvLeftChannelListLayout;
     private TvRecyclerView mChannelGroupView;
+
+    public String epgStringAddress = "";
     private TvRecyclerView mLiveChannelView;
     private TvRecyclerView mEpgDateGridView;
     private TvRecyclerView mRightEpgList;
@@ -148,6 +148,14 @@ public class LivePlayActivity extends BaseActivity {
 
         // takagen99 : Hide only when video playing
         hideSystemUI(false);
+
+        // Getting EPG Address
+        epgStringAddress = Hawk.get(HawkConfig.EPG_URL, "");
+        if (epgStringAddress == null) {
+            epgStringAddress = "http://epg.51zmt.top:8000/api/diyp/";
+        }
+        // http://epg.aishangtv.top/live_proxy_epg_bc.php
+        // http://diyp.112114.xyz/
 
         EventBus.getDefault().register(this);
         setLoadSir(findViewById(R.id.live_root));
@@ -225,6 +233,7 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private long mExitTime = 0;
+
     private void exit() {
         if (System.currentTimeMillis() - mExitTime < 2000) {
             super.onBackPressed();
@@ -334,12 +343,13 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private void showChannelList() {
-        if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
+        if (ll_epg.getVisibility() == View.VISIBLE) {
+            mHandler.removeCallbacks(mHideChannelInfoRun);
+            mHandler.post(mHideChannelInfoRun);
+        } else if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
             mHandler.removeCallbacks(mHideSettingLayoutRun);
             mHandler.post(mHideSettingLayoutRun);
-        }
-        if (tvLeftChannelListLayout.getVisibility() == View.INVISIBLE) {
-
+        } else if (tvLeftChannelListLayout.getVisibility() == View.INVISIBLE) {
             //重新载入上一次状态
             liveChannelItemAdapter.setNewData(getLiveChannels(currentChannelGroupIndex));
             if (currentLiveChannelIndex > -1)
@@ -566,8 +576,6 @@ public class LivePlayActivity extends BaseActivity {
     public void getEpg(Date date) {
 
         final String channelName = channel_Name.getChannelName();
-        // http://diyp.112114.xyz/?ch=    http://epg.aishangtv.top/live_proxy_epg_bc.php?ch=
-
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String[] epgInfo = EpgUtil.getEpgInfo(channelName);
@@ -576,11 +584,17 @@ public class LivePlayActivity extends BaseActivity {
             epgTagName = epgInfo[1];
         }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
-//        epgListAdapter.setNewData(arrayList);
-        UrlHttpUtil.get("http://epg.51zmt.top:8000/api/diyp/?ch=" + URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date), new CallBackUtil.CallBackString() {
+
+        String epgUrl;
+        if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
+            epgUrl = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
+        } else {
+            epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date);
+        }
+        UrlHttpUtil.get(epgUrl, new CallBackUtil.CallBackString() {
             public void onFailure(int i, String str) {
-                showEpg(date, new ArrayList());
-                showBottomEpg();
+//                showEpg(date, new ArrayList());
+//                showBottomEpg();
             }
 
             public void onResponse(String paramString) {
