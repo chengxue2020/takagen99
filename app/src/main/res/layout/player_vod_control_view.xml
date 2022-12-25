@@ -313,16 +313,6 @@
                 android:layout_marginEnd="@dimen/vs_8"
                 android:layout_marginRight="@dimen/vs_8" />
 
-            <ImageView
-                android:id="@+id/tv_resolution_icon"
-                android:layout_width="@dimen/vs_50"
-                android:layout_height="@dimen/vs_40"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/vs_10"
-                android:layout_marginRight="@dimen/vs_10"
-                android:src="@drawable/vid_1080p"
-                android:visibility="gone" />
-
             <TextView
                 android:id="@+id/tv_resolution"
                 android:layout_width="wrap_content"

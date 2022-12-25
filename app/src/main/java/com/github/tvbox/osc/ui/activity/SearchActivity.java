@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,10 +26,12 @@ import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.ui.adapter.PinyinAdapter;
 import com.github.tvbox.osc.ui.adapter.SearchAdapter;
 import com.github.tvbox.osc.ui.dialog.RemoteDialog;
+import com.github.tvbox.osc.ui.dialog.SearchCheckboxDialog;
 import com.github.tvbox.osc.ui.tv.QRCodeGen;
 import com.github.tvbox.osc.ui.tv.widget.SearchKeyboard;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.SearchHelper;
 import com.github.tvbox.osc.util.js.JSEngine;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.google.gson.JsonArray;
@@ -49,6 +52,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,6 +77,9 @@ public class SearchActivity extends BaseActivity {
     private SearchAdapter searchAdapter;
     private PinyinAdapter wordAdapter;
     private String searchTitle = "";
+    private ImageView tvSearchCheckbox;
+    private static HashMap<String, String> mCheckSources = null;
+    private SearchCheckboxDialog mSearchCheckboxDialog = null;
 
     @Override
     protected int getLayoutResID() {
@@ -107,6 +114,7 @@ public class SearchActivity extends BaseActivity {
         llLayout = findViewById(R.id.llLayout);
         etSearch = findViewById(R.id.etSearch);
         tvSearch = findViewById(R.id.tvSearch);
+        tvSearchCheckbox = findViewById(R.id.tvSearchCheckbox);
         tvClear = findViewById(R.id.tvClear);
         tvAddress = findViewById(R.id.tvAddress);
         ivQRCode = findViewById(R.id.ivQRCode);
@@ -162,7 +170,7 @@ public class SearchActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(wd)) {
                     search(wd);
                 } else {
-                    Toast.makeText(mContext, "输入内容不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, getString(R.string.search_input), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -196,6 +204,28 @@ public class SearchActivity extends BaseActivity {
                     RemoteDialog remoteDialog = new RemoteDialog(mContext);
                     remoteDialog.show();
                 }
+            }
+        });
+        tvSearchCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSearchCheckboxDialog == null) {
+                    List<SourceBean> allSourceBean = ApiConfig.get().getSourceBeanList();
+                    List<SourceBean> searchAbleSource = new ArrayList<>();
+                    for (SourceBean sourceBean : allSourceBean) {
+                        if (sourceBean.isSearchable()) {
+                            searchAbleSource.add(sourceBean);
+                        }
+                    }
+                    mSearchCheckboxDialog = new SearchCheckboxDialog(SearchActivity.this, searchAbleSource, mCheckSources);
+                }
+                mSearchCheckboxDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        dialog.dismiss();
+                    }
+                });
+                mSearchCheckboxDialog.show();
             }
         });
         setLoadSir(llLayout);
@@ -242,6 +272,7 @@ public class SearchActivity extends BaseActivity {
 
     private void initData() {
         refreshQRCode();
+        initCheckedSourcesForSearch();
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("title")) {
             String title = intent.getStringExtra("title");
@@ -267,13 +298,13 @@ public class SearchActivity extends BaseActivity {
                                     .get("data").getAsJsonObject()
                                     .get("mapResult").getAsJsonObject();
                             List<String> groupIndex = Arrays.asList("0", "1", "2", "3", "5");
-                            for(String index : groupIndex) {
+                            for (String index : groupIndex) {
                                 JsonArray itemList = mapResult.get(index).getAsJsonObject()
                                         .get("listInfo").getAsJsonArray();
                                 for (JsonElement ele : itemList) {
                                     JsonObject obj = (JsonObject) ele;
                                     String hotKey = obj.get("title").getAsString().trim().replaceAll("<|>|《|》|-", "").split(" ")[0];
-                                    if(!hots.contains(hotKey))
+                                    if (!hots.contains(hotKey))
                                         hots.add(hotKey);
                                 }
                             }
@@ -317,6 +348,14 @@ public class SearchActivity extends BaseActivity {
         }
     }
 
+    private void initCheckedSourcesForSearch() {
+        mCheckSources = SearchHelper.getSourcesForSearch();
+    }
+
+    public static void setCheckedSourcesForSearch(HashMap<String, String> checkedSources) {
+        mCheckSources = checkedSources;
+    }
+
     private void search(String title) {
         cancel();
         showLoading();
@@ -327,7 +366,7 @@ public class SearchActivity extends BaseActivity {
     }
 
     private ExecutorService searchExecutorService = null;
-    private AtomicInteger allRunCount = new AtomicInteger(0);
+    private final AtomicInteger allRunCount = new AtomicInteger(0);
 
     private void searchResult() {
         try {
@@ -354,8 +393,16 @@ public class SearchActivity extends BaseActivity {
             if (!bean.isSearchable()) {
                 continue;
             }
+            if (mCheckSources != null && !mCheckSources.containsKey(bean.getKey())) {
+                continue;
+            }
             siteKey.add(bean.getKey());
             allRunCount.incrementAndGet();
+        }
+        if (siteKey.size() <= 0) {
+            Toast.makeText(mContext, getString(R.string.search_site), Toast.LENGTH_SHORT).show();
+            showEmpty();
+            return;
         }
         for (String key : siteKey) {
             searchExecutorService.execute(new Runnable() {
@@ -367,12 +414,22 @@ public class SearchActivity extends BaseActivity {
         }
     }
 
+    private boolean matchSearchResult(String name, String searchTitle) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(searchTitle)) return false;
+        searchTitle = searchTitle.trim();
+        String[] arr = searchTitle.split("\\s+");
+        int matchNum = 0;
+        for (String one : arr) {
+            if (name.contains(one)) matchNum++;
+        }
+        return matchNum == arr.length;
+    }
+
     private void searchData(AbsXml absXml) {
         if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
             List<Movie.Video> data = new ArrayList<>();
             for (Movie.Video video : absXml.movie.videoList) {
-                if (video.name.contains(searchTitle))
-                    data.add(video);
+                if (matchSearchResult(video.name, searchTitle)) data.add(video);
             }
             if (searchAdapter.getData().size() > 0) {
                 searchAdapter.addData(data);
