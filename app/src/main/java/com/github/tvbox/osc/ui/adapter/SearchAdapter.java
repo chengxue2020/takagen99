@@ -20,13 +20,13 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 public class SearchAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
     public SearchAdapter() {
-        super(Hawk.get(HawkConfig.SEARCH_VIEW, 1) == 0 ? R.layout.item_search_lite : R.layout.item_search, new ArrayList<>()); // lite  SEARCH_VIEW值为1-显示搜索结果图片的图片
+        super(Hawk.get(HawkConfig.SEARCH_VIEW, 0) == 0 ? R.layout.item_search_lite : R.layout.item_search, new ArrayList<>()); 
     }
 
     @Override
     protected void convert(BaseViewHolder helper, Movie.Video item) {
-        // lite  SEARCH_VIEW值为1-显示搜索结果图片的框
-        if (Hawk.get(HawkConfig.SEARCH_VIEW, 1) == 0) {
+        // lite
+        if (Hawk.get(HawkConfig.SEARCH_VIEW, 0) == 0) {
             helper.setText(R.id.tvName, String.format("%s  %s %s %s", ApiConfig.get().getSource(item.sourceKey).getName(), item.name, item.type == null ? "" : item.type, item.note == null ? "" : item.note));
         } else {// with preview
             helper.setText(R.id.tvName, item.name);

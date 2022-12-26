@@ -64,9 +64,9 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.HOME_REC, 1);       // Home Rec 0=豆瓣, 1=推荐, 2=历史
         putDefault(HawkConfig.PLAY_TYPE, 1);      // Player   0=系统, 1=IJK, 2=Exo
         putDefault(HawkConfig.IJK_CODEC, "硬解码");// IJK Render 软解码, 硬解码
-//        putDefault(HawkConfig.HOME_NUM, 2);       // History Number
+//        putDefault(HawkConfig.HOME_NUM, 2);       // 历史记录数量
 //        putDefault(HawkConfig.DOH_URL, 2);        // DNS
-//        putDefault(HawkConfig.SEARCH_VIEW, 1);    // 0=Text ,1= Picture
+//        putDefault(HawkConfig.SEARCH_VIEW, 1);    // 0=文字列表搜索结果 ,1= 图片搜索结果
 
     }
 

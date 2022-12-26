@@ -14,3 +14,6 @@ App default settings can be set here :
         putDefault(HawkConfig.SEARCH_VIEW, 2);    // Text or Picture
 
     }
+
+中文配置地址：
+C:\Users\Frank\Documents\GitHub\takagen99\app\src\main\res\values-zh\strings.xml
