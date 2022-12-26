@@ -112,6 +112,12 @@
     <string name="act_player">播放器</string>
     <string name="act_system">系统</string>
 
+    // Search Page //
+    <string name="search_input">输入内容不能为空</string>
+    <string name="search_site">没有指定搜索源</string>
+    <string name="search_checkAll">全选</string>
+    <string name="search_clearAll">全不选</string>
+
     // Fast Search Page //
     <string name="fs_show_all">全部显示</string>
     <string name="fs_results">搜索结果</string>

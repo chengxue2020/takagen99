@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,8 @@ import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
+import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +47,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.jessyan.autosize.utils.AutoSizeUtils;
 import okhttp3.HttpUrl;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -190,6 +195,20 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 List<SourceBean> sites = ApiConfig.get().getSourceBeanList();
                 if (sites.size() > 0) {
                     SelectDialog<SourceBean> dialog = new SelectDialog<>(mActivity);
+
+                    // Multi Column Selection
+                    int spanCount = (int) Math.floor(sites.size() / 10);
+                    if (spanCount <= 1) spanCount = 1;
+                    if (spanCount >= 3) spanCount = 3;
+
+                    TvRecyclerView tvRecyclerView = dialog.findViewById(R.id.list);
+                    tvRecyclerView.setLayoutManager(new V7GridLayoutManager(dialog.getContext(), spanCount));
+                    LinearLayout cl_root = dialog.findViewById(R.id.cl_root);
+                    ViewGroup.LayoutParams clp = cl_root.getLayoutParams();
+                    if (spanCount != 1) {
+                        clp.width = AutoSizeUtils.mm2px(dialog.getContext(), 400 + 260 * (spanCount - 1));
+                    }
+
                     dialog.setTip(getString(R.string.dia_source));
                     dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
                         @Override

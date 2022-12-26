@@ -112,6 +112,12 @@
     <string name="act_player">Player</string>
     <string name="act_system">System</string>
 
+    // Search Page //
+    <string name="search_input">Input cannot be blank</string>
+    <string name="search_site">No source site selected</string>
+    <string name="search_checkAll">Select All</string>
+    <string name="search_clearAll">Select None</string>
+
     // Fast Search Page //
     <string name="fs_show_all">All</string>
     <string name="fs_results">Search Results</string>

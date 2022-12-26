@@ -59,6 +59,7 @@ import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -200,9 +201,9 @@ public class HomeActivity extends BaseActivity {
         });
         this.mGridView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
             public final boolean onInBorderKeyEvent(int direction, View view) {
-                if(direction == View.FOCUS_UP){
+                if (direction == View.FOCUS_UP) {
                     BaseLazyFragment baseLazyFragment = fragments.get(sortFocused);
-                    if ((baseLazyFragment instanceof GridFragment) ) {// 弹出筛选
+                    if ((baseLazyFragment instanceof GridFragment)) {// 弹出筛选
                         ((GridFragment) baseLazyFragment).forceRefresh();
                     }
                 }
@@ -656,8 +657,21 @@ public class HomeActivity extends BaseActivity {
     void showSiteSwitch() {
         List<SourceBean> sites = ApiConfig.get().getSourceBeanList();
         if (sites.size() > 0) {
-            String homeSourceKey = ApiConfig.get().getHomeSourceBean().getKey();
             SelectDialog<SourceBean> dialog = new SelectDialog<>(HomeActivity.this);
+
+            // Multi Column Selection
+            int spanCount = (int) Math.floor(sites.size() / 10);
+            if (spanCount <= 1) spanCount = 1;
+            if (spanCount >= 3) spanCount = 3;
+
+            TvRecyclerView tvRecyclerView = dialog.findViewById(R.id.list);
+            tvRecyclerView.setLayoutManager(new V7GridLayoutManager(dialog.getContext(), spanCount));
+            LinearLayout cl_root = dialog.findViewById(R.id.cl_root);
+            ViewGroup.LayoutParams clp = cl_root.getLayoutParams();
+            if (spanCount != 1) {
+                clp.width = AutoSizeUtils.mm2px(dialog.getContext(), 400 + 260 * (spanCount - 1));
+            }
+
             dialog.setTip(getString(R.string.dia_source));
             dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
                 @Override
