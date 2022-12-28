@@ -892,9 +892,9 @@ public class VodController extends BaseController {
         Date afterAdd = new Date(t + TimeRemaining);
         SimpleDateFormat timeEnd = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
         if (isPaused) {
-            mTimeEnd.setText("剩余时间 " + PlayerUtils.stringForTime((int)TimeRemaining) + " | 结束于 " + timeEnd.format(afterAdd));
+            mTimeEnd.setText("剩余时间 " + PlayerUtils.stringForTime((int)TimeRemaining) + " | 结束时间 " + timeEnd.format(afterAdd));
         } else {
-            mTimeEnd.setText("结束于 " + timeEnd.format(afterAdd));
+            mTimeEnd.setText("结束时间 " + timeEnd.format(afterAdd));
         }
         mCurrentTime.setText(PlayerUtils.stringForTimeVod(position));
         mTotalTime.setText(PlayerUtils.stringForTimeVod(duration));
