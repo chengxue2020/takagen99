@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_FFB800">#FF6600</color>
-    <color name="color_FF0057">#FF0057</color>
-    <color name="color_FF0057_80">#CCFF0057</color>
-    <color name="color_FF0057_70">#B3FF0057</color>
-    <color name="color_FF0057_40">#66FF0057</color>
 
+    <!-- Main Theme E50914 D81F26 -->
+    <color name="color_theme">#F80000</color>
+    <color name="color_theme_80">#CCF80000</color>
+    <color name="color_theme_70">#B3F80000</color>
+    <color name="color_theme_60">#99F80000</color>
+    <color name="color_theme_50">#80F80000</color>
+    <color name="color_theme_40">#66F80000</color>
     <!-- Main Dialog Button BG -->
-    <color name="color_6C0025_70">#B36C0025</color>
+    <color name="color_theme_dark_70">#B3601216</color>
 
     <!-- EPG Colors -->
     <color name="color_32364E">#32364E</color>
@@ -18,7 +21,7 @@
     <color name="color_3D3D3D_50">#803D3D3D</color>
 
     <!-- Live Menu BG (left / right) -->
-    <color name="color_181E28_90">#E6181E28</color>
+    <color name="color_0E0E0E_90">#E60E0E0E</color>
 
     <!-- Main Dialog BG -->
     <color name="color_6A6A6A_95">#F26A6A6A</color>

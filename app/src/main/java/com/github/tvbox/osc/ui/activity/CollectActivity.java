@@ -47,7 +47,7 @@ public class CollectActivity extends BaseActivity {
     private void toggleDelMode() {
         delMode = !delMode;
         tvDelTip.setVisibility(delMode ? View.VISIBLE : View.GONE);
-        tvDel.setTextColor(delMode ? getResources().getColor(R.color.color_FF0057) : Color.WHITE);
+        tvDel.setTextColor(delMode ? getResources().getColor(R.color.color_theme) : Color.WHITE);
     }
 
     private void initView() {

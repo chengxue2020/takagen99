@@ -1,6 +1,6 @@
-# Box
+# Box (supports only Android 5 and above)
 
-App default settings can be set here :
+=== Source Code - Editing the app default settings ===
 /src/main/java/com/github/tvbox/osc/base/App.java
 
     private void initParams() {
@@ -15,5 +15,7 @@ App default settings can be set here :
 
     }
 
-中文配置地址：
-C:\Users\Frank\Documents\GitHub\takagen99\app\src\main\res\values-zh\strings.xml
+=== Setting Up the Configuration Address ===
+- 数据源 > Input Source URL address
+- 直播 (Optional) > Input Live URL (http) address. If empty, will take Live URL from Source file
+- EPG (Optional) > Input EPG URL (http) address. If empty, will take EPG URL from Source file. If not found in Source file, default from http://epg.51zmt.top:8000/api/diyp/

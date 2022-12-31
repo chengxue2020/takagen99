@@ -383,7 +383,7 @@ public class DriveActivity extends BaseActivity {
     public void toggleDelMode() {
         delMode = !delMode;
         if (delMode) {
-            this.btnRemoveServer.setColorFilter(ContextCompat.getColor(mContext, R.color.color_FF0057));
+            this.btnRemoveServer.setColorFilter(ContextCompat.getColor(mContext, R.color.color_theme));
         } else {
             this.btnRemoveServer.setColorFilter(ContextCompat.getColor(mContext, R.color.color_FFFFFF));
         }
