@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="ts_10">10mm</dimen>
+    <dimen name="ts_15">15mm</dimen>
     <dimen name="ts_16">16mm</dimen>
     <dimen name="ts_18">18mm</dimen>
     <dimen name="ts_20">20mm</dimen>
     <dimen name="ts_22">22mm</dimen>
     <dimen name="ts_24">24mm</dimen>
-    <dimen name="ts_25">25mm</dimen>
     <dimen name="ts_26">26mm</dimen>
-    <dimen name="ts_28">28mm</dimen>
     <dimen name="ts_30">30mm</dimen>
     <dimen name="ts_34">34mm</dimen>
+    <dimen name="ts_36">36mm</dimen>
     <dimen name="ts_40">40mm</dimen>
     <dimen name="ts_50">50mm</dimen>
     <dimen name="vs_4_">-4mm</dimen>
@@ -29,7 +29,6 @@
     <dimen name="vs_22">22mm</dimen>
     <dimen name="vs_23">23mm</dimen>
     <dimen name="vs_25">25mm</dimen>
-    <dimen name="vs_28">28mm</dimen>
     <dimen name="vs_30">30mm</dimen>
     <dimen name="vs_33">33mm</dimen>
     <dimen name="vs_35">35mm</dimen>
@@ -47,23 +46,17 @@
     <dimen name="vs_120">120mm</dimen>
     <dimen name="vs_128">128mm</dimen>
     <dimen name="vs_140">140mm</dimen>
-    <dimen name="vs_145">145mm</dimen>
     <dimen name="vs_150">150mm</dimen>
     <dimen name="vs_160">160mm</dimen>
     <dimen name="vs_180">180mm</dimen>
     <dimen name="vs_190">190mm</dimen>
     <dimen name="vs_200">200mm</dimen>
     <dimen name="vs_214">214mm</dimen>
-    <dimen name="vs_220">220mm</dimen>
     <dimen name="vs_225">225mm</dimen>
     <dimen name="vs_240">240mm</dimen>
-    <dimen name="vs_260">260mm</dimen>
     <dimen name="vs_280">280mm</dimen>
     <dimen name="vs_300">300mm</dimen>
-    <dimen name="vs_320">320mm</dimen>
     <dimen name="vs_340">340mm</dimen>
-    <dimen name="vs_360">360mm</dimen>
-    <dimen name="vs_380">380mm</dimen>
     <dimen name="vs_400">400mm</dimen>
     <dimen name="vs_420">420mm</dimen>
     <dimen name="vs_440">440mm</dimen>
@@ -72,7 +65,5 @@
     <dimen name="vs_530">530mm</dimen>
     <dimen name="vs_600">600mm</dimen>
     <dimen name="vs_720">720mm</dimen>
-    <dimen name="vs_850">850mm</dimen>
-    <dimen name="vs_900">900mm</dimen>
     <dimen name="vs_960">960mm</dimen>
 </resources>

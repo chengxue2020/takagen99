@@ -16,10 +16,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
+import android.webkit.CookieManager;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
@@ -258,7 +260,7 @@ public class PlayActivity extends BaseActivity {
 
     //设置字幕
     void setSubtitle(String path) {
-        if (path != null && path .length() > 0) {
+        if (path != null && path.length() > 0) {
             // 设置字幕
             mController.mSubtitleView.setVisibility(View.GONE);
             mController.mSubtitleView.setSubtitlePath(path);
@@ -280,14 +282,17 @@ public class PlayActivity extends BaseActivity {
             public void setTextSize(int size) {
                 mController.mSubtitleView.setTextSize(size);
             }
+
             @Override
             public void setSubtitleDelay(int milliseconds) {
                 mController.mSubtitleView.setSubtitleDelay(milliseconds);
             }
+
             @Override
             public void selectInternalSubtitle() {
                 selectMyInternalSubtitle();
             }
+
             @Override
             public void setTextStyle(int style) {
                 setSubtitleViewTextStyle(style);
@@ -313,9 +318,9 @@ public class PlayActivity extends BaseActivity {
                         });
                     }
                 });
-                if(mVodInfo.playFlag.contains("Ali")||mVodInfo.playFlag.contains("parse")){
+                if (mVodInfo.playFlag.contains("Ali") || mVodInfo.playFlag.contains("parse")) {
                     searchSubtitleDialog.setSearchWord(mVodInfo.playNote);
-                }else {
+                } else {
                     searchSubtitleDialog.setSearchWord(mVodInfo.name);
                 }
                 searchSubtitleDialog.show();
@@ -358,7 +363,7 @@ public class PlayActivity extends BaseActivity {
         }
         TrackInfo trackInfo = null;
         if (mediaPlayer instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
         }
 //        if (trackInfo == null) {
 //            Toast.makeText(mContext, "没有内置字幕", Toast.LENGTH_SHORT).show();
@@ -385,7 +390,7 @@ public class PlayActivity extends BaseActivity {
                         mController.mSubtitleView.destroy();
                         mController.mSubtitleView.clearSubtitleCache();
                         mController.mSubtitleView.isInternal = true;
-                        ((IjkMediaPlayer)mediaPlayer).setTrack(value.index);
+                        ((IjkMediaPlayer) mediaPlayer).setTrack(value.index);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -426,7 +431,7 @@ public class PlayActivity extends BaseActivity {
         }
         TrackInfo trackInfo = null;
         if (mediaPlayer instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
         }
         if (trackInfo == null) {
             Toast.makeText(mContext, getString(R.string.vod_no_audio), Toast.LENGTH_SHORT).show();
@@ -446,7 +451,7 @@ public class PlayActivity extends BaseActivity {
                     mediaPlayer.pause();
                     long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
                     if (mediaPlayer instanceof IjkMediaPlayer) {
-                        ((IjkMediaPlayer)mediaPlayer).setTrack(value.index);
+                        ((IjkMediaPlayer) mediaPlayer).setTrack(value.index);
                     }
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -573,11 +578,11 @@ public class PlayActivity extends BaseActivity {
     private void initSubtitleView() {
         TrackInfo trackInfo = null;
         if (mVideoView.getMediaPlayer() instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)(mVideoView.getMediaPlayer())).getTrackInfo();
+            trackInfo = ((IjkMediaPlayer) (mVideoView.getMediaPlayer())).getTrackInfo();
             if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
                 mController.mSubtitleView.hasInternal = true;
             }
-            ((IjkMediaPlayer)(mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
+            ((IjkMediaPlayer) (mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
                 @Override
                 public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
                     if (mController.mSubtitleView.isInternal) {
@@ -590,11 +595,11 @@ public class PlayActivity extends BaseActivity {
         }
         mController.mSubtitleView.bindToMediaPlayer(mVideoView.getMediaPlayer());
         mController.mSubtitleView.setPlaySubtitleCacheKey(subtitleCacheKey);
-        String subtitlePathCache = (String)CacheManager.getCache(MD5.string2MD5(subtitleCacheKey));
+        String subtitlePathCache = (String) CacheManager.getCache(MD5.string2MD5(subtitleCacheKey));
         if (subtitlePathCache != null && !subtitlePathCache.isEmpty()) {
             mController.mSubtitleView.setSubtitlePath(subtitlePathCache);
         } else {
-            if (playSubtitle != null && playSubtitle .length() > 0) {
+            if (playSubtitle != null && playSubtitle.length() > 0) {
                 mController.mSubtitleView.setSubtitlePath(playSubtitle);
             } else {
                 if (mController.mSubtitleView.hasInternal) {
@@ -720,6 +725,7 @@ public class PlayActivity extends BaseActivity {
             enterPictureInPictureMode(params);
             mController.hideBottom();
         }
+        super.onUserLeaveHint();
     }
 
     @Override
@@ -909,7 +915,7 @@ public class PlayActivity extends BaseActivity {
 
         stopParse();
         if (mVideoView != null) mVideoView.release();
-        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
+        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex + "-" + vs.name + "-subt";
         String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex;
         //重新播放清除现有进度
         if (reset) {
@@ -1498,6 +1504,9 @@ public class PlayActivity extends BaseActivity {
                     } else {
                         playUrl(url, null);
                     }
+                    String cookie = CookieManager.getInstance().getCookie(url);
+                    if (!TextUtils.isEmpty(cookie)) headers.put("Cookie", " " + cookie);//携带cookie
+                    playUrl(url, headers);
                     stopLoadWebView(false);
                 }
             }
@@ -1510,7 +1519,7 @@ public class PlayActivity extends BaseActivity {
         @Nullable
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            WebResourceResponse response = checkIsVideo(url, null);
+            WebResourceResponse response = checkIsVideo(url, new HashMap<>());
             if (response == null)
                 return super.shouldInterceptRequest(view, url);
             else
@@ -1679,6 +1688,10 @@ public class PlayActivity extends BaseActivity {
                     } else {
                         playUrl(url, null);
                     }
+                    String cookie = CookieManager.getInstance().getCookie(url);
+                    if (!TextUtils.isEmpty(cookie))
+                        webHeaders.put("Cookie", " " + cookie);//携带cookie
+                    playUrl(url, webHeaders);
                     stopLoadWebView(false);
                 }
             }

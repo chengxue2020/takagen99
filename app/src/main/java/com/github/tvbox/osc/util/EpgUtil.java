@@ -19,7 +19,7 @@ public class EpgUtil {
     private static HashMap<String, JsonObject> epgHashMap = new HashMap<>();
 
     public static void init() {
-        if(epgDoc != null)
+        if (epgDoc != null)
             return;
 
         //credit by 龍
@@ -29,22 +29,21 @@ public class EpgUtil {
             BufferedReader br = new BufferedReader(inputStreamReader);//使用字符高效流
             String line;
             StringBuilder builder = new StringBuilder();
-            while ((line = br.readLine())!=null){
+            while ((line = br.readLine()) != null) {
                 builder.append(line);
             }
             br.close();
             inputStreamReader.close();
-            if(!builder.toString().isEmpty()){
-                epgDoc =  new Gson().fromJson(builder.toString(), (Type)JsonObject.class);// 从builder中读取了json中的数据。
+            if (!builder.toString().isEmpty()) {
+                epgDoc = new Gson().fromJson(builder.toString(), (Type) JsonObject.class);// 从builder中读取了json中的数据。
                 for (JsonElement opt : epgDoc.get("epgs").getAsJsonArray()) {
                     JsonObject obj = (JsonObject) opt;
                     String name = obj.get("name").getAsString().trim();
-                    String[] names  = name.split(",");
+                    String[] names = name.split(",");
                     for (String string : names) {
-                        epgHashMap.put(string,obj);
+                        epgHashMap.put(string, obj);
                     }
                 }
-                return;
             }
 
         } catch (IOException e) {
@@ -54,14 +53,14 @@ public class EpgUtil {
 
     public static String[] getEpgInfo(String channelName) {
         try {
-            if(epgHashMap.containsKey(channelName)){
+            if (epgHashMap.containsKey(channelName)) {
                 JsonObject obj = epgHashMap.get(channelName);
-                return new String[] {
+                return new String[]{
                         obj.get("logo").getAsString(),
                         obj.get("epgid").getAsString()
                 };
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;

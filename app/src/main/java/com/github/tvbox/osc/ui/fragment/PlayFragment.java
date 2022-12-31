@@ -9,10 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
+import android.webkit.CookieManager;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
@@ -1393,6 +1395,9 @@ public class PlayFragment extends BaseLazyFragment {
                     } else {
                         playUrl(url, null);
                     }
+                    String cookie = CookieManager.getInstance().getCookie(url);
+                    if (!TextUtils.isEmpty(cookie)) headers.put("Cookie", " " + cookie);//携带cookie
+                    playUrl(url, headers);
                     stopLoadWebView(false);
                 }
             }
@@ -1405,7 +1410,7 @@ public class PlayFragment extends BaseLazyFragment {
         @Nullable
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            WebResourceResponse response = checkIsVideo(url, null);
+            WebResourceResponse response = checkIsVideo(url, new HashMap<>());
             if (response == null)
                 return super.shouldInterceptRequest(view, url);
             else
@@ -1574,6 +1579,10 @@ public class PlayFragment extends BaseLazyFragment {
                     } else {
                         playUrl(url, null);
                     }
+                    String cookie = CookieManager.getInstance().getCookie(url);
+                    if (!TextUtils.isEmpty(cookie))
+                        webHeaders.put("Cookie", " " + cookie);//携带cookie
+                    playUrl(url, webHeaders);
                     stopLoadWebView(false);
                 }
             }

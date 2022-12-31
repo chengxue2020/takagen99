@@ -19,8 +19,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <View
-            android:layout_width="4dp"
-            android:layout_height="22dp"
+            android:layout_width="@dimen/vs_5"
+            android:layout_height="@dimen/vs_25"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/vs_2"
             android:layout_marginEnd="@dimen/vs_10"

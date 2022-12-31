@@ -2,7 +2,9 @@ package com.github.tvbox.osc.ui.fragment;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
+import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,22 +19,16 @@ import com.github.tvbox.osc.bean.MovieSort;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.activity.FastSearchActivity;
-import com.github.tvbox.osc.ui.activity.SearchActivity;
 import com.github.tvbox.osc.ui.adapter.GridAdapter;
 import com.github.tvbox.osc.ui.dialog.GridFilterDialog;
 import com.github.tvbox.osc.ui.tv.widget.LoadMoreView;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
-import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
-import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
 import java.util.Stack;
-
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 /**
  * @author pj567
@@ -217,7 +213,7 @@ public class GridFragment extends BaseLazyFragment {
                         focusedView = view;
                         changeView(video.id);
                     } else {
-                        if(video.id == null || video.id.isEmpty() || video.id.startsWith("msearch:")){
+                        if (video.id == null || video.id.isEmpty() || video.id.startsWith("msearch:")) {
                             jumpActivity(FastSearchActivity.class, bundle);
                         } else {
                             jumpActivity(DetailActivity.class, bundle);
@@ -266,18 +262,24 @@ public class GridFragment extends BaseLazyFragment {
                     }
                     page++;
                     maxPage = absXml.movie.pagecount;
+                    if (page > maxPage) {
+                        gridAdapter.loadMoreEnd();
+                        gridAdapter.setEnableLoadMore(false);
+                    } else {
+                        gridAdapter.loadMoreComplete();
+                        gridAdapter.setEnableLoadMore(true);
+                    }
                 } else {
                     if (page == 1) {
                         showEmpty();
                     }
                     if (page > maxPage) {
                         Toast.makeText(getContext(), "没有更多了", Toast.LENGTH_SHORT).show();
+                        gridAdapter.loadMoreEnd();
+                    } else {
+                        gridAdapter.loadMoreComplete();
                     }
-                }
-                if (page > maxPage) {
-                    gridAdapter.loadMoreEnd();
-                } else {
-                    gridAdapter.loadMoreComplete();
+                    gridAdapter.setEnableLoadMore(false);
                 }
             }
         });
