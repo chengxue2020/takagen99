@@ -780,7 +780,6 @@ public class DetailActivity extends BaseActivity {
             enterPictureInPictureMode(params);
             playFragment.getVodController().hideBottom();
         }
-        super.onUserLeaveHint();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -833,7 +832,8 @@ public class DetailActivity extends BaseActivity {
             toggleFullPreview();
             mGridView.requestFocus();
             return;
-        } else if (seriesSelect) {
+        }
+        if (seriesSelect) {
             if (seriesFlagFocus != null && !seriesFlagFocus.isFocused()) {
                 seriesFlagFocus.requestFocus();
                 return;

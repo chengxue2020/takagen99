@@ -33,7 +33,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="20dp"
-            android:alpha="0.9"
+            android:alpha="0.8"
             android:src="@drawable/play_volume" />
     </LinearLayout>
 
@@ -65,7 +65,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="20dp"
-            android:alpha="0.9"
+            android:alpha="0.8"
             android:src="@drawable/play_brightness" />
     </LinearLayout>
 
@@ -175,7 +175,6 @@
                     android:indeterminateOnly="true"
                     android:tag="vod_control_loading_hide" />
             </LinearLayout>
-
         </LinearLayout>
 
     </LinearLayout>
@@ -183,7 +182,7 @@
     <LinearLayout
         android:id="@+id/top_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/vs_128"
+        android:layout_height="@dimen/vs_120"
         android:layout_gravity="top"
         android:background="@drawable/box_controller_top_bg"
         android:gravity="end"
@@ -198,29 +197,26 @@
             android:id="@+id/tv_top_line1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vs_10"
             android:orientation="horizontal">
 
             <View
-                android:layout_width="@dimen/vs_5"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|center"
                 android:layout_marginStart="@dimen/vs_50"
                 android:layout_marginLeft="@dimen/vs_50"
-                android:layout_marginTop="@dimen/vs_4"
                 android:layout_marginEnd="@dimen/vs_8"
                 android:layout_marginRight="@dimen/vs_8"
-                android:layout_marginBottom="@dimen/vs_4"
                 android:background="@drawable/button_detail_collect" />
 
             <TextView
                 android:id="@+id/tv_title_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|left"
+                android:layout_gravity="bottom|left"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:gravity="center|left"
+                android:gravity="left"
                 android:maxLines="1"
                 android:shadowColor="@color/color_FF000000"
                 android:shadowDx="0"
@@ -229,14 +225,14 @@
                 android:tag="tv_title_top"
                 android:text="TvTitle"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/ts_26"
+                android:textSize="@dimen/ts_24"
                 android:textStyle="bold"
                 android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/tv_speed_top"
                 android:layout_width="@dimen/vs_120"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/vs_40"
                 android:orientation="horizontal"
                 android:tag="tv_speed_top">
 
@@ -244,7 +240,7 @@
                     android:id="@+id/tv_play_speed_top"
                     android:layout_width="@dimen/vs_70"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center"
+                    android:layout_gravity="bottom"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:gravity="right"
@@ -262,7 +258,7 @@
                     android:id="@+id/tv_MPBS_top"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center"
+                    android:layout_gravity="bottom|right"
                     android:layout_marginStart="@dimen/vs_5"
                     android:layout_marginLeft="@dimen/vs_5"
                     android:gravity="right"
@@ -279,8 +275,8 @@
             <LinearLayout
                 android:id="@+id/tv_spin_top"
                 android:layout_width="@dimen/vs_45"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
+                android:layout_height="@dimen/vs_40"
+                android:layout_gravity="top"
                 android:layout_marginEnd="@dimen/vs_10"
                 android:layout_marginRight="@dimen/vs_10"
                 android:gravity="center|right"
@@ -299,7 +295,6 @@
                     android:indeterminateOnly="true"
                     android:tag="vod_control_loading" />
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -336,6 +331,7 @@
                 android:textSize="@dimen/ts_20"
                 android:textStyle="bold"
                 android:visibility="visible" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -351,9 +347,10 @@
         <LinearLayout
             android:id="@+id/ll_pause"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/vs_70"
+            android:layout_height="@dimen/vs_100"
+
             android:layout_gravity="end"
-            android:layout_marginTop="@dimen/vs_80"
+            android:layout_marginTop="@dimen/vs_60"
             android:layout_marginEnd="@dimen/vs_50"
             android:layout_marginRight="@dimen/vs_50"
             android:background="@drawable/shape_user_pause"
@@ -399,6 +396,7 @@
                     android:layout_gravity="center|top"
                     android:max="100"
                     android:tag="pausebar_video" />
+
             </LinearLayout>
 
             <ImageView
@@ -411,6 +409,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:src="@drawable/play_pause" />
+
         </LinearLayout>
 
     </FrameLayout>
@@ -439,9 +438,9 @@
     <LinearLayout
         android:id="@+id/tv_progress_container"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/vs_70"
+        android:layout_height="@dimen/vs_100"
         android:layout_gravity="end"
-        android:layout_marginTop="@dimen/vs_80"
+        android:layout_marginTop="@dimen/vs_60"
         android:layout_marginEnd="@dimen/vs_50"
         android:layout_marginRight="@dimen/vs_50"
         android:background="@drawable/shape_user_pause"
@@ -500,6 +499,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             tools:src="@drawable/play_rewind" />
+
     </LinearLayout>
 
     <com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView
@@ -578,6 +578,7 @@
                 android:textSize="@dimen/vs_60"
                 android:textStyle="normal"
                 android:visibility="visible" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -625,6 +626,7 @@
                 android:textSize="@dimen/vs_22"
                 android:textStyle="normal"
                 android:visibility="visible" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -697,122 +699,21 @@
         <LinearLayout
             android:id="@+id/vod_control_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/vs_45"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/vs_10"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/vs_40"
-            android:paddingRight="@dimen/vs_40">
-
-            <LinearLayout
-                android:id="@+id/play_prev"
-                android:layout_width="@dimen/vs_60"
-                android:layout_height="@dimen/vs_60"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_2"
-                android:layout_marginLeft="@dimen/vs_2"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_vod"
-                android:focusable="true"
-                android:gravity="center"
-                android:nextFocusLeft="@id/play_time_end"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/vs_60"
-                    android:layout_height="@dimen/vs_60"
-                    android:layout_gravity="center"
-                    android:src="@drawable/v_prev" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/play_pause"
-                android:layout_width="@dimen/vs_60"
-                android:layout_height="@dimen/vs_60"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_5"
-                android:layout_marginLeft="@dimen/vs_5"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_vod"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/play_pauseImg"
-                    android:layout_width="@dimen/vs_50"
-                    android:layout_height="@dimen/vs_50"
-                    android:layout_gravity="center"
-                    android:src="@drawable/v_pause" />
-            </LinearLayout>
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/play_next"
-                android:layout_width="@dimen/vs_60"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="@dimen/vs_50"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_5"
-                android:layout_marginLeft="@dimen/vs_5"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_vod"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/vs_60"
-                    android:layout_height="@dimen/vs_60"
-                    android:layout_gravity="center"
-                    android:src="@drawable/v_next" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/play_speed"
-                android:layout_width="@dimen/vs_120"
-                android:layout_height="@dimen/vs_60"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_5"
-                android:layout_marginLeft="@dimen/vs_5"
-                android:background="@drawable/button_dialog_vod"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="@dimen/vs_60"
-                    android:layout_height="@dimen/vs_60"
-                    android:layout_gravity="center"
-                    android:src="@drawable/v_ffwd" />
-
-                <TextView
-                    android:id="@+id/play_speed_txt"
-                    android:layout_width="@dimen/vs_45"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/vs_4_"
-                    android:layout_marginLeft="@dimen/vs_4_"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:gravity="center"
-                    android:text="x1.0"
-                    android:textColor="@color/color_FFFFFF"
-                    android:textSize="@dimen/ts_16" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/play_retry"
-                android:layout_width="@dimen/vs_60"
-                android:layout_height="@dimen/vs_60"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_5"
-                android:layout_marginLeft="@dimen/vs_5"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
                 android:background="@drawable/button_dialog_vod"
                 android:focusable="true"
                 android:gravity="center"
@@ -822,13 +723,81 @@
                     android:layout_width="@dimen/vs_40"
                     android:layout_height="@dimen/vs_40"
                     android:layout_gravity="center"
-                    android:src="@drawable/v_replay" />
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_next" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/play_prev"
+                android:layout_width="@dimen/vs_50"
+                android:layout_height="@dimen/vs_45"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
+                android:background="@drawable/button_dialog_vod"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/vs_40"
+                    android:layout_height="@dimen/vs_40"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_prev" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/play_ff"
+                android:layout_width="@dimen/vs_50"
+                android:layout_height="@dimen/vs_45"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
+                android:background="@drawable/button_dialog_vod"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/play_ff_img"
+                    android:layout_width="@dimen/vs_40"
+                    android:layout_height="@dimen/vs_40"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_ffwd" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/play_retry"
+                android:layout_width="@dimen/vs_50"
+                android:layout_height="@dimen/vs_45"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
+                android:background="@drawable/button_dialog_vod"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/vs_30"
+                    android:layout_height="@dimen/vs_30"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_replay" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/play_scale"
-                android:layout_width="@dimen/vs_120"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="@dimen/vs_100"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/vs_2"
                 android:layout_marginLeft="@dimen/vs_2"
@@ -841,15 +810,17 @@
 
                 <ImageView
                     android:id="@+id/play_scale_img"
-                    android:layout_width="@dimen/vs_40"
-                    android:layout_height="@dimen/vs_40"
+                    android:layout_width="@dimen/vs_30"
+                    android:layout_height="@dimen/vs_30"
                     android:layout_gravity="center"
-                    android:src="@drawable/v_aspect" />
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_aspect" />
 
                 <TextView
                     android:id="@+id/play_scale_txt"
                     android:layout_width="@dimen/vs_45"
                     android:layout_height="match_parent"
+                    android:layout_centerInParent="false"
                     android:layout_gravity="center"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -860,9 +831,45 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/play_speed"
+                android:layout_width="@dimen/vs_100"
+                android:layout_height="@dimen/vs_45"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
+                android:background="@drawable/button_dialog_vod"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/play_speed_img"
+                    android:layout_width="@dimen/vs_33"
+                    android:layout_height="@dimen/vs_33"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_speed" />
+
+                <TextView
+                    android:id="@+id/play_speed_txt"
+                    android:layout_width="@dimen/vs_45"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="false"
+                    android:layout_gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"
+                    android:text="x1.0"
+                    android:textColor="@color/color_FFFFFF"
+                    android:textSize="@dimen/ts_16" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/play_player"
-                android:layout_width="@dimen/vs_120"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="@dimen/vs_100"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/vs_2"
                 android:layout_marginLeft="@dimen/vs_2"
@@ -875,15 +882,17 @@
 
                 <ImageView
                     android:id="@+id/play_player_img"
-                    android:layout_width="@dimen/vs_40"
-                    android:layout_height="@dimen/vs_40"
+                    android:layout_width="@dimen/vs_30"
+                    android:layout_height="@dimen/vs_30"
                     android:layout_gravity="center"
-                    android:src="@drawable/v_type" />
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_type" />
 
                 <TextView
                     android:id="@+id/play_player_txt"
                     android:layout_width="@dimen/vs_45"
                     android:layout_height="match_parent"
+                    android:layout_centerInParent="false"
                     android:layout_gravity="center"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -895,8 +904,8 @@
 
             <TextView
                 android:id="@+id/play_ijk"
-                android:layout_width="@dimen/vs_80"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="@dimen/vs_70"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/vs_2"
                 android:layout_marginLeft="@dimen/vs_2"
@@ -913,55 +922,57 @@
 
             <LinearLayout
                 android:id="@+id/play_subtitle"
-                android:layout_width="@dimen/vs_60"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="@dimen/vs_50"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_5"
-                android:layout_marginLeft="@dimen/vs_5"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
                 android:background="@drawable/button_dialog_vod"
                 android:focusable="true"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="@dimen/vs_40"
-                    android:layout_height="@dimen/vs_40"
+                    android:layout_width="@dimen/vs_28"
+                    android:layout_height="@dimen/vs_28"
                     android:layout_gravity="center"
-                    android:src="@drawable/v_subtitle" />
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_subtitle" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/play_audio"
-                android:layout_width="@dimen/vs_60"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="@dimen/vs_50"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_5"
-                android:layout_marginLeft="@dimen/vs_5"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
                 android:background="@drawable/button_dialog_vod"
                 android:focusable="true"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="@dimen/vs_40"
-                    android:layout_height="@dimen/vs_40"
+                    android:layout_width="@dimen/vs_28"
+                    android:layout_height="@dimen/vs_28"
                     android:layout_gravity="center"
-                    android:src="@drawable/v_audio" />
+                    android:layout_margin="@dimen/vs_2"
+                    android:src="@drawable/play_audio" />
             </LinearLayout>
 
             <TextView
-                android:layout_width="1dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/vs_10"
-                android:layout_marginLeft="@dimen/vs_10"
-                android:layout_marginEnd="@dimen/vs_10"
-                android:layout_marginRight="@dimen/vs_10"
-                android:background="@color/color_FFFFFF_50"
+                android:layout_marginStart="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginEnd="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
+                android:drawableLeft="@drawable/vod_skip"
                 android:gravity="center"
                 android:padding="@dimen/vs_10"
                 android:textColor="@color/color_FFFFFF"
@@ -969,8 +980,8 @@
 
             <TextView
                 android:id="@+id/play_time_start"
-                android:layout_width="@dimen/vs_70"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/vs_2"
                 android:layout_marginLeft="@dimen/vs_2"
@@ -986,8 +997,8 @@
 
             <TextView
                 android:id="@+id/play_time_end"
-                android:layout_width="@dimen/vs_70"
-                android:layout_height="@dimen/vs_60"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/vs_45"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/vs_2"
                 android:layout_marginLeft="@dimen/vs_2"
@@ -996,7 +1007,6 @@
                 android:background="@drawable/button_dialog_vod"
                 android:focusable="true"
                 android:gravity="center"
-                android:nextFocusRight="@id/play_prev"
                 android:padding="@dimen/vs_8"
                 android:text="01:00"
                 android:textColor="@android:color/white"
@@ -1020,6 +1030,7 @@
                 android:textSize="@dimen/ts_16"
                 android:visibility="gone"
                 tools:visibility="gone" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -1075,7 +1086,9 @@
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20"
                 android:textStyle="bold" />
+
         </LinearLayout>
+
 
     </LinearLayout>
 

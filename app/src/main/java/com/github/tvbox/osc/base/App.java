@@ -6,7 +6,6 @@ import com.github.tvbox.osc.callback.EmptyCallback;
 import com.github.tvbox.osc.callback.LoadingCallback;
 import com.github.tvbox.osc.data.AppDataManager;
 import com.github.tvbox.osc.server.ControlManager;
-import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LocaleHelper;
 import com.github.tvbox.osc.util.OkGoHelper;
@@ -36,8 +35,6 @@ public class App extends MultiDexApplication {
         initLocale();
         // OKGo
         OkGoHelper.init();
-        // Get EPG Info
-        EpgUtil.init();
         // 初始化Web服务器
         ControlManager.init(this);
         //初始化数据库
