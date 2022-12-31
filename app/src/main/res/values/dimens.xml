@@ -28,6 +28,8 @@
     <dimen name="vs_10">10mm</dimen>
     <dimen name="vs_15">15mm</dimen>
     <dimen name="vs_20">20mm</dimen>
+	<dimen name="vs_22">22mm</dimen>
+	<dimen name="vs_23">23mm</dimen>
     <dimen name="vs_25">25mm</dimen>
     <dimen name="vs_30">30mm</dimen>
     <dimen name="vs_33">33mm</dimen>
@@ -40,7 +42,9 @@
     <dimen name="vs_70">70mm</dimen>
     <dimen name="vs_80">80mm</dimen>
     <dimen name="vs_95">95mm</dimen>
+	<dimen name="vs_98">98mm</dimen>
     <dimen name="vs_100">100mm</dimen>
+	<dimen name="vs_110">110mm</dimen>
     <dimen name="vs_120">120mm</dimen>
     <dimen name="vs_128">128mm</dimen>
     <dimen name="vs_140">140mm</dimen>

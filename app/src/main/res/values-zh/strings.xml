@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">TVBox</string>
     <string name="app_home">首页</string>
-    <string name="app_source"></string>
+    <string name="app_source">https://chengxue2020.github.io/Cat-ports/main.json</string>
 
     // Home Page //
     <string name="hm_ok">加载成功</string>
@@ -12,7 +12,7 @@
     <string name="hm_exit">再按一次返回键退出应用</string>
     <string name="hm_exit_live">再按一次返回键退出直播</string>
     <string name="hm_date1">MM月dd日</string>
-    <string name="hm_date2">EE hh:mm aa</string>
+    <string name="hm_date2">EE HH:mm aa</string>
     <string name="hm_hist">历史</string>
     <string name="hm_live">直播</string>
     <string name="hm_search">搜索</string>

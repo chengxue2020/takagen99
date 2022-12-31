@@ -622,7 +622,7 @@
                 android:shadowRadius="3"
                 android:text="Ends at 00:00 AM"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/vs_20"
+                android:textSize="@dimen/vs_22"
                 android:textStyle="normal"
                 android:visibility="visible" />
         </LinearLayout>
