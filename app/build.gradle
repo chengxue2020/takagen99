@@ -1,14 +1,18 @@
 apply plugin: 'com.android.application'
 
+def static buildTime() {
+    return new Date().format("yyyyMMdd-HHmm", TimeZone.getTimeZone("GMT+08:00"))
+}
+
 android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId 'com.github.tvbox.osc.tk'
+        applicationId 'com.github.tvbox.Frank.takagen'
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName '1.0.0'
+        versionName "Frank".concat("_").concat(buildTime())//根据打包日期生成版本号
         multiDexEnabled true
         //设置room的Schema的位置
         javaCompileOptions {
