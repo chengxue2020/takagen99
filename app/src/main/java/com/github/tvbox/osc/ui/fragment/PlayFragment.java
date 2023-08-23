@@ -1832,7 +1832,9 @@ public class PlayFragment extends BaseLazyFragment {
             try {
                 Request.Builder requestBuilder = new Request.Builder().url(url);
                 if ("POST".equals(request.getMethod())) {
-                    requestBuilder.post( RequestBody.create(MediaType.get(request.getEnctype() + "; charset=utf-8"), request.getBody()));
+                    String encType = request.getEnctype();
+                    if (encType == null) encType = "application/x-www-form-urlencoded";
+                    requestBuilder.post( RequestBody.create(MediaType.get(encType + "; charset=utf-8"), request.getBody()));
                 }
                 OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
                 clientBuilder.readTimeout(10000, TimeUnit.MILLISECONDS);
