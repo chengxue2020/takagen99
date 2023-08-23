@@ -1,13 +1,20 @@
 package com.github.tvbox.osc.base;
 
+import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
+
+import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
+import com.github.tvbox.osc.BuildConfig;
 import com.github.tvbox.osc.callback.EmptyCallback;
 import com.github.tvbox.osc.callback.LoadingCallback;
 import com.github.tvbox.osc.data.AppDataManager;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FileUtils;
+import com.github.tvbox.osc.util.FixDexUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LocaleHelper;
 import com.github.tvbox.osc.util.OkGoHelper;
@@ -16,7 +23,12 @@ import com.github.tvbox.osc.util.js.JSEngine;
 import com.kingja.loadsir.core.LoadSir;
 import com.orhanobut.hawk.Hawk;
 
-import java.io.File;
+import org.conscrypt.Conscrypt;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.Provider;
+import java.security.Security;
 
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
@@ -28,7 +40,7 @@ import me.jessyan.autosize.unit.Subunits;
  */
 public class App extends MultiDexApplication {
     private static App instance;
-
+    public static Provider conscrypt = Conscrypt.newProvider();
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,6 +76,10 @@ public class App extends MultiDexApplication {
 
         // Add JS support
         JSEngine.getInstance().create();
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            Security.insertProviderAt(conscrypt, 1);
+        }
+
     }
 
     private void initParams() {
@@ -119,4 +135,21 @@ public class App extends MultiDexApplication {
         JSEngine.getInstance().destroy();
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        MultiDex.install(base);
+
+        //okhttp的改动见OkHttpClientReplace.java的public OkHttpClientReplace build()
+        //用于替换spider jar里的Builder.build()以让android 9及以下系统支持 tls 1.3
+        try {
+            Uri uri = Uri.parse("android.resource://"+ BuildConfig.APPLICATION_ID+"/raw/okhttp_inject.dex");
+            FixDexUtils.copy(base, new FileInputStream(uri.getPath()));
+        } catch (IOException e) {
+        }
+        // 每次启动应用都先进行修复包加载操作
+        FixDexUtils.loadDex(base);
+
+        super.attachBaseContext(base);
+
+    }
 }
