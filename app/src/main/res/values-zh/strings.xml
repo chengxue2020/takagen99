@@ -174,7 +174,7 @@
 
 	// About
     <string name="version_title">版本 </string>
-	<string name="mn_Version">20230821-0055</string>
-	<string name="dia_about">版本：20230821-0055\n更新日志：\nRevert  紧急修复闪退，部分视频原先能看变成不能看待修复\nThis reverts commit fc3652920d2c60197822760e8d894c0554bcc804.\nRevert  安卓9及以下支持TLSv1.3，部分站点只开启了TLSv1.3\nThis reverts commit 5608c21b596001d5072fc5be684bbb170faf2520.\n\n本软件只提供聚合展示功能，所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容. 软件仅供学习参考, 请于安装后24小时内删除。\n\n打包分发请保留出处\nhttps://github.com/CatVodTVOfficial/TVBoxOSC</string>
+	<string name="mn_Version">20230823-2234</string>
+	<string name="dia_about">版本：20230823-2234\n更新日志：\n支持安卓9及以下系统访问只开启了TLSv1.3的站点\n\n本软件只提供聚合展示功能，所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容. 软件仅供学习参考, 请于安装后24小时内删除。\n\n打包分发请保留出处\nhttps://github.com/CatVodTVOfficial/TVBoxOSC</string>
 	
 </resources>
