@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -105,7 +103,6 @@ import org.xwalk.core.XWalkWebResourceResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1831,6 +1828,9 @@ public class PlayFragment extends BaseLazyFragment {
                 return null;
             try {
                 Request.Builder requestBuilder = new Request.Builder().url(url);
+                for (Map.Entry<String, String> entrySet : request.getHeaders().entrySet()) {
+                    requestBuilder.addHeader(entrySet.getKey(), entrySet.getValue());
+                }
                 if ("POST".equals(request.getMethod())) {
                     String encType = request.getEnctype();
                     if (encType == null) encType = "application/x-www-form-urlencoded";
@@ -1872,7 +1872,7 @@ public class PlayFragment extends BaseLazyFragment {
                     }
                     return new WebResourceResponse(guessMimeType, null, response.body().byteStream());
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
