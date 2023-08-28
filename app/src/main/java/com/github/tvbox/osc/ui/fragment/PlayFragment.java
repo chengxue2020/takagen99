@@ -71,6 +71,7 @@ import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.OkGoHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.VideoParseRuler;
 import com.github.tvbox.osc.util.XWalkUtils;
@@ -1840,9 +1841,13 @@ public class PlayFragment extends BaseLazyFragment {
                 clientBuilder.readTimeout(10000, TimeUnit.MILLISECONDS);
                 clientBuilder.writeTimeout(10000, TimeUnit.MILLISECONDS);
                 clientBuilder.connectTimeout(10000, TimeUnit.MILLISECONDS);
+                clientBuilder.followRedirects(false);
+                clientBuilder.followSslRedirects(false);
                 okhttp3.Response response = clientBuilder.build().newCall(requestBuilder.build()).execute();
 
                 final String contentTypeValue = response.header("Content-Type");
+                String responsePhase = OkGoHelper.httpPhaseMap.get(response.code());
+                if (responsePhase == null) responsePhase = "Internal Server Error";
                 if (contentTypeValue != null) {
                     if (contentTypeValue.indexOf("charset=") > 0) {
                         final String[] contentTypeAndEncoding = contentTypeValue.replace(" ","").split(";");
@@ -1853,9 +1858,9 @@ public class PlayFragment extends BaseLazyFragment {
                             if (csArray.length >= 2)
                                 charset = csArray[1];
                         }
-                        return new WebResourceResponse(contentType, charset, response.body().byteStream());
+                        return new WebResourceResponse(contentType, charset, response.code(), responsePhase, request.getHeaders(), response.body().byteStream());
                     } else {
-                        return new WebResourceResponse(contentTypeValue, null, response.body().byteStream());
+                        return new WebResourceResponse(contentTypeValue, null, response.code(), responsePhase, request.getHeaders(), response.body().byteStream());
                     }
                 } else {
                     String guessMimeType = "application/octet-stream";
@@ -1870,7 +1875,7 @@ public class PlayFragment extends BaseLazyFragment {
                     } else if (url.endsWith(".jpg") || url.endsWith(".jpeg")) {
                         guessMimeType = "image/jpeg";
                     }
-                    return new WebResourceResponse(guessMimeType, null, response.body().byteStream());
+                    return new WebResourceResponse(guessMimeType, null, response.code(), responsePhase, request.getHeaders(), response.body().byteStream());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
