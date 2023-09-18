@@ -3,6 +3,7 @@ package com.github.tvbox.osc.ui.dialog;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class SearchSubtitleDialog extends BaseDialog {
 
-    private Context mContext;
+    private final Context mContext;
     private TvRecyclerView mGridView;
     private SearchSubtitleAdapter searchAdapter;
 
@@ -43,7 +44,7 @@ public class SearchSubtitleDialog extends BaseDialog {
     private ProgressBar loadingBar;
     private SubtitleViewModel subtitleViewModel;
     private int page = 1;
-    private int maxPage = 5;
+    private final int maxPage = 5;
     private String searchWord = "";
 
     private List<Subtitle> zipSubtitles = new ArrayList<>();
@@ -64,7 +65,7 @@ public class SearchSubtitleDialog extends BaseDialog {
     protected void initView(Context context) {
         loadingBar = findViewById(R.id.loadingBar);
         mGridView = findViewById(R.id.mGridView);
-        subtitleSearchEt = findViewById(R.id.input);
+        subtitleSearchEt = findViewById(R.id.input_sub);
         subtitleSearchBtn = findViewById(R.id.inputSubmit);
         subtitleSearchBtn.setText(HomeActivity.getRes().getString(R.string.vod_sub_search));
 
@@ -101,6 +102,9 @@ public class SearchSubtitleDialog extends BaseDialog {
             }
         }, mGridView);
 
+        // takagen99 : Fix on Key Enter
+        subtitleSearchEt.setOnKeyListener(onSoftKeyPress);
+
         subtitleSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +115,18 @@ public class SearchSubtitleDialog extends BaseDialog {
         });
         searchAdapter.setNewData(new ArrayList<>());
     }
+
+    // takagen99 : Fix on Key Enter
+    private final View.OnKeyListener onSoftKeyPress = new View.OnKeyListener() {
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                // hide soft keyboard, set focus on next button
+                subtitleSearchEt.clearFocus();
+                subtitleSearchBtn.requestFocus();
+            }
+            return false;
+        }
+    };
 
     public void setSearchWord(String wd) {
         wd = wd.replaceAll("(?:（|\\(|\\[|【|\\.mp4|\\.mkv|\\.avi|\\.MP4|\\.MKV|\\.AVI)", "");

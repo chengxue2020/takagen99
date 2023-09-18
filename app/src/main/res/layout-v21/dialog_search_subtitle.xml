@@ -18,13 +18,15 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/input"
+                android:id="@+id/input_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/input_search"
                 android:hint="请输入字幕名称"
                 android:inputType="text"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
                 android:maxLines="1"
                 android:paddingLeft="@dimen/vs_20"
                 android:paddingTop="@dimen/vs_10"

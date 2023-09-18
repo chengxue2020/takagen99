@@ -857,7 +857,7 @@
 
             <LinearLayout
                 android:id="@+id/play_scale"
-                android:layout_width="@dimen/vs_110"
+                android:layout_width="@dimen/vs_60"
                 android:layout_height="@dimen/vs_60"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/vs_6"
@@ -875,22 +875,23 @@
                     android:layout_height="@dimen/vs_40"
                     android:layout_gravity="center"
                     android:src="@drawable/v_aspect" />
-
-                <TextView
-                    android:id="@+id/play_scale_txt"
-                    android:layout_width="@dimen/vs_45"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="-10mm"
-                    android:layout_marginLeft="@dimen/vs_4_"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:gravity="center"
-                    android:text="16:9"
-                    android:textColor="@color/color_FFFFFF"
-                    android:textSize="@dimen/ts_14"
-                    android:visibility="visible" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/play_scale_txt"
+                android:layout_width="@dimen/vs_40"
+                android:layout_height="@dimen/vs_20"
+                android:layout_gravity="center"
+                android:layout_marginStart="-20mm"
+                android:layout_marginLeft="-15mm"
+                android:layout_marginTop="8mm"
+                android:background="@drawable/shape_speed_hint"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text="16:9"
+                android:textColor="@color/color_FFFFFF"
+                android:textSize="@dimen/ts_12"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/play_player"
