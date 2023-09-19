@@ -216,6 +216,14 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        String jpaliCachePath = getExternalCachePath() + "/jpali/Downloads/";
+        File jpaliCacheDir = new File(jpaliCachePath);
+        try {
+            if (jpaliCacheDir.exists()) recursiveDelete(jpaliCacheDir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getFileNameWithoutExt(String filePath){
