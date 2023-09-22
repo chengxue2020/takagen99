@@ -1,15 +1,20 @@
 package xyz.doikki.videoplayer.exo;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.text.TextUtils;
+
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
+import androidx.media3.common.C;
+import androidx.media3.common.Format;
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.Assertions;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.common.util.Util;
 
 import com.github.tvbox.osc.R;
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.util.Assertions;
-import com.google.android.exoplayer2.util.MimeTypes;
-import com.google.android.exoplayer2.util.Util;
+
 import java.util.Locale;
 
 public class ExoTrackNameProvider {
@@ -19,8 +24,29 @@ public class ExoTrackNameProvider {
     /**
      * @param resources Resources from which to obtain strings.
      */
-    public ExoTrackNameProvider(Resources resources) {
+    public @OptIn(markerClass = UnstableApi.class) ExoTrackNameProvider(Resources resources) {
         this.resources = Assertions.checkNotNull(resources);
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    private static int inferPrimaryTrackType(Format format) {
+        @SuppressLint("UnsafeOptInUsageError") int trackType = MimeTypes.getTrackType(format.sampleMimeType);
+        if (trackType != C.TRACK_TYPE_UNKNOWN) {
+            return trackType;
+        }
+        if (MimeTypes.getVideoMediaMimeType(format.codecs) != null) {
+            return C.TRACK_TYPE_VIDEO;
+        }
+        if (MimeTypes.getAudioMediaMimeType(format.codecs) != null) {
+            return C.TRACK_TYPE_AUDIO;
+        }
+        if (format.width != Format.NO_VALUE || format.height != Format.NO_VALUE) {
+            return C.TRACK_TYPE_VIDEO;
+        }
+        if (format.channelCount != Format.NO_VALUE || format.sampleRate != Format.NO_VALUE) {
+            return C.TRACK_TYPE_AUDIO;
+        }
+        return C.TRACK_TYPE_UNKNOWN;
     }
 
     public String getTrackName(Format format) {
@@ -51,7 +77,7 @@ public class ExoTrackNameProvider {
     }
 
     private String buildBitrateString(Format format) {
-        int bitrate = format.bitrate;
+        @SuppressLint("UnsafeOptInUsageError") int bitrate = format.bitrate;
         return bitrate == Format.NO_VALUE
                 ? ""
                 : resources.getString(R.string.exo_track_bitrate, bitrate / 1000000f);
@@ -92,9 +118,9 @@ public class ExoTrackNameProvider {
         if (TextUtils.isEmpty(language) || C.LANGUAGE_UNDETERMINED.equals(language)) {
             return "";
         }
-        Locale languageLocale =
+        @SuppressLint("UnsafeOptInUsageError") Locale languageLocale =
                 Util.SDK_INT >= 21 ? Locale.forLanguageTag(language) : new Locale(language);
-        Locale displayLocale =
+        @SuppressLint("UnsafeOptInUsageError") Locale displayLocale =
                 Util.SDK_INT >= 24 ? Locale.getDefault(Locale.Category.DISPLAY) : Locale.getDefault();
         String languageName = languageLocale.getDisplayName(displayLocale);
         if (TextUtils.isEmpty(languageName)) {
@@ -141,25 +167,5 @@ public class ExoTrackNameProvider {
             }
         }
         return itemList;
-    }
-
-    private static int inferPrimaryTrackType(Format format) {
-        int trackType = MimeTypes.getTrackType(format.sampleMimeType);
-        if (trackType != C.TRACK_TYPE_UNKNOWN) {
-            return trackType;
-        }
-        if (MimeTypes.getVideoMediaMimeType(format.codecs) != null) {
-            return C.TRACK_TYPE_VIDEO;
-        }
-        if (MimeTypes.getAudioMediaMimeType(format.codecs) != null) {
-            return C.TRACK_TYPE_AUDIO;
-        }
-        if (format.width != Format.NO_VALUE || format.height != Format.NO_VALUE) {
-            return C.TRACK_TYPE_VIDEO;
-        }
-        if (format.channelCount != Format.NO_VALUE || format.sampleRate != Format.NO_VALUE) {
-            return C.TRACK_TYPE_AUDIO;
-        }
-        return C.TRACK_TYPE_UNKNOWN;
     }
 }

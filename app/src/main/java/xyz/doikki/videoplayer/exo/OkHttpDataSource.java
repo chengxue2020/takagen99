@@ -15,26 +15,32 @@
  */
 package xyz.doikki.videoplayer.exo;
 
-import static com.google.android.exoplayer2.upstream.HttpUtil.buildRangeRequestHeader;
-import static com.google.android.exoplayer2.util.Util.castNonNull;
+
+import static androidx.media3.common.util.Util.castNonNull;
+import static androidx.media3.datasource.HttpUtil.buildRangeRequestHeader;
 import static java.lang.Math.min;
 
 import android.net.Uri;
+
 import androidx.annotation.Nullable;
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
-import com.google.android.exoplayer2.PlaybackException;
-import com.google.android.exoplayer2.upstream.BaseDataSource;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSourceException;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.HttpDataSource;
-import com.google.android.exoplayer2.upstream.HttpUtil;
-import com.google.android.exoplayer2.upstream.TransferListener;
-import com.google.android.exoplayer2.util.Assertions;
-import com.google.android.exoplayer2.util.Util;
+import androidx.annotation.OptIn;
+import androidx.media3.common.C;
+import androidx.media3.common.MediaLibraryInfo;
+import androidx.media3.common.PlaybackException;
+import androidx.media3.common.util.Assertions;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.common.util.Util;
+import androidx.media3.datasource.BaseDataSource;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DataSourceException;
+import androidx.media3.datasource.DataSpec;
+import androidx.media3.datasource.HttpDataSource;
+import androidx.media3.datasource.HttpUtil;
+import androidx.media3.datasource.TransferListener;
+
 import com.google.common.base.Predicate;
 import com.google.common.net.HttpHeaders;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -42,6 +48,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.HttpUrl;
@@ -52,6 +59,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+@UnstableApi
 /**
  * An {@link HttpDataSource} that delegates to Square's {@link Call.Factory}.
  *
@@ -62,138 +70,49 @@ import okhttp3.ResponseBody;
 public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
 
     static {
-        ExoPlayerLibraryInfo.registerModule("goog.exo.okhttp");
-    }
-
-    /** {@link DataSource.Factory} for {@link OkHttpDataSource} instances. */
-    public static final class Factory implements HttpDataSource.Factory {
-
-        private final RequestProperties defaultRequestProperties;
-        private final Call.Factory callFactory;
-
-        @Nullable private String userAgent;
-        @Nullable private TransferListener transferListener;
-        @Nullable private CacheControl cacheControl;
-        @Nullable private Predicate<String> contentTypePredicate;
-
-        /**
-         * Creates an instance.
-         *
-         * @param callFactory A {@link Call.Factory} (typically an {@link OkHttpClient}) for use by the
-         *     sources created by the factory.
-         */
-        public Factory(Call.Factory callFactory) {
-            this.callFactory = callFactory;
-            defaultRequestProperties = new RequestProperties();
-        }
-
-        @Override
-        public final Factory setDefaultRequestProperties(Map<String, String> defaultRequestProperties) {
-            this.defaultRequestProperties.clearAndSet(defaultRequestProperties);
-            return this;
-        }
-
-        /**
-         * Sets the user agent that will be used.
-         *
-         * <p>The default is {@code null}, which causes the default user agent of the underlying {@link
-         * OkHttpClient} to be used.
-         *
-         * @param userAgent The user agent that will be used, or {@code null} to use the default user
-         *     agent of the underlying {@link OkHttpClient}.
-         * @return This factory.
-         */
-        public Factory setUserAgent(@Nullable String userAgent) {
-            this.userAgent = userAgent;
-            return this;
-        }
-
-        /**
-         * Sets the {@link CacheControl} that will be used.
-         *
-         * <p>The default is {@code null}.
-         *
-         * @param cacheControl The cache control that will be used.
-         * @return This factory.
-         */
-        public Factory setCacheControl(@Nullable CacheControl cacheControl) {
-            this.cacheControl = cacheControl;
-            return this;
-        }
-
-        /**
-         * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
-         * {@link HttpDataSource.InvalidContentTypeException} is thrown from {@link
-         * OkHttpDataSource#open(DataSpec)}.
-         *
-         * <p>The default is {@code null}.
-         *
-         * @param contentTypePredicate The content type {@link Predicate}, or {@code null} to clear a
-         *     predicate that was previously set.
-         * @return This factory.
-         */
-        public Factory setContentTypePredicate(@Nullable Predicate<String> contentTypePredicate) {
-            this.contentTypePredicate = contentTypePredicate;
-            return this;
-        }
-
-        /**
-         * Sets the {@link TransferListener} that will be used.
-         *
-         * <p>The default is {@code null}.
-         *
-         * <p>See {@link DataSource#addTransferListener(TransferListener)}.
-         *
-         * @param transferListener The listener that will be used.
-         * @return This factory.
-         */
-        public Factory setTransferListener(@Nullable TransferListener transferListener) {
-            this.transferListener = transferListener;
-            return this;
-        }
-
-        @Override
-        public OkHttpDataSource createDataSource() {
-            OkHttpDataSource dataSource =
-                    new OkHttpDataSource(
-                            callFactory, userAgent, cacheControl, defaultRequestProperties, contentTypePredicate);
-            if (transferListener != null) {
-                dataSource.addTransferListener(transferListener);
-            }
-            return dataSource;
-        }
+        MediaLibraryInfo.registerModule("goog.exo.okhttp");
     }
 
     private final Call.Factory callFactory;
     private final RequestProperties requestProperties;
-
-    @Nullable private final String userAgent;
-    @Nullable private final CacheControl cacheControl;
-    @Nullable private final RequestProperties defaultRequestProperties;
-
-    @Nullable private Predicate<String> contentTypePredicate;
-    @Nullable private DataSpec dataSpec;
-    @Nullable private Response response;
-    @Nullable private InputStream responseByteStream;
+    @Nullable
+    private final String userAgent;
+    @Nullable
+    private final CacheControl cacheControl;
+    @Nullable
+    private final RequestProperties defaultRequestProperties;
+    @Nullable
+    private Predicate<String> contentTypePredicate;
+    @Nullable
+    private DataSpec dataSpec;
+    @Nullable
+    private Response response;
+    @Nullable
+    private InputStream responseByteStream;
     private boolean opened;
     private long bytesToRead;
     private long bytesRead;
-
-    /** @deprecated Use {@link OkHttpDataSource.Factory} instead. */
+    /**
+     * @deprecated Use {@link OkHttpDataSource.Factory} instead.
+     */
     @SuppressWarnings("deprecation")
     @Deprecated
     public OkHttpDataSource(Call.Factory callFactory) {
         this(callFactory, /* userAgent= */ null);
     }
 
-    /** @deprecated Use {@link OkHttpDataSource.Factory} instead. */
+    /**
+     * @deprecated Use {@link OkHttpDataSource.Factory} instead.
+     */
     @SuppressWarnings("deprecation")
     @Deprecated
     public OkHttpDataSource(Call.Factory callFactory, @Nullable String userAgent) {
         this(callFactory, userAgent, /* cacheControl= */ null, /* defaultRequestProperties= */ null);
     }
 
-    /** @deprecated Use {@link OkHttpDataSource.Factory} instead. */
+    /**
+     * @deprecated Use {@link OkHttpDataSource.Factory} instead.
+     */
     @Deprecated
     public OkHttpDataSource(
             Call.Factory callFactory,
@@ -208,7 +127,7 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
                 /* contentTypePredicate= */ null);
     }
 
-    private OkHttpDataSource(
+    private @OptIn(markerClass = UnstableApi.class) OkHttpDataSource(
             Call.Factory callFactory,
             @Nullable String userAgent,
             @Nullable CacheControl cacheControl,
@@ -369,7 +288,9 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
         }
     }
 
-    /** Establishes a connection. */
+    /**
+     * Establishes a connection.
+     */
     private Request makeRequest(DataSpec dataSpec) throws HttpDataSourceException {
         long position = dataSpec.position;
         long length = dataSpec.length;
@@ -426,10 +347,10 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
      * Attempts to skip the specified number of bytes in full.
      *
      * @param bytesToSkip The number of bytes to skip.
-     * @param dataSpec The {@link DataSpec}.
+     * @param dataSpec    The {@link DataSpec}.
      * @throws HttpDataSourceException If the thread is interrupted during the operation, or an error
-     *     occurs while reading from the source, or if the data ended before skipping the specified
-     *     number of bytes.
+     *                                 occurs while reading from the source, or if the data ended before skipping the specified
+     *                                 number of bytes.
      */
     private void skipFully(long bytesToSkip, DataSpec dataSpec) throws HttpDataSourceException {
         if (bytesToSkip == 0) {
@@ -472,11 +393,11 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
      * <p>This method blocks until at least one byte of data can be read, the end of the opened range
      * is detected, or an exception is thrown.
      *
-     * @param buffer The buffer into which the read data should be stored.
-     * @param offset The start offset into {@code buffer} at which data should be written.
+     * @param buffer     The buffer into which the read data should be stored.
+     * @param offset     The start offset into {@code buffer} at which data should be written.
      * @param readLength The maximum number of bytes to read.
      * @return The number of bytes read, or {@link C#RESULT_END_OF_INPUT} if the end of the opened
-     *     range is reached.
+     * range is reached.
      * @throws IOException If an error occurs reading from the source.
      */
     private int readInternal(byte[] buffer, int offset, int readLength) throws IOException {
@@ -501,12 +422,118 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
         return read;
     }
 
-    /** Closes the current connection quietly, if there is one. */
+    /**
+     * Closes the current connection quietly, if there is one.
+     */
     private void closeConnectionQuietly() {
         if (response != null) {
             Assertions.checkNotNull(response.body()).close();
             response = null;
         }
         responseByteStream = null;
+    }
+
+    @UnstableApi
+    /** {@link DataSource.Factory} for {@link OkHttpDataSource} instances. */
+    public static final class Factory implements HttpDataSource.Factory {
+
+        private final RequestProperties defaultRequestProperties;
+        private final Call.Factory callFactory;
+
+        @Nullable
+        private String userAgent;
+        @Nullable
+        private TransferListener transferListener;
+        @Nullable
+        private CacheControl cacheControl;
+        @Nullable
+        private Predicate<String> contentTypePredicate;
+
+        /**
+         * Creates an instance.
+         *
+         * @param callFactory A {@link Call.Factory} (typically an {@link OkHttpClient}) for use by the
+         *                    sources created by the factory.
+         */
+        public Factory(Call.Factory callFactory) {
+            this.callFactory = callFactory;
+            defaultRequestProperties = new RequestProperties();
+        }
+
+        @Override
+        public final Factory setDefaultRequestProperties(Map<String, String> defaultRequestProperties) {
+            this.defaultRequestProperties.clearAndSet(defaultRequestProperties);
+            return this;
+        }
+
+        /**
+         * Sets the user agent that will be used.
+         *
+         * <p>The default is {@code null}, which causes the default user agent of the underlying {@link
+         * OkHttpClient} to be used.
+         *
+         * @param userAgent The user agent that will be used, or {@code null} to use the default user
+         *                  agent of the underlying {@link OkHttpClient}.
+         * @return This factory.
+         */
+        public Factory setUserAgent(@Nullable String userAgent) {
+            this.userAgent = userAgent;
+            return this;
+        }
+
+        /**
+         * Sets the {@link CacheControl} that will be used.
+         *
+         * <p>The default is {@code null}.
+         *
+         * @param cacheControl The cache control that will be used.
+         * @return This factory.
+         */
+        public Factory setCacheControl(@Nullable CacheControl cacheControl) {
+            this.cacheControl = cacheControl;
+            return this;
+        }
+
+        /**
+         * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
+         * {@link HttpDataSource.InvalidContentTypeException} is thrown from {@link
+         * OkHttpDataSource#open(DataSpec)}.
+         *
+         * <p>The default is {@code null}.
+         *
+         * @param contentTypePredicate The content type {@link Predicate}, or {@code null} to clear a
+         *                             predicate that was previously set.
+         * @return This factory.
+         */
+        public Factory setContentTypePredicate(@Nullable Predicate<String> contentTypePredicate) {
+            this.contentTypePredicate = contentTypePredicate;
+            return this;
+        }
+
+        /**
+         * Sets the {@link TransferListener} that will be used.
+         *
+         * <p>The default is {@code null}.
+         *
+         * <p>See {@link DataSource#addTransferListener(TransferListener)}.
+         *
+         * @param transferListener The listener that will be used.
+         * @return This factory.
+         */
+        public Factory setTransferListener(@Nullable TransferListener transferListener) {
+            this.transferListener = transferListener;
+            return this;
+        }
+
+        @Override
+        public OkHttpDataSource createDataSource() {
+            OkHttpDataSource dataSource =
+                    new OkHttpDataSource(
+                            callFactory, userAgent, cacheControl, defaultRequestProperties, contentTypePredicate);
+            if (transferListener != null) {
+                dataSource.addTransferListener(transferListener);
+            }
+            return dataSource;
+        }
     }
 }

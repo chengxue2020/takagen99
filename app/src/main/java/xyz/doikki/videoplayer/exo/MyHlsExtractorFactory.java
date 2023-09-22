@@ -1,31 +1,33 @@
 package xyz.doikki.videoplayer.exo;
 
-import static com.google.android.exoplayer2.util.Assertions.checkNotNull;
+
+import static androidx.media3.common.util.Assertions.checkNotNull;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
+import androidx.media3.common.FileTypes;
+import androidx.media3.common.Format;
+import androidx.media3.common.Metadata;
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.TimestampAdjuster;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.analytics.PlayerId;
+import androidx.media3.exoplayer.hls.HlsExtractorFactory;
+import androidx.media3.exoplayer.hls.HlsTrackMetadataEntry;
+import androidx.media3.exoplayer.hls.WebvttExtractor;
+import androidx.media3.extractor.Extractor;
+import androidx.media3.extractor.ExtractorInput;
+import androidx.media3.extractor.mp3.Mp3Extractor;
+import androidx.media3.extractor.mp4.FragmentedMp4Extractor;
+import androidx.media3.extractor.ts.Ac3Extractor;
+import androidx.media3.extractor.ts.Ac4Extractor;
+import androidx.media3.extractor.ts.AdtsExtractor;
+import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
-import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.analytics.PlayerId;
-import com.google.android.exoplayer2.extractor.Extractor;
-import com.google.android.exoplayer2.extractor.ExtractorInput;
-import com.google.android.exoplayer2.extractor.mp3.Mp3Extractor;
-import com.google.android.exoplayer2.extractor.mp4.FragmentedMp4Extractor;
-import com.google.android.exoplayer2.extractor.ts.Ac3Extractor;
-import com.google.android.exoplayer2.extractor.ts.Ac4Extractor;
-import com.google.android.exoplayer2.extractor.ts.AdtsExtractor;
-import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory;
-import com.google.android.exoplayer2.extractor.ts.MyTsExtractor;
-import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.source.hls.HlsExtractorFactory;
-import com.google.android.exoplayer2.source.hls.HlsTrackMetadataEntry;
-import com.google.android.exoplayer2.source.hls.WebvttExtractor;
-import com.google.android.exoplayer2.util.FileTypes;
-import com.google.android.exoplayer2.util.MimeTypes;
-import com.google.android.exoplayer2.util.TimestampAdjuster;
+import com.google.androidx.media3.exoplayer.extractor.ts.MyTsExtractor;
 import com.google.common.primitives.Ints;
 
 import java.io.EOFException;
@@ -35,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@UnstableApi
 public final class MyHlsExtractorFactory implements HlsExtractorFactory {
     // Extractors order is optimized according to
     // https://docs.google.com/document/d/1w2mKaWMxfz2Ei8-LdxqbPs1VLe_oudB-eryXXw9OvQQ.
@@ -78,97 +81,12 @@ public final class MyHlsExtractorFactory implements HlsExtractorFactory {
         this.exposeCea608WhenMissingDeclarations = exposeCea608WhenMissingDeclarations;
     }
 
-    @Override
-    public MyBundledHlsMediaChunkExtractor createExtractor(
-            Uri uri,
-            Format format,
-            @Nullable List<Format> muxedCaptionFormats,
-            TimestampAdjuster timestampAdjuster,
-            Map<String, List<String>> responseHeaders,
-            ExtractorInput sniffingExtractorInput,
-            PlayerId playerId)
-            throws IOException {
-        @FileTypes.Type
-        int formatInferredFileType = FileTypes.inferFileTypeFromMimeType(format.sampleMimeType);
-        @FileTypes.Type
-        int responseHeadersInferredFileType =
-                FileTypes.inferFileTypeFromResponseHeaders(responseHeaders);
-        @FileTypes.Type int uriInferredFileType = FileTypes.inferFileTypeFromUri(uri);
-
-        // Defines the order in which to try the extractors.
-        List<Integer> fileTypeOrder =
-                new ArrayList<>(/* initialCapacity= */ DEFAULT_EXTRACTOR_ORDER.length);
-        addFileTypeIfValidAndNotPresent(formatInferredFileType, fileTypeOrder);
-        addFileTypeIfValidAndNotPresent(responseHeadersInferredFileType, fileTypeOrder);
-        addFileTypeIfValidAndNotPresent(uriInferredFileType, fileTypeOrder);
-        for (int fileType : DEFAULT_EXTRACTOR_ORDER) {
-            addFileTypeIfValidAndNotPresent(fileType, fileTypeOrder);
-        }
-
-        // Extractor to be used if the type is not recognized.
-        @Nullable Extractor fallBackExtractor = null;
-        sniffingExtractorInput.resetPeekPosition();
-        for (int i = 0; i < fileTypeOrder.size(); i++) {
-            int fileType = fileTypeOrder.get(i);
-            Extractor extractor =
-                    checkNotNull(
-                            createExtractorByFileType(fileType, format, muxedCaptionFormats, timestampAdjuster));
-            if (sniffQuietly(extractor, sniffingExtractorInput)) {
-                return new MyBundledHlsMediaChunkExtractor(extractor, format, timestampAdjuster);
-            }
-            if (fallBackExtractor == null
-                    && (fileType == formatInferredFileType
-                    || fileType == responseHeadersInferredFileType
-                    || fileType == uriInferredFileType
-                    || fileType == FileTypes.TS)) {
-                // If sniffing fails, fallback to the file types inferred from context. If all else fails,
-                // fallback to Transport Stream. See https://github.com/google/ExoPlayer/issues/8219.
-                fallBackExtractor = extractor;
-            }
-        }
-
-        return new MyBundledHlsMediaChunkExtractor(
-                checkNotNull(fallBackExtractor), format, timestampAdjuster);
-    }
-
     private static void addFileTypeIfValidAndNotPresent(
             @FileTypes.Type int fileType, List<Integer> fileTypes) {
         if (Ints.indexOf(DEFAULT_EXTRACTOR_ORDER, fileType) == -1 || fileTypes.contains(fileType)) {
             return;
         }
         fileTypes.add(fileType);
-    }
-
-    @SuppressLint("SwitchIntDef") // HLS only supports a small subset of the defined file types.
-    @Nullable
-    private Extractor createExtractorByFileType(
-            @FileTypes.Type int fileType,
-            Format format,
-            @Nullable List<Format> muxedCaptionFormats,
-            TimestampAdjuster timestampAdjuster) {
-        switch (fileType) {
-            case FileTypes.WEBVTT:
-                return new WebvttExtractor(format.language, timestampAdjuster);
-            case FileTypes.ADTS:
-                return new AdtsExtractor();
-            case FileTypes.AC3:
-                return new Ac3Extractor();
-            case FileTypes.AC4:
-                return new Ac4Extractor();
-            case FileTypes.MP3:
-                return new Mp3Extractor(/* flags= */ 0, /* forcedFirstSampleTimestampUs= */ 0);
-            case FileTypes.MP4:
-                return createFragmentedMp4Extractor(timestampAdjuster, format, muxedCaptionFormats);
-            case FileTypes.TS:
-                return createTsExtractor(
-                        payloadReaderFactoryFlags,
-                        exposeCea608WhenMissingDeclarations,
-                        format,
-                        muxedCaptionFormats,
-                        timestampAdjuster);
-            default:
-                return null;
-        }
     }
 
     private static MyTsExtractor createTsExtractor(
@@ -253,6 +171,91 @@ public final class MyHlsExtractorFactory implements HlsExtractorFactory {
             input.resetPeekPosition();
         }
         return result;
+    }
+
+    @Override
+    public MyBundledHlsMediaChunkExtractor createExtractor(
+            Uri uri,
+            Format format,
+            @Nullable List<Format> muxedCaptionFormats,
+            TimestampAdjuster timestampAdjuster,
+            Map<String, List<String>> responseHeaders,
+            ExtractorInput sniffingExtractorInput,
+            PlayerId playerId)
+            throws IOException {
+        @FileTypes.Type
+        int formatInferredFileType = FileTypes.inferFileTypeFromMimeType(format.sampleMimeType);
+        @FileTypes.Type
+        int responseHeadersInferredFileType =
+                FileTypes.inferFileTypeFromResponseHeaders(responseHeaders);
+        @FileTypes.Type int uriInferredFileType = FileTypes.inferFileTypeFromUri(uri);
+
+        // Defines the order in which to try the extractors.
+        List<Integer> fileTypeOrder =
+                new ArrayList<>(/* initialCapacity= */ DEFAULT_EXTRACTOR_ORDER.length);
+        addFileTypeIfValidAndNotPresent(formatInferredFileType, fileTypeOrder);
+        addFileTypeIfValidAndNotPresent(responseHeadersInferredFileType, fileTypeOrder);
+        addFileTypeIfValidAndNotPresent(uriInferredFileType, fileTypeOrder);
+        for (int fileType : DEFAULT_EXTRACTOR_ORDER) {
+            addFileTypeIfValidAndNotPresent(fileType, fileTypeOrder);
+        }
+
+        // Extractor to be used if the type is not recognized.
+        @Nullable Extractor fallBackExtractor = null;
+        sniffingExtractorInput.resetPeekPosition();
+        for (int i = 0; i < fileTypeOrder.size(); i++) {
+            int fileType = fileTypeOrder.get(i);
+            Extractor extractor =
+                    (Extractor) checkNotNull(
+                            createExtractorByFileType(fileType, format, muxedCaptionFormats, timestampAdjuster));
+            if (sniffQuietly(extractor, sniffingExtractorInput)) {
+                return new MyBundledHlsMediaChunkExtractor(extractor, format, timestampAdjuster);
+            }
+            if (fallBackExtractor == null
+                    && (fileType == formatInferredFileType
+                    || fileType == responseHeadersInferredFileType
+                    || fileType == uriInferredFileType
+                    || fileType == FileTypes.TS)) {
+                // If sniffing fails, fallback to the file types inferred from context. If all else fails,
+                // fallback to Transport Stream. See https://github.com/google/ExoPlayer/issues/8219.
+                fallBackExtractor = extractor;
+            }
+        }
+
+        return new MyBundledHlsMediaChunkExtractor(
+                checkNotNull(fallBackExtractor), format, timestampAdjuster);
+    }
+
+    @SuppressLint("SwitchIntDef") // HLS only supports a small subset of the defined file types.
+    @Nullable
+    private Object createExtractorByFileType(
+            @FileTypes.Type int fileType,
+            Format format,
+            @Nullable List<Format> muxedCaptionFormats,
+            TimestampAdjuster timestampAdjuster) {
+        switch (fileType) {
+            case FileTypes.WEBVTT:
+                return new WebvttExtractor(format.language, timestampAdjuster);
+            case FileTypes.ADTS:
+                return new AdtsExtractor();
+            case FileTypes.AC3:
+                return new Ac3Extractor();
+            case FileTypes.AC4:
+                return new Ac4Extractor();
+            case FileTypes.MP3:
+                return new Mp3Extractor(/* flags= */ 0, /* forcedFirstSampleTimestampUs= */ 0);
+            case FileTypes.MP4:
+                return createFragmentedMp4Extractor(timestampAdjuster, format, muxedCaptionFormats);
+            case FileTypes.TS:
+                return createTsExtractor(
+                        payloadReaderFactoryFlags,
+                        exposeCea608WhenMissingDeclarations,
+                        format,
+                        muxedCaptionFormats,
+                        timestampAdjuster);
+            default:
+                return null;
+        }
     }
 
 }

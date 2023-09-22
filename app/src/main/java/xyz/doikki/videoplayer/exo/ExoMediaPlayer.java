@@ -1,5 +1,6 @@
 package xyz.doikki.videoplayer.exo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.TrafficStats;
@@ -8,21 +9,21 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
+import androidx.media3.common.PlaybackException;
+import androidx.media3.common.PlaybackParameters;
+import androidx.media3.common.Player;
+import androidx.media3.common.Tracks;
+import androidx.media3.common.VideoSize;
+import androidx.media3.exoplayer.DefaultLoadControl;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.LoadControl;
+import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.util.LOG;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.PlaybackException;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.Tracks;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.video.VideoSize;
 
 import java.util.Map;
 
@@ -46,12 +47,15 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private int errorCode = -100;
     private String path;
     private Map<String, String> headers;
+    private long lastTotalRxBytes = 0;
+    private long lastTimeStamp = 0;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
         if (mRenderersFactory == null) {
@@ -65,7 +69,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mLoadControl = new DefaultLoadControl();
         }
         mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setTunnelingEnabled(true));
-        /*mMediaPlayer = new SimpleExoPlayer.Builder(
+        /*mMediaPlayer = new ExoPlayer.Builder(
                 mAppContext,
                 mRenderersFactory,
                 mTrackSelector,
@@ -122,6 +126,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         mMediaPlayer.stop();
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void prepareAsync() {
         if (mMediaPlayer == null)
@@ -234,15 +239,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     @Override
-    public void setSpeed(float speed) {
-        PlaybackParameters playbackParameters = new PlaybackParameters(speed);
-        mSpeedPlaybackParameters = playbackParameters;
-        if (mMediaPlayer != null) {
-            mMediaPlayer.setPlaybackParameters(playbackParameters);
-        }
-    }
-
-    @Override
     public float getSpeed() {
         if (mSpeedPlaybackParameters != null) {
             return mSpeedPlaybackParameters.speed;
@@ -250,9 +246,14 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         return 1f;
     }
 
-    private long lastTotalRxBytes = 0;
-
-    private long lastTimeStamp = 0;
+    @Override
+    public void setSpeed(float speed) {
+        PlaybackParameters playbackParameters = new PlaybackParameters(speed);
+        mSpeedPlaybackParameters = playbackParameters;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setPlaybackParameters(playbackParameters);
+        }
+    }
 
     private boolean unsupported() {
         return TrafficStats.getUidRxBytes(App.getInstance().getApplicationInfo().uid) == TrafficStats.UNSUPPORTED;

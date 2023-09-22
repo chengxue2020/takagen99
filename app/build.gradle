@@ -120,11 +120,11 @@ dependencies {
     implementation 'com.orhanobut:hawk:2.0.1'
 
     implementation 'androidx.annotation:annotation:1.6.0'
-    implementation "com.google.android.exoplayer:exoplayer-core:2.19.0"
-    implementation "com.google.android.exoplayer:exoplayer-dash:2.19.0"
-    implementation "com.google.android.exoplayer:exoplayer-hls:2.19.0"
-    implementation "com.google.android.exoplayer:exoplayer-rtsp:2.19.0"
-    implementation "com.google.android.exoplayer:extension-rtmp:2.19.0"
+    implementation "androidx.media3:media3-exoplayer:1.1.1"
+    implementation "androidx.media3:media3-exoplayer-dash:1.1.1"
+    implementation "androidx.media3:media3-exoplayer-hls:1.1.1"
+    implementation "androidx.media3:media3-exoplayer-rtsp:1.1.1"
+    implementation "androidx.media3:media3-datasource-rtmp:1.1.1"
     //implementation 'com.google.android.exoplayer:extension-okhttp:' + rootProject.ext.exoVersion
 
     implementation "com.aliyun.sdk.android:AliyunPlayer:5.5.1.0-full"
