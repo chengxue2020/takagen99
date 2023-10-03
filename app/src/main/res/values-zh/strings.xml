@@ -125,6 +125,7 @@
     <string name="act_home">首页</string>
     <string name="act_player">播放器</string>
     <string name="act_system">系统</string>
+	<string name="act_no_EPG_information">暂无节目信息</string>
 
     // Search Page //
     <string name="search_input">输入内容不能为空</string>
