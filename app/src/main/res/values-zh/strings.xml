@@ -175,7 +175,7 @@
 
 	// About
     <string name="version_title">版本 </string>
-	<string name="mn_Version">20230922-1950</string>
-	<string name="dia_about">版本：20230922-1950\n更新日志：\n修复在线打包，使用exo播放器，哔哩js不能播放的问题 (#1)\n\n本软件只提供聚合展示功能，所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容. 软件仅供学习参考, 请于安装后24小时内删除。\n\n打包分发请保留出处\nhttps://github.com/CatVodTVOfficial/TVBoxOSC</string>
+	<string name="mn_Version">20231013-2112</string>
+	<string name="dia_about">版本：20231013-2112\n更新日志：\nupdate quickjs\n增加部分站点一集分两段mp4的支持，代码里写死该站点的嗅探逻辑\n嗅探使用okhttp后，忘记添加缓存机制，加入缓存机制以提升嗅深速度\nquickjs lib include arm64-v8a now, add it to build type.\n\n本软件只提供聚合展示功能，所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容. 软件仅供学习参考, 请于安装后24小时内删除。\n\n打包分发请保留出处\nhttps://github.com/CatVodTVOfficial/TVBoxOSC</string>
 	
 </resources>
