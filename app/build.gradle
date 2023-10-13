@@ -2,18 +2,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 def static buildTime() {
-    return new Date().format("yyyyMMdd.HHmm", TimeZone.getTimeZone("GMT+08:00"))
+    return new Date().format("yyyyMMdd_HHmm", TimeZone.getTimeZone("GMT+08:00"))
 }
 
 android {
     compileSdk 33
 
     defaultConfig {
-        applicationId 'com.github.tvbox.Frank.takagen'
+        applicationId 'com.github.tvbox.osc.tk'
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "3.".concat(buildTime())
+        versionName "1.0.".concat(buildTime())
         multiDexEnabled true
         //设置room的Schema的位置
         javaCompileOptions {
@@ -34,6 +34,7 @@ android {
 
             ndk {
                 abiFilters 'armeabi-v7a'
+                abiFilters 'arm64-v8a'
             }
         }
         release {
@@ -42,6 +43,7 @@ android {
 
             ndk {
                 abiFilters 'armeabi-v7a'
+                abiFilters 'arm64-v8a'
             }
         }
     }
@@ -55,12 +57,7 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    dexOptions {
-        javaMaxHeapSize "4g"
-        additionalParameters += '--multi-dex'
-        additionalParameters += '--set-max-idx-number=48000'
-        additionalParameters += '--minimal-main-dex'
-    }
+    
     buildFeatures {
         dataBinding = true
     }
@@ -87,7 +84,8 @@ dependencies {
             because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
         }
     }
-    api fileTree(dir: "libs", include: ["*.jar"])
+    api fileTree(dir: "libs", include: ['*.jar', '*.aar'])
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     // for WebDAV
     implementation('com.github.thegrizzlylabs:sardine-android:0.8') {
@@ -118,7 +116,7 @@ dependencies {
     }
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'com.orhanobut:hawk:2.0.1'
-
+    implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation "androidx.media3:media3-exoplayer:1.1.1"
     implementation "androidx.media3:media3-exoplayer-dash:1.1.1"
@@ -130,11 +128,7 @@ dependencies {
     implementation "com.aliyun.sdk.android:AliyunPlayer:5.5.1.0-full"
     implementation 'com.alivc.conan:AlivcConan:0.9.5'
     implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
-    implementation 'xyz.doikki.android.dkplayer:videocache:3.3.7'
-
-    implementation project(":quickjs")
-	implementation 'com.github.xuexiangjys:XUpdate:2.1.2' 
-    implementation 'com.github.xuexiangjys.XUpdateAPI:xupdate-easy:1.0.1'
+    implementation 'xyz.doikki.android.dkplayer:videocache:3.3.7'    
 
     implementation('org.xwalk:xwalk_shared_library:23.53.589.4') {
         exclude group: 'com.android.support'

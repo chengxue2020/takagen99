@@ -13,9 +13,7 @@ import androidx.media3.common.Tracks;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-
-import com.github.tvbox.quickjs.JSUtils;
-
+import com.github.tvbox.osc.util.StringUtils;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 
 public class EXOmPlayer extends ExoMediaPlayer {
@@ -45,7 +43,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             t.name = trackName;
                             t.language = "";
                             t.trackId = formatIndex;
-                            t.selected = !JSUtils.isEmpty(audioId) && audioId.equals(format.id);
+                            t.selected = !StringUtils.isEmpty(audioId) && audioId.equals(format.id);
                             t.trackGroupId = groupIndex;
                             t.renderId = groupArrayIndex;
                             data.addAudio(t);
@@ -55,7 +53,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             t.name = trackName;
                             t.language = "";
                             t.trackId = formatIndex;
-                            t.selected = !JSUtils.isEmpty(subtitleId) && subtitleId.equals(format.id);
+                            t.selected = !StringUtils.isEmpty(subtitleId) && subtitleId.equals(format.id);
                             t.trackGroupId = groupIndex;
                             t.renderId = groupArrayIndex;
                             data.addSubtitle(t);

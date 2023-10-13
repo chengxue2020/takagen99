@@ -654,9 +654,9 @@ public class SourceViewModel extends ViewModel {
             spThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
-                    Spider sp = ApiConfig.get().getCSP(sourceBean);
-                    String json = sp.playerContent(playFlag, url, ApiConfig.get().getVipParseFlags());
+                    Spider sp = ApiConfig.get().getCSP(sourceBean);                    
                     try {
+			String json = sp.playerContent(playFlag, url, ApiConfig.get().getVipParseFlags());    
                         JSONObject result = new JSONObject(json);
                         result.put("key", url);
                         result.put("proKey", progressKey);

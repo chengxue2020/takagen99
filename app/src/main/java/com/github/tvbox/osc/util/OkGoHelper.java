@@ -1,5 +1,9 @@
 package com.github.tvbox.osc.util;
 
+import static okhttp3.ConnectionSpec.CLEARTEXT;
+import static okhttp3.ConnectionSpec.COMPATIBLE_TLS;
+import static okhttp3.ConnectionSpec.MODERN_TLS;
+import static okhttp3.ConnectionSpec.RESTRICTED_TLS;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.picasso.CustomImageDownloader;
 import com.github.tvbox.osc.util.SSL.SSLSocketFactoryCompat;
@@ -12,6 +16,7 @@ import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.List;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -24,9 +29,11 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.Cache;
+import okhttp3.ConnectionSpec;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.dnsoverhttps.DnsOverHttps;
+import okhttp3.internal.Util;
 import okhttp3.internal.Version;
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
@@ -61,7 +68,7 @@ public class OkGoHelper {
             loggingInterceptor.setColorLevel(Level.OFF);
         }
         builder.addInterceptor(loggingInterceptor);
-
+        builder.connectionSpecs(getConnectionSpec());
         builder.retryOnConnectionFailure(true);
         builder.followRedirects(true);
         builder.followSslRedirects(true);
@@ -80,6 +87,10 @@ public class OkGoHelper {
     public static DnsOverHttps dnsOverHttps = null;
 
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
+
+    public static List<ConnectionSpec> getConnectionSpec() {
+        return Util.immutableList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+    }
 
 
     public static String getDohUrl(int type) {
@@ -130,6 +141,7 @@ public class OkGoHelper {
         } catch (Throwable th) {
             th.printStackTrace();
         }
+        builder.connectionSpecs(getConnectionSpec());
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
@@ -164,7 +176,7 @@ public class OkGoHelper {
         }
 
         //builder.retryOnConnectionFailure(false);
-
+        builder.connectionSpecs(getConnectionSpec());
         builder = builder.addInterceptor(loggingInterceptor)
                 .readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS)
                 .writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS)

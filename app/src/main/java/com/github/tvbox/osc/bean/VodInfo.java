@@ -1,6 +1,11 @@
 package com.github.tvbox.osc.bean;
 
+import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+
 import com.github.tvbox.osc.api.ApiConfig;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -47,6 +52,7 @@ public class VodInfo implements Serializable {
     public String des;// <![CDATA[权来]
     public String playFlag = null;
     public int playIndex = 0;
+
     public String playNote = "";
     public String sourceKey;
     public String playerCfg = "";
@@ -75,13 +81,17 @@ public class VodInfo implements Serializable {
                 if (urlInfo.beanList != null && urlInfo.beanList.size() > 0) {
                     List<VodSeries> seriesList = new ArrayList<>();
                     for (Movie.Video.UrlBean.UrlInfo.InfoBean infoBean : urlInfo.beanList) {
-                        seriesList.add(new VodSeries(infoBean.name, infoBean.url));
+                        if(!TextUtils.isEmpty(name)) {
+                            seriesList.add(new VodSeries(infoBean.name.replace(name, ""), infoBean.url));
+                        } else {
+                            seriesList.add(new VodSeries(infoBean.name, infoBean.url));
+                        }
                     }
                     tempSeriesMap.put(urlInfo.flag, seriesList);
                     seriesFlags.add(new VodSeriesFlag(urlInfo.flag));
                 }
             }
-            SourceBean sb = ApiConfig.get().getSource(video.sourceKey);
+            /*SourceBean sb = ApiConfig.get().getSource(video.sourceKey);
             if (sb != null) { // ssp 不排序
                 // 优先展示m3u8
                 Collections.sort(seriesFlags, new Comparator<VodSeriesFlag>() {
@@ -96,7 +106,7 @@ public class VodInfo implements Serializable {
                         return 0;
                     }
                 });
-            }
+            }*/
             seriesMap = new LinkedHashMap<>();
             for (VodSeriesFlag flag : seriesFlags) {
                 seriesMap.put(flag.name, tempSeriesMap.get(flag.name));
@@ -111,31 +121,43 @@ public class VodInfo implements Serializable {
         }
     }
 
+    @NonNull
+    @Override
+    public Object clone() {
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(this);
+            return gson.fromJson(json, VodInfo.class);
+        } catch (Exception ignored) {
+        }
+        return this;
+    }
+
     //takagen99
-    public boolean isSeriesEmpty(){
+    public boolean isSeriesEmpty() {
         return seriesMap == null ? true : seriesMap.isEmpty();
     }
 
-    public List<VodSeries> getFlagSeries(String playFlag){
+    public List<VodSeries> getFlagSeries(String playFlag) {
         List<VodSeries> list = null;
-        if(!isSeriesEmpty()){
+        if (!isSeriesEmpty()) {
             list = seriesMap.get(playFlag);
-        }else{
+        } else {
             list = new ArrayList<>();
         }
         return list;
     }
 
-    public boolean isFlagSeriesEmpty(String playFlag){
+    public boolean isFlagSeriesEmpty(String playFlag) {
         List<VodSeries> list = getFlagSeries(playFlag);
         return list.isEmpty();
     }
 
-    public VodSeries getVodSeries(String playFlag, int playIndex){
+    public VodSeries getVodSeries(String playFlag, int playIndex) {
         VodSeries vodSeries = null;
         List<VodSeries> list = getFlagSeries(playFlag);
-        if(list != null && !list.isEmpty()){
-            if(playIndex >= 0 && playIndex < list.size()){
+        if (list != null && !list.isEmpty()) {
+            if (playIndex >= 0 && playIndex < list.size()) {
                 vodSeries = list.get(playIndex);
             }
         }
@@ -145,7 +167,7 @@ public class VodInfo implements Serializable {
     public static class VodSeriesFlag implements Serializable {
 
         public String name;
-        public boolean selected;
+        public boolean selected = false;
 
         public VodSeriesFlag() {
 

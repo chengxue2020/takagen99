@@ -6,7 +6,7 @@ import android.os.Build;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
-
+import com.github.catvod.crawler.JsLoader;
 import com.github.tvbox.osc.BuildConfig;
 import com.github.tvbox.osc.callback.EmptyCallback;
 import com.github.tvbox.osc.callback.LoadingCallback;
@@ -20,11 +20,11 @@ import com.github.tvbox.osc.util.LocaleHelper;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.OkGoHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
-import com.github.tvbox.osc.util.js.JSEngine;
 import com.kingja.loadsir.core.LoadSir;
 import com.orhanobut.hawk.Hawk;
 
 import com.p2p.P2PClass;
+import com.whl.quickjs.android.QuickJSLoader;
 import org.conscrypt.Conscrypt;
 
 import java.io.FileInputStream;
@@ -44,6 +44,7 @@ public class App extends MultiDexApplication {
     private static App instance;
     private static P2PClass p;
     public static String burl;
+    private static String dashData;
     public static Provider conscrypt = Conscrypt.newProvider();
     @Override
     public void onCreate() {
@@ -79,7 +80,7 @@ public class App extends MultiDexApplication {
         FileUtils.cleanPlayerCache();
 
         // Add JS support
-        JSEngine.getInstance().create();
+        QuickJSLoader.init();
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             Security.insertProviderAt(conscrypt, 1);
         }
@@ -149,7 +150,7 @@ public class App extends MultiDexApplication {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        JSEngine.getInstance().destroy();
+        JsLoader.load();
     }
 
     @Override
@@ -168,5 +169,12 @@ public class App extends MultiDexApplication {
 
         super.attachBaseContext(base);
 
+    }
+
+    public void setDashData(String data) {
+        dashData = data;
+    }
+    public String getDashData() {
+        return dashData;
     }
 }
