@@ -175,7 +175,7 @@
 
 	// About
     <string name="version_title">版本 </string>
-	<string name="mn_Version">20231018-1210</string>
-	<string name="dia_about">版本：20231018-1210\n更新日志：\n优化js加载规则\n解决部分站点因加速代理异常导致的可能闪退的bug\n\n本软件只提供聚合展示功能，所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容. 软件仅供学习参考, 请于安装后24小时内删除。\n\n打包分发请保留出处\nhttps://github.com/CatVodTVOfficial/TVBoxOSC</string>
+	<string name="mn_Version">20231018-2103</string>
+	<string name="dia_about">版本：20231018-2103\n更新日志：\n解决gitcode闪退问题\n\n本软件只提供聚合展示功能，所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容. 软件仅供学习参考, 请于安装后24小时内删除。\n\n打包分发请保留出处\nhttps://github.com/CatVodTVOfficial/TVBoxOSC</string>
 	
 </resources>
