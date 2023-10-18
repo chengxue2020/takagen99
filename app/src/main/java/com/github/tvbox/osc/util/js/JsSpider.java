@@ -158,14 +158,16 @@ public class JsSpider extends Spider {
             if (ctx == null) createCtx();
             if (dex != null) createDex();
 
-            String content = FileUtils.loadModule(api);
+            String content = FileUtils.loadModule(api);            
+            if (TextUtils.isEmpty(content)) {return null;}
+            
             if(content.startsWith("//bb")){
                 cat = true;
                 byte[] b = Base64.decode(content.replace("//bb",""), 0);
-                //ctx.execute(byteFF(b), key + ".js");
-                //ctx.evaluateModule(String.format(SPIDER_STRING_CODE, key + ".js") + "globalThis." + key + " = __JS_SPIDER__;", "tv_box_root.js");
-                ctx.execute(byteFF(b), key + ".js","__jsEvalReturn");
-                ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");
+                ctx.execute(byteFF(b), key + ".js");
+                ctx.evaluateModule(String.format(SPIDER_STRING_CODE, key + ".js") + "globalThis." + key + " = __JS_SPIDER__;", "tv_box_root.js");
+                //ctx.execute(byteFF(b), key + ".js","__jsEvalReturn");
+                //ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");
             } else {
                 if (content.contains("__JS_SPIDER__")) {
                     content = content.replaceAll("__JS_SPIDER__\\s*=", "export default ");
@@ -175,10 +177,10 @@ public class JsSpider extends Spider {
                     moduleExtName = "__jsEvalReturn";
                     cat = true;
                 }
-                //ctx.evaluateModule(content, api);
-                //ctx.evaluateModule(String.format(SPIDER_STRING_CODE, api) + "globalThis." + key + " = __JS_SPIDER__;", "tv_box_root.js");
-                ctx.evaluateModule(content, api, moduleExtName);
-                ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");
+                ctx.evaluateModule(content, api);
+                ctx.evaluateModule(String.format(SPIDER_STRING_CODE, api) + "globalThis." + key + " = __JS_SPIDER__;", "tv_box_root.js");
+                //ctx.evaluateModule(content, api, moduleExtName);
+                //ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");                
             }
             jsObject = (JSObject) ctx.get(ctx.getGlobalObject(), key);
             return null;
@@ -198,17 +200,18 @@ public class JsSpider extends Spider {
             @Override
             public byte[] getModuleBytecode(String moduleName) {
                 String ss = FileUtils.loadModule(moduleName);
+                if (TextUtils.isEmpty(ss)) {return null;}
                 if(ss.startsWith("//DRPY")){
                     return Base64.decode(ss.replace("//DRPY",""), Base64.URL_SAFE);
                 } else if(ss.startsWith("//bb")){
                     byte[] b = Base64.decode(ss.replace("//bb",""), 0);
                     return byteFF(b);
                 } else {
-                    /*if (moduleName.contains("cheerio.min.js")) {
+                    if (moduleName.contains("cheerio.min.js")) {
                         FileUtils.setCacheByte("cheerio.min", ctx.compileModule(ss, "cheerio.min.js"));
                     } else if (moduleName.contains("crypto-js.js")) {
                         FileUtils.setCacheByte("crypto-js", ctx.compileModule(ss, "crypto-js.js"));
-                    }*/
+                    }
                     return ctx.compileModule(ss, moduleName);
                 }
             }
@@ -284,6 +287,7 @@ public class JsSpider extends Spider {
     private String getContent() {
         String global = "globalThis." + key;
         String content = FileUtils.loadModule(api);
+        if (TextUtils.isEmpty(content)) {return null;}
         if (content.contains("__jsEvalReturn")) {
             ctx.evaluate("req = http");
             return content.concat(global).concat(" = __jsEvalReturn()");
