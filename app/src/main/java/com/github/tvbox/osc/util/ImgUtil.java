@@ -70,7 +70,7 @@ public class ImgUtil {
             if (roundingRadius == 0) roundingRadius = 1;
             RequestOptions requestOptions = new RequestOptions()
                 .format(DecodeFormat.PREFER_RGB_565)
-                .diskCacheStrategy(getDiskCacheStrategy(0))
+                .diskCacheStrategy(getDiskCacheStrategy(4))
                 .dontAnimate()
                 .transform(
             new CenterCrop(),
