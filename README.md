@@ -1,6 +1,16 @@
 # Box
 
-=== Source Code - Editing the app default settings ===
+
+=== Setting Up the Configuration Address ===
+- 数据源 > Input Source URL address
+- 直播 (Optional) > Input Live URL (http) address. If empty, will take Live URL from Source file
+- EPG (Optional) > Input EPG URL (http) address. If empty, will take EPG URL from Source file. If not found in Source file, default from http://epg.51zmt.top:8000/api/diyp/
+
+中文配置地址：
+C:\Users\Frank\Documents\GitHub\takagen99\app\src\main\res\values-zh\strings.xml
+
+
+=== Source Code - 修改默认设置 ===
 /src/main/java/com/github/tvbox/osc/base/App.java
 
     private void initParams() { 
