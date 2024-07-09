@@ -4923,7 +4923,7 @@
     {
       "tvid": "616",
       "epgid": "河北经济",
-      "name": "河北经济生活,河北经济",
+      "name": "河北经济生活,河北经济,河北经济生活频道,河北经济频道",
       "status": "1",
       "note": "河北经济",
       "logo": "https://chengxue2020.github.io/Logos/大陆/河北/河北经济生活频道.png"
@@ -4931,7 +4931,7 @@
     {
       "tvid": "617",
       "epgid": "河北都市",
-      "name": "河北都市",
+      "name": "河北都市,河北都市频道",
       "status": "1",
       "note": "河北都市",
       "logo": "https://chengxue2020.github.io/Logos/大陆/河北/河北都市频道.png"
@@ -4939,7 +4939,7 @@
     {
       "tvid": "618",
       "epgid": "河北影视剧",
-      "name": "河北影视剧",
+      "name": "河北影视剧,河北影视剧频道",
       "status": "1",
       "note": "河北影视剧",
       "logo": "https://chengxue2020.github.io/Logos/大陆/河北/河北影视剧频道.png"
@@ -4947,7 +4947,7 @@
     {
       "tvid": "619",
       "epgid": "河北少儿科教",
-      "name": "河北少儿科教",
+      "name": "河北少儿科教,河北少儿科教频道",
       "status": "1",
       "note": "河北少儿科教",
       "logo": "https://chengxue2020.github.io/Logos/大陆/河北/河北少儿科教频道.png"
@@ -4955,7 +4955,7 @@
     {
       "tvid": "620",
       "epgid": "河北公共",
-      "name": "河北公共",
+      "name": "河北公共,河北公共频道",
       "status": "1",
       "note": "河北公共",
       "logo": "https://chengxue2020.github.io/Logos/大陆/河北/河北公共频道.png"
