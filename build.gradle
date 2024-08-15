@@ -8,6 +8,8 @@ buildscript {
         maven { url "https://jitpack.io" }
         maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
         maven { url "https://maven.aliyun.com/repository/releases" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
@@ -25,6 +27,7 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
         maven { url "https://maven.aliyun.com/repository/releases" }
+        maven { url "https://maven.aliyun.com/repository/public" }
     }
 }
 

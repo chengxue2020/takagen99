@@ -153,7 +153,7 @@ public class ImgUtil {
         if (url.contains("@User-Agent=")) ua = url.split("@User-Agent=")[1].split("@")[0];
         if (url.contains("@Referer=")) referer = url.split("@Referer=")[1].split("@")[0];
         url = url.split("@")[0];
-
+        if(TextUtils.isEmpty(url)) return null;
         /*   AuthInfo authInfo = new AuthInfo(url);
         url = authInfo.url; */
 

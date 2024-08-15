@@ -272,6 +272,7 @@ public class StorageDriveType {
             "M2T",
             "M2TS",
             "M2V",
+            "M3U8",
             "M4E",
             "M4F",
             "M4S",
