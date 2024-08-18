@@ -686,7 +686,9 @@ public class ApiConfig {
     }
 
     public Object[] proxyLocal(Map param) {
-
+        if ("js".equals(param.get("do"))) {
+            return jsLoader.proxyInvoke(param);
+        }
         return jarLoader.proxyInvoke(param);
     }
 
