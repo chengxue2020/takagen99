@@ -1,4 +1,4 @@
-name: Action
+name: 2nd build
 
 on:
   schedule:
