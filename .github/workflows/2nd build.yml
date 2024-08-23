@@ -21,12 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - userName: takagen99
-            repoName: Box
-            branchName: main
           - userName: chengxue2020
             repoName: takagen99
-            branchName: main
+            branchName: 2nd
             java_ver: 17
     steps:
       - name: Checkout
