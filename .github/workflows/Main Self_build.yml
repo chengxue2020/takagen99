@@ -1,9 +1,9 @@
-name: 2nd build
+name: Main Self build
 
 on:
   push:
     branches:
-      - 2nd
+      - main
   pull_request:
   schedule:
     - cron: 30 0-18/2 * * *
@@ -27,7 +27,7 @@ jobs:
         include:
           - userName: chengxue2020
             repoName: takagen99
-            branchName: 2nd
+            branchName: main
             java_ver: 17
     steps:
       - name: Checkout
