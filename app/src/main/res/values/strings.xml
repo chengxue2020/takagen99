@@ -136,6 +136,7 @@
     <string name="act_home">Home</string>
     <string name="act_player">Player</string>
     <string name="act_system">System</string>
+    <string name="act_no_EPG_information">No EPG Information</string>
 
     // Search Page //
     <string name="search_input">Input cannot be blank</string>
