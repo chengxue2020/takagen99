@@ -1,20 +1,29 @@
 # TVBoxOSC
 
-![Build](https://shields.io/github/actions/workflow/status/o0HalfLife0o/TVBoxOSC/test.yml?branch=master&logo=github&label=Build)
+![Build](https://shields.io/github/actions/workflow/status/chengxue2020/takagen99/Main_Self_build.yml?branch=master&logo=github&label=Build)
 [![Channel](https://img.shields.io/badge/Follow-Telegram-blue.svg?logo=telegram)](https://t.me/TVBoxOSC)
-[![Download](https://img.shields.io/github/v/release/o0HalfLife0o/TVBoxOSC?color=orange&logoColor=orange&label=Download&logo=DocuSign)](https://github.com/o0HalfLife0o/TVBoxOSC/releases/latest) 
-[![Total](https://shields.io/github/downloads/o0HalfLife0o/TVBoxOSC/total?logo=Bookmeter&label=Counts&logoColor=yellow&color=yellow)](https://github.com/o0HalfLife0o/TVBoxOSC/releases)
+[![Download](https://img.shields.io/github/v/release/chengxue2020/takagen99?color=orange&logoColor=orange&label=Download&logo=DocuSign)](https://github.com/chengxue2020/takagen99/releases/latest) 
+[![Total](https://shields.io/github/downloads/chengxue2020/takagen99/total?logo=Bookmeter&label=Counts&logoColor=yellow&color=yellow)](https://github.com/chengxue2020/takagen99/releases)
 
 ## Credits
 This repo relies on the following third-party projects:
 - [CatVodTVOfficial/TVBoxOSC](https://github.com/CatVodTVOfficial/TVBoxOSC)
-- [q215613905/TVBoxOS](https://github.com/q215613905/TVBoxOS) (Updated: 49e631437836a97cdf158544267de59855c11b6a)
-- [takagen99/Box](https://github.com/takagen99/Box) (Updated: 9fcd86189c7818ca26284aa69c4ce29c7a30b87f)
+- [takagen99/Box](https://github.com/takagen99/Box) (Updated: 0cfa60f9661479c0066b5f18e99fb134090c1bcd)
+- [chengxue2020/takagen99](https://github.com/chengxue2020/takagen99) (Updated: 0cfa60f9661479c0066b5f18e99fb134090c1bcd)
 
 
 
 
-=== Source Code - Editing the app default settings ===
+=== Setting Up the Configuration Address ===
+- 数据源 > Input Source URL address
+- 直播 (Optional) > Input Live URL (http) address. If empty, will take Live URL from Source file
+- EPG (Optional) > Input EPG URL (http) address. If empty, will take EPG URL from Source file. If not found in Source file, default from http://epg.51zmt.top:8000/api/diyp/
+
+中文配置地址：
+C:\Users\Frank\Documents\GitHub\takagen99\app\src\main\res\values-zh\strings.xml
+
+
+=== Source Code - 修改默认设置 ===
 /src/main/java/com/github/tvbox/osc/base/App.java
 
     private void initParams() { 
@@ -26,5 +35,6 @@ This repo relies on the following third-party projects:
         putDefault(HawkConfig.HOME_NUM, 2);       // History Number
         putDefault(HawkConfig.DOH_URL, 2);        // DNS
         putDefault(HawkConfig.SEARCH_VIEW, 2);    // Text or Picture
+
 
     }
