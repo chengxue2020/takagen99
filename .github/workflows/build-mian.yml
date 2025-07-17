@@ -1,0 +1,284 @@
+name: 打包mian
+
+on:
+  schedule:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    - cron: 30 0-18/2 * * *
+  workflow_dispatch:
+    inputs:
+      rebuild:
+        description: '忽略构建记录以重新构建'
+        required: false
+        type: boolean
+      donotpublish:
+        description: '构建后不提交发布新版'
+        required: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - userName: chengxue2020
+            repoName: takagen99
+            branchName: main
+            java_ver: 17
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check New Commit
+        run: |
+          upStream=https://github.com/${{ matrix.userName }}/${{ matrix.repoName }}
+          echo "upStream=$upStream" >> $GITHUB_ENV
+          commit=$(curl -sL $upStream/commits/${{ matrix.branchName }} |grep -o "/${{ matrix.userName }}/${{ matrix.repoName }}/commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
+          if [[ -z "${commit}" ]]; then
+            commit=$(curl -s "https://api.github.com/repos/${{ matrix.userName }}/${{ matrix.repoName }}/commits/${{ matrix.branchName }}?per_page=1" | jq -r '.sha' )
+          fi
+          if ! grep -q "$commit" README.md || [ "${{ inputs.rebuild }}" == "true" ]; then
+            echo "commit=$commit" >> $GITHUB_ENV
+            echo "commitS=${commit:0:7}" >> $GITHUB_ENV
+          fi
+          echo "commit=$commit"
+      - name: Checkout Source Code
+        if: ${{ env.commit }}
+        run: |
+          git clone ${{ env.upStream }} TVBoxOSC
+          cd TVBoxOSC
+          git checkout ${{ env.commit }}
+          echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
+      - name: Extra Modify
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          echo '修改VersionName'
+          if [ "${{ matrix.userName }}" == "takagen99" ]; then
+            # 进行 sed 修改
+            sed -i 's/\.concat(buildTime())/ +\"${{ env.tag }}\"/g' app/build.gradle 
+            # 目前关于页面没有合并我的分支
+            sed -i "/android:text=/s#=\"#=\"${{ env.tag }}\\\\n\\\\n#" app/src/main/res/layout/dialog_about.xml
+          else
+             sed -i "/versionName/s#[0-9a-zA-Z_\.\'\"-]\+\$#\'${{ env.tag }}\'#" app/build.gradle
+             sed -i "/android:text=/s#=\"#=\"${{ env.tag }}\\\\n\\\\n#" app/src/main/res/layout/dialog_about.xml
+          fi 
+          echo 'crosswalk源，防挂'
+          if grep -q 'crosswalk' build.gradle; then
+            sed -i "/crosswalk/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
+          else
+            sed -i "/jitpack.io/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
+          fi
+      - name: Compress Source Code
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          #zip -q -x ".git/*" -x  ".github/*" -r sourceCode-${{ env.commitS }}.zip .
+          tar -cJf sourceCode-${{ env.commitS }}.tar.xz --exclude=.git --exclude=.github *
+      
+      - name: Setup Python
+        #if: ${{ matrix.userName == 'q215613905' && env.commit }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      - name: Install Python dependencies
+        #if: ${{ matrix.userName == 'q215613905' && env.commit }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install lxml ujson pyquery requests jsonpath cachetools pycryptodome beautifulsoup4
+
+      - name: Modify pyramid——build.gradle（Takagen99 & chengxue2020）
+        if: ${{ (matrix.userName == 'takagen99' || matrix.userName == 'chengxue2020') && env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          sed -i '/buildPython.*python.exe/d' pyramid/build.gradle
+          
+      - name: Modify pyramid——build.gradle()
+        if: ${{ matrix.userName == 'q215613905' && env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          # 替换Windows路径为系统Python路径
+          sed -i "s|buildPython(\"D:/Programs/Python/Python38/python.exe\")|buildPython(\"/usr/bin/python3\")|g" pyramid/build.gradle
+          sed -i '/buildPython.*python.exe/d' pyramid/build.gradle
+
+      - name: Setup Python local.properties
+        #if: ${{ matrix.userName == 'q215613905' && env.commit }}
+        working-directory: TVBoxOSC
+        run: echo "" > local.properties 
+          
+      - name: Release Apk Sign
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          signingConfigs='ICAgIHNpZ25pbmdDb25maWdzIHtcCiAgICAgICAgaWYgKHByb2plY3QuaGFzUHJvcGVydHkoIlJFTEVBU0VfU1RPUkVfRklMRSIpKSB7XAogICAgICAgICAgICBteUNvbmZpZyB7XAogICAgICAgICAgICAgICAgc3RvcmVGaWxlIGZpbGUoUkVMRUFTRV9TVE9SRV9GSUxFKVwKICAgICAgICAgICAgICAgIHN0b3JlUGFzc3dvcmQgUkVMRUFTRV9TVE9SRV9QQVNTV09SRFwKICAgICAgICAgICAgICAgIGtleUFsaWFzIFJFTEVBU0VfS0VZX0FMSUFTXAogICAgICAgICAgICAgICAga2V5UGFzc3dvcmQgUkVMRUFTRV9LRVlfUEFTU1dPUkRcCiAgICAgICAgICAgICAgICB2MVNpZ25pbmdFbmFibGVkIHRydWVcCiAgICAgICAgICAgICAgICB2MlNpZ25pbmdFbmFibGVkIHRydWVcCiAgICAgICAgICAgICAgICBlbmFibGVWM1NpZ25pbmcgPSB0cnVlXAogICAgICAgICAgICAgICAgZW5hYmxlVjRTaWduaW5nID0gdHJ1ZVwKICAgICAgICAgICAgfVwKICAgICAgICB9XAogICAgfVwKXA=='
+          signingConfig='ICAgICAgICAgICAgaWYgKHByb2plY3QuaGFzUHJvcGVydHkoIlJFTEVBU0VfU1RPUkVfRklMRSIpKSB7XAogICAgICAgICAgICAgICAgc2lnbmluZ0NvbmZpZyBzaWduaW5nQ29uZmlncy5teUNvbmZpZ1wKICAgICAgICAgICAgfVwK'
+          signingConfigs="$(echo "$signingConfigs" |base64 -d )"
+          signingConfig="$(echo "$signingConfig" |base64 -d )"
+          sed -i -e "/defaultConfig {/i\\$signingConfigs " -e "/debug {/a\\$signingConfig " -e "/release {/a\\$signingConfig " app/build.gradle
+          cp -f ${{ github.workspace }}/.github/workflows/TVBoxOSC.jks app/TVBoxOSC.jks
+          sed -i '$a\RELEASE_STORE_FILE=./TVBoxOSC.jks'     ./gradle.properties
+          sed -i '$a\RELEASE_KEY_ALIAS=TVBoxOSC'            ./gradle.properties
+          sed -i '$a\RELEASE_STORE_PASSWORD=TVBoxOSC'       ./gradle.properties
+          sed -i '$a\RELEASE_KEY_PASSWORD=TVBoxOSC'         ./gradle.properties
+      - uses: actions/setup-java@v4
+        if: ${{ matrix.java_ver }}
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java_ver }}
+      - uses: gradle/actions/setup-gradle@v4
+        if: ${{ env.commit }}
+      - name: Build With Gradle
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          chmod +x gradlew
+          ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
+      - name: Prepare App
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          rm -rf apk/
+          mkdir -p apk/
+          for file in `find ~ -name "*release*.apk" -print`; do
+            # 获取文件的基本名称
+            base=$(basename "$file")
+            # 如果文件是 TVBox_ 开头
+            if [[ "$base" == TVBox_* ]]; then
+              new_base=$(echo "$base" | sed "s/release/${{ matrix.userName }}_${{ env.tag }}/")
+            else
+              new_base="TVBox_${{ matrix.userName }}_${{ env.tag }}.apk"
+            fi
+            # 移动并重命名文件
+            mv "$file" "apk/$new_base"
+          done
+          mv sourceCode-${{ env.commitS }}.* apk/
+      - name: Release Note
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          lastCommit=$(grep "${{ matrix.userName }}\/${{ matrix.repoName }}" ${{ github.workspace }}/README.md |grep -o '[a-z0-9]\{40\}')
+          export LESSCHARSET=utf-8
+          echo -e "Credit: [${{ matrix.userName }}](${{ env.upStream }})\nCommit: ${{ env.commit }}\nChangelog:\n\`\`\`" > apk/${{ matrix.userName }}-Release.log
+          if [ "${{ env.commit }}" == "${lastCommit}" ]; then
+            git log --pretty=format:%B ${{ env.commitS }} -1 |sed -e "s# \{2,\}#\n#g" -e "/^Merge \(pull\|branch\|remote\)/d" -e '/^$/d' |cat -n |sort -k2,2 -k1,1n |uniq -f1 |sort -k1,1n |cut -f2- >> apk/${{ matrix.userName }}-Release.log
+          else
+            git log --pretty=format:%B ${{ env.commitS }}...${lastCommit:0:7} |sed -e "s# \{2,\}#\n#g" -e "/^Merge \(pull\|branch\|remote\)/d" -e '/^$/d' |cat -n |sort -k2,2 -k1,1n |uniq -f1 |sort -k1,1n |cut -f2- >> apk/${{ matrix.userName }}-Release.log
+          fi
+          echo -e '\n```' >> apk/${{ matrix.userName }}-Release.log
+      - name: Upload App To Artifact
+        uses: actions/upload-artifact@v4
+        if: ${{ env.commit }}
+        with:
+          name: ${{ matrix.userName }}-${{ matrix.repoName }}
+          path: |
+            TVBoxOSC/apk/*
+      - name: Whether Or Not to Publish
+        if: ${{ inputs.donotpublish && env.commit }}
+        run: |
+          echo "commit=" >> $GITHUB_ENV
+      - name: Release and Upload Assets
+        uses: ncipollo/release-action@v1
+        if: ${{ env.commit }}
+        with:
+          name: ${{ env.tag }}
+          tag: ${{ env.tag }}
+          bodyFile: TVBoxOSC/apk/${{ matrix.userName }}-Release.log
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: |
+            TVBoxOSC/apk/*.apk
+            TVBoxOSC/apk/sourceCode-${{ env.commitS }}.*
+      - name: Download Telegram Bot API Binary
+        if: ${{ env.commit }}
+        uses: actions/download-artifact@v4
+        with:
+          name: telegram-bot-api-binary
+          path: TVBoxOSC
+      - name: Post To Telegram
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        env:
+          CHAT_ID: -1001734684817
+          TELEGRAM_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          if [ -n "${{ secrets.BOT_TOKEN }}" ]; then
+            sed -i -e '1s/\[\(.*\)\].*/#\1/' -e 's#\([&"\/]\)#\\\1#g' apk/${{ matrix.userName }}-Release.log
+            mv -f apk/${{ matrix.userName }}-Release.log caption.txt
+            chmod +x telegram-bot-api-binary
+            ./telegram-bot-api-binary --api-id=21724 --api-hash=3e0cb5efcd52300aec5994fdfc5bdc16 --local 2>&1 > /dev/null &
+            mv ../.github/scripts/upload.py ./
+            python upload.py
+          fi
+      - name: Push to master
+        if: ${{ env.commit }}
+        run: |
+          rm -rf TVBoxOSC
+          git reset --hard
+          sed -i '/url =/d' ./.git/config
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url --add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git pull --rebase
+          sed -i "/${{ matrix.userName }}\/${{ matrix.repoName }}/s#Updated: [a-zA-Z0-9]*#Updated: ${{ env.commit }}#" README.md
+          git add --all
+          git commit -m "${{ env.commit }}"
+          git push -u -f origin master
+
+  telegram-bot-api:
+    name: Telegram Bot API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clone Telegram Bot API
+        run: |
+          git clone --recursive https://github.com/tdlib/telegram-bot-api.git
+          git status telegram-bot-api >> telegram-bot-api-status
+
+      - name: Cache Bot API Binary
+        id: cache-bot-api
+        uses: actions/cache@v4
+        with:
+          path: telegram-bot-api-binary
+          key: CI-telegram-bot-api-${{ hashFiles('telegram-bot-api-status') }}
+
+      - name: Compile Telegram Bot API
+        if: steps.cache-bot-api.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install make git zlib1g-dev libssl-dev gperf cmake g++
+          cd telegram-bot-api
+          rm -rf build
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=.. ..
+          cmake --build . --target install -j$(nproc)
+          cd ../..
+          ls -l telegram-bot-api/bin/telegram-bot-api*
+          cp telegram-bot-api/bin/telegram-bot-api telegram-bot-api-binary
+
+      - name: Upload Binary
+        uses: actions/upload-artifact@master
+        with:
+          name: telegram-bot-api-binary
+          path: telegram-bot-api-binary
+
+  clean:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete older workflow runs and artifacts
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 14
+          keep_minimum_runs: 10
