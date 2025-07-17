@@ -1,13 +1,12 @@
 name: 打包mian
 
 on:
-  schedule:
   push:
     branches:
       - main
   pull_request:
   schedule:
-    - cron: 30 0-18/2 * * *
+  - cron: 30 0-18/2 * * *
   workflow_dispatch:
     inputs:
       rebuild:
