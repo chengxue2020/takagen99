@@ -13,9 +13,10 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.BounceInterpolator; //添加放大效果
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,7 +32,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.catvod.crawler.JsLoader;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
-import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.bean.AbsXml;
 import com.github.tvbox.osc.bean.Movie;
@@ -120,7 +120,6 @@ public class SearchActivity extends BaseActivity {
     private static ArrayList<String> hots = new ArrayList<>();
     private HashMap<String, String> mCheckSources = null;
     private SearchCheckboxDialog mSearchCheckboxDialog = null;
-    private int searchResultWidth;
 
     @Override
     protected int getLayoutResID() {
@@ -214,24 +213,7 @@ public class SearchActivity extends BaseActivity {
         mGridViewWord.setLayoutManager(new V7LinearLayoutManager(this.mContext, 1, false));
         wordAdapter = new PinyinAdapter();
         mGridViewWord.setAdapter(wordAdapter);
-        searchResultWidth = Hawk.get(HawkConfig.SEARCH_RESULT_WIDTH, -1);
-        llLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (searchResultWidth != -1) {
-                    return;
-                }
-                int width = mGridView.getWidth();
-                if (width != 0) {
-                    // 计算item的宽度
-                    searchResultWidth = (width - 3 * (int) (App.getInstance().getResources().getDimension(R.dimen.vs_5))) / 4;
-                    Hawk.put(HawkConfig.SEARCH_RESULT_WIDTH, searchResultWidth);
-                    if (searchAdapter != null) {
-                        searchAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });
+
 
         wordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -248,6 +230,23 @@ public class SearchActivity extends BaseActivity {
                 } else {
                     search(keyword);
                 }
+            }
+        });
+		//添加放大效果
+        mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
+            @Override
+            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+            }
+
+            @Override
+            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                itemView.animate().scaleX(1.15f).scaleY(1.15f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+            }
+
+            @Override
+            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+
             }
         });
         mGridView.setHasFixedSize(true);
@@ -645,10 +644,10 @@ public class SearchActivity extends BaseActivity {
                                     .get("data").getAsJsonObject()
                                     .get("mapResult").getAsJsonObject();
                             List<String> emoji;
-                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N)
-                                emoji = Arrays.asList(" ❶ ", " ❷ ", " ❸ ", " ❹ ", " ❺ ", " ❻ ", " ❼ ", " ❽ ", " ❾ ", " ❿ ", " ⑪ ", " ⑫ ", " ⑬ ", " ⑭ ", " ⑮ ", " ⑯ ", " ⑰ ", " ⑱ ", " ⑲ ", " ⑳ ");
-                            else
-                                emoji = Arrays.asList("\uD83E\uDD47", "\uD83E\uDD48", "\uD83E\uDD49", "4\uFE0F⃣", "5\uFE0F⃣", "6\uFE0F⃣", "7\uFE0F⃣", "8\uFE0F⃣", "9\uFE0F⃣", "\uD83D\uDD1F", " ⑪ ", " ⑫ ", " ⑬ ", " ⑭ ", " ⑮ ", " ⑯ ", " ⑰ ", " ⑱ ", " ⑲ ", " ⑳ ");
+                            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.N)
+                                emoji = Arrays.asList(" ❶ "," ❷ "," ❸ "," ❹ "," ❺ "," ❻ "," ❼ "," ❽ "," ❾ "," ❿ "," ⑪ "," ⑫ "," ⑬ "," ⑭ "," ⑮ "," ⑯ "," ⑰ "," ⑱ "," ⑲ "," ⑳ ");
+                             else
+                                emoji = Arrays.asList("\uD83E\uDD47","\uD83E\uDD48","\uD83E\uDD49"," ❹ "," ❺ "," ❻ "," ❼ "," ❽ "," ❾ "," ❿ "," ⑪ "," ⑫ "," ⑬ "," ⑭ "," ⑮ "," ⑯ "," ⑰ "," ⑱ "," ⑲ "," ⑳ ");
                             JsonArray itemList = mapResult.get("0").getAsJsonObject()
                                     .get("listInfo").getAsJsonArray();
                             for (int i = 0; i < 10; i++) {
@@ -689,11 +688,6 @@ public class SearchActivity extends BaseActivity {
                 search(title);
             }
         }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -819,7 +813,7 @@ public class SearchActivity extends BaseActivity {
             if (sourceViewModel != null) {
                 sourceViewModel.shutdownNow();
                 sourceViewModel.destroyExecutor();
-                JsLoader.load();
+                JsLoader.stopAll();
             }
         } catch (Throwable th) {
             th.printStackTrace();

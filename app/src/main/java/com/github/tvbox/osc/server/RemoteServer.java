@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.server;
 
+import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -15,7 +16,7 @@ import com.github.tvbox.osc.util.OkGoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
+import com.github.tvbox.osc.util.Proxy;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedOutputStream;
@@ -95,6 +96,32 @@ public class RemoteServer extends NanoHTTPD {
         isStarted = false;
     }
 
+    private Response getProxy(Object[] rs){
+        try {
+            if (rs[0] instanceof NanoHTTPD.Response) return (NanoHTTPD.Response) rs[0];
+            int code = (int) rs[0];
+            String mime = (String) rs[1];
+            InputStream stream = rs[2] != null ? (InputStream) rs[2] : null;
+            Response response = NanoHTTPD.newChunkedResponse(
+                    Response.Status.lookup(code),
+                    mime,
+                    stream
+            );
+            // 添加头部信息
+            if (rs.length >= 4 && rs[3] instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, String> mapHeader = (Map<String, String>) rs[3];
+                if(!mapHeader.isEmpty()){
+                    for (String key : mapHeader.keySet()) {
+                        response.addHeader(key, mapHeader.get(key));
+                    }
+                }
+            }
+            return response;
+        } catch (Throwable th) {
+            return NanoHTTPD.newFixedLengthResponse(Response.Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, "500");
+        }
+    }
     @Override
     public Response serve(IHTTPSession session) {
         EventBus.getDefault().post(new ServerEvent(ServerEvent.SERVER_CONNECTION));
@@ -115,27 +142,11 @@ public class RemoteServer extends NanoHTTPD {
                     params.put("request-headers", new Gson().toJson(session.getHeaders()));
                     if (params.containsKey("do")) {
                         Object[] rs = ApiConfig.get().proxyLocal(params);
-                        //if (rs[0] instanceof Response) {
-                        //    return (Response) rs[0];
-                        //}                        
-                        int code = (int) rs[0];
-                        String mime = (String) rs[1];
-                        InputStream stream = rs[2] != null ? (InputStream) rs[2] : null;
-                        Response response = NanoHTTPD.newChunkedResponse(
-                        NanoHTTPD.Response.Status.lookup(code),
-                        mime,
-                        stream);
-                        if (rs.length > 3) {
-                            try {
-                                HashMap < String, String > headers = (HashMap < String, String > ) rs[3];
-                                for (String key: headers.keySet()) {
-                                    response.addHeader(key, headers.get(key));
-                                }
-                            } catch (Throwable th) {
-                                th.printStackTrace();
-                            }
-                        }
-                        return response;                        
+                        return getProxy(rs);
+                    }
+                    if (params.containsKey("go")) {
+                        Object[] rs = Proxy.proxy(params);
+                        return getProxy(rs);
                     }
                 } else if (fileName.startsWith("/file/")) {
                     try {
@@ -183,7 +194,7 @@ public class RemoteServer extends NanoHTTPD {
                         if (hd != null) {
                             // cuke: 修正中文乱码问题
                             if (hd.toLowerCase().contains("multipart/form-data") && !hd.toLowerCase().contains("charset=")) {
-                                Matcher matcher = Pattern.compile("[ |\t]*(boundary[ |\t]*=[ |\t]*['|\"]?[^\"^'^;^,]*['|\"]?)", Pattern.CASE_INSENSITIVE).matcher(hd);
+                                Matcher matcher = getPattern("[ |\t]*(boundary[ |\t]*=[ |\t]*['|\"]?[^\"^'^;^,]*['|\"]?)", Pattern.CASE_INSENSITIVE).matcher(hd);
                                 String boundary = matcher.find() ? matcher.group(1) : null;
                                 if (boundary != null) {
                                     session.getHeaders().put("content-type", "multipart/form-data; charset=utf-8; " + boundary);
@@ -343,7 +354,8 @@ public class RemoteServer extends NanoHTTPD {
             info.add("files", new JsonArray());
             return info.toString();
         }
-        Arrays.sort(list, new Comparator < File > () {@Override
+        Arrays.sort(list, new Comparator<File>() {
+            @Override
             public int compare(File o1, File o2) {
                 if (o1.isDirectory() && o2.isFile()) return -1;
                 return o1.isFile() && o2.isDirectory() ? 1 : o1.getName().compareTo(o2.getName());

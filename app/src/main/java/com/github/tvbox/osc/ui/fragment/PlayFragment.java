@@ -80,6 +80,7 @@ import com.github.tvbox.osc.util.HawkUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.M3U8;
 import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.parser.SuperParse;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.util.SubtitleHelper;
@@ -1274,7 +1275,18 @@ public class PlayFragment extends BaseLazyFragment {
         loadFoundVideoUrls = new LinkedList<String>();
         loadFoundVideoUrlsHeader = new HashMap<String, HashMap<String, String>>();
     }
-
+    public void setPlayTitle(boolean show)
+    {
+        if(show){
+            String playTitleInfo= "";
+            if(mVodInfo!=null){
+                playTitleInfo = mVodInfo.name + " " + mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.playIndex).name;
+            }
+            mController.setTitle(playTitleInfo);
+        }else {
+            mController.setTitle("");
+        }
+    }
     public void play(boolean reset) {
     	if (mVodInfo == null) return;
         VodInfo.VodSeries vs = mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.getplayIndex());
@@ -1294,9 +1306,14 @@ public class PlayFragment extends BaseLazyFragment {
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
             CacheManager.delete(MD5.string2MD5(subtitleCacheKey), "");
         }
-        if (vs.url.startsWith("tvbox-xg:") && !TextUtils.isEmpty(vs.url.substring(9))) {
-            this.mController.showParse(false);
-            playUrl(Jianpian.JPUrlDec(vs.url.substring(9)), null);
+        if(Jianpian.isJpUrl(vs.url)){//荐片地址特殊判断
+            String jp_url= vs.url;
+            mController.showParse(false);
+            if(vs.url.startsWith("tvbox-xg:")){
+                playUrl(Jianpian.JPUrlDec(jp_url.substring(9)), null);
+            }else {
+                playUrl(Jianpian.JPUrlDec(jp_url), null);
+            }
             return;
         }
         if (Thunder.play(vs.url, new Thunder.ThunderCallback() {
@@ -1411,11 +1428,13 @@ public class PlayFragment extends BaseLazyFragment {
     private void doParse(ParseBean pb) {
         stopParse();
         initParseLoadFound();
-        if (pb.getType() == 0) {
+        if (pb.getType() == 4) {
+            parseMix(pb,true);
+        }else if (pb.getType() == 0) {
             setTip("正在嗅探播放地址", true, false);
             mHandler.removeMessages(100);
             mHandler.sendEmptyMessageDelayed(100, 20 * 1000);
-            if (pb.getExt() != null) {
+            if(pb.getExt()!=null){
                 // 解析ext
                 try {
                     HashMap<String, String> reqHeaders = new HashMap<>();
@@ -1558,24 +1577,68 @@ public class PlayFragment extends BaseLazyFragment {
                 }
             });
         } else if (pb.getType() == 3) { // json 聚合
-            setTip("正在解析播放地址", true, false);
-            parseThreadPool = Executors.newSingleThreadExecutor();
-            LinkedHashMap<String, HashMap<String, String>> jxs = new LinkedHashMap<>();
-            String extendName = "";
-            for (ParseBean p : ApiConfig.get().getParseBeanList()) {
-                HashMap data = new HashMap<String, String>();
-                data.put("url", p.getUrl());
-                if (p.getUrl().equals(pb.getUrl())) {
-                    extendName = p.getName();
-                }
-                data.put("type", p.getType() + "");
-                data.put("ext", p.getExt());
-                jxs.put(p.getName(), data);
+             parseMix(pb,false);
+        }
+    }
+    private void parseMix(ParseBean pb,boolean isSuper){
+        setTip("正在解析播放地址", true, false);
+        parseThreadPool = Executors.newSingleThreadExecutor();
+        LinkedHashMap<String, HashMap<String, String>> jxs = new LinkedHashMap<>();
+        LinkedHashMap<String, String> json_jxs = new LinkedHashMap<>();
+        String extendName = "";
+        for (ParseBean p : ApiConfig.get().getParseBeanList()) {
+            HashMap<String, String> data = new HashMap<String, String>();
+            data.put("url", p.getUrl());
+            if (p.getUrl().equals(pb.getUrl())) {
+                extendName = p.getName();
             }
-            String finalExtendName = extendName;
-            parseThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
+            data.put("type", p.getType() + "");
+            data.put("ext", p.getExt());
+            jxs.put(p.getName(), data);
+
+            if (p.getType() == 1) {
+                json_jxs.put(p.getName(), p.mixUrl());
+            }
+        }
+        String finalExtendName = extendName;
+        parseThreadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                if(isSuper){
+                    //并发执行 嗅探和json
+                    JSONObject rs = SuperParse.parse(jxs, parseFlag+"123", webUrl);
+                    if (!rs.has("url") || rs.optString("url").isEmpty()) {
+                        setTip("解析错误", false, true);
+                    } else {
+                        if (rs.has("parse") && rs.optInt("parse", 0) == 1) {
+                            if (rs.has("ua")) {
+                                webUserAgent = rs.optString("ua").trim();
+                            }
+                            setTip("超级解析中", true, false);
+
+                            if(!isAdded())return;
+                            requireActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String mixParseUrl = DefaultConfig.checkReplaceProxy(rs.optString("url", ""));
+                                    stopParse();
+                                    mHandler.removeMessages(100);
+                                    mHandler.sendEmptyMessageDelayed(100, 20 * 1000);
+                                    loadWebView(mixParseUrl);
+                                }
+                            });
+                            parseThreadPool.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    JSONObject res = SuperParse.doJsonJx(webUrl);
+                                    rsJsonJX(res, true);
+                                }
+                            });
+                        } else {
+                            rsJsonJX(rs,false);
+                        }
+                    }
+                }else {
                     JSONObject rs = ApiConfig.get().jsonExtMix(parseFlag + "111", pb.getUrl(), finalExtendName, jxs, webUrl);
                     if (rs == null || !rs.has("url") || rs.optString("url").isEmpty()) {
 //                        errorWithRetry("解析错误", false);
@@ -1585,7 +1648,7 @@ public class PlayFragment extends BaseLazyFragment {
                             if (rs.has("ua")) {
                                 webUserAgent = rs.optString("ua").trim();
                             }
-                            if (!isAdded()) return;
+                            if(!isAdded())return;
                             requireActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1598,38 +1661,47 @@ public class PlayFragment extends BaseLazyFragment {
                                 }
                             });
                         } else {
-                            HashMap<String, String> headers = null;
-                            if (rs.has("header")) {
-                                try {
-                                    JSONObject hds = rs.getJSONObject("header");
-                                    Iterator<String> keys = hds.keys();
-                                    while (keys.hasNext()) {
-                                        String key = keys.next();
-                                        if (headers == null) {
-                                            headers = new HashMap<>();
-                                        }
-                                        headers.put(key, hds.getString(key));
-                                    }
-                                } catch (Throwable th) {
-                                    th.printStackTrace();
-                                }
-                            }
-                            if (rs.has("jxFrom")) {
-                                if (!isAdded()) return;
-                                requireActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(mContext, "解析来自:" + rs.optString("jxFrom"), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                            playUrl(rs.optString("url", ""), headers);
+                            rsJsonJX(rs,false);
                         }
                     }
                 }
+            }
+        });
+    }
+
+    private void rsJsonJX(JSONObject rs,boolean isSuper){
+        if(isSuper){
+            if(rs==null || !rs.has("url"))return;
+            stopLoadWebView(false);
+        }
+        HashMap<String, String> headers = null;
+        if (rs.has("header")) {
+            try {
+                JSONObject hds = rs.getJSONObject("header");
+                Iterator<String> keys = hds.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    if (headers == null) {
+                        headers = new HashMap<>();
+                    }
+                    headers.put(key, hds.getString(key));
+                }
+            } catch (Throwable th) {
+                th.printStackTrace();
+            }
+        }
+        if (rs.has("jxFrom")) {
+            if(!isAdded())return;
+            requireActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "解析来自:" + rs.optString("jxFrom"), Toast.LENGTH_SHORT).show();
+                }
             });
         }
+        playUrl(rs.optString("url", ""), headers);
     }
+
 
     private String encodeUrl(String url) {
         try {
@@ -1656,7 +1728,7 @@ public class PlayFragment extends BaseLazyFragment {
                 XWalkUtils.tryUseXWalk(mContext, new XWalkUtils.XWalkState() {
                     @Override
                     public void success() {
-                        initWebView(!sourceBean.getClickSelector().isEmpty());
+                        initWebView(false);
                         loadUrl(url);
                     }
 
@@ -1908,12 +1980,10 @@ public class PlayFragment extends BaseLazyFragment {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            String click = sourceBean.getClickSelector();
-            LOG.i("onPageFinished url:" + url);
-            if (!click.isEmpty()) {
-                mSysWebView.loadUrl("javascript:" + click);
+            LOG.i("echo-onPageFinished url:" + url);
+            if(!url.equals("about:blank")){
+                mController.evaluateScript(sourceBean,url,view,null);
             }
-
             mHandler.sendEmptyMessage(200);
         }
 
@@ -1953,6 +2023,7 @@ public class PlayFragment extends BaseLazyFragment {
                             headers.put("Cookie", " " + cookie);//携带cookie
                         playUrl(url, headers);
                         stopLoadWebView(false);
+                        SuperParse.stopJsonJx();
                     }
                 }
             }
@@ -2078,6 +2149,10 @@ public class PlayFragment extends BaseLazyFragment {
         @Override
         public void onLoadFinished(XWalkView view, String url) {
             super.onLoadFinished(view, url);
+            LOG.i("echo-onLoadFinished url:" + url);
+            if(!url.equals("about:blank")){
+                mController.evaluateScript(sourceBean,url,null,view);
+            }
         }
 
         @Override
@@ -2135,6 +2210,7 @@ public class PlayFragment extends BaseLazyFragment {
                             webHeaders.put("Cookie", " " + cookie);//携带cookie
                         playUrl(url, webHeaders);
                         stopLoadWebView(false);
+                        SuperParse.stopJsonJx();
                     }
                 }
             }

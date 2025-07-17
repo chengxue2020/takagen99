@@ -23,7 +23,7 @@
     <string name="hm_file">文件</string>
     <string name="hm_fav">收藏</string>
     <string name="hm_setting">设置</string>
-    <string name="hm_style_line">一行显示</string>
+    <string name="hm_style_line">单行显示</string>
     <string name="hm_style_grid">多行显示</string>
     <string name="hm_hist_del">已删除当前记录</string>
     <string name="hm_cache_del">已删除缓存</string>
@@ -107,7 +107,7 @@
     <string name="set_bkup_fail">备份失败!</string>
     <string name="set_bkup_fail_hk">备份Hawk失败!</string>
     <string name="set_bkup_fail_db">DB文件不存在!</string>
-    <string name="set_rest_ok">恢复成功,请重启应用!</string>
+    <string name="set_rest_ok">恢复成功,即将自动重启应用!</string>
     <string name="set_rest_fail_hk">Hawk恢复失败!</string>
     <string name="set_rest_fail_db">DB文件恢复失败!</string>
     <string name="set_permission_ok">已获得存储权限</string>
