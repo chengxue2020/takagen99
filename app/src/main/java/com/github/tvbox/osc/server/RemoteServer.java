@@ -18,6 +18,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.github.tvbox.osc.util.Proxy;
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -61,6 +63,8 @@ public class RemoteServer extends NanoHTTPD {
     private static final String PATTERN_ETH_STR = "^eth\\d+$";
     private static final Pattern ETH_PATTERN = Pattern.compile(PATTERN_ETH_STR);
     public static String m3u8Content;
+    public static String vodName;
+    public static String artist;
 
     public RemoteServer(int port, Context context) {
         super(port);
@@ -135,6 +139,16 @@ public class RemoteServer extends NanoHTTPD {
                     if (process.isRequest(session, fileName)) {
                         return process.doResponse(session, fileName, session.getParms(), null);
                     }
+                }
+                if (fileName.equals("/media")) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("title", vodName);
+                        jsonObject.put("artist", artist);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, jsonObject.toString());
                 }
                 if (fileName.equals("/proxy")) {
                     Map < String, String > params = session.getParms();

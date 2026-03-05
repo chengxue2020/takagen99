@@ -33,6 +33,7 @@
     <string name="det_expand">全屏</string>
     <string name="det_search">快搜</string>
     <string name="det_sort">倒序</string>
+    <string name="det_sort_normal">正序</string>
     <string name="det_push">推送</string>
     <string name="det_fav">收藏</string>
     <string name="det_fav_add">已添加收藏</string>

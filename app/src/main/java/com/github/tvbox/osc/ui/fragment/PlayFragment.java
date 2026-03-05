@@ -56,6 +56,7 @@ import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.EXOmPlayer;
 import com.github.tvbox.osc.player.IjkmPlayer;
 import com.github.tvbox.osc.player.MyVideoView;
+import xyz.doikki.videoplayer.player.AndroidMediaPlayer;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.player.controller.VodController;
@@ -287,14 +288,10 @@ public class PlayFragment extends BaseLazyFragment {
                         }
                     }
                 }
-                if (mVodInfo.reverseSort) {
-                    PlayFragment.this.playPrevious();
-                } else {
-                    String preProgressKey = progressKey;
-                    PlayFragment.this.playNext(rmProgress);
-                    if (rmProgress && preProgressKey != null)
-                        CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
-                }
+                String preProgressKey = progressKey;
+                PlayFragment.this.playNext(rmProgress);
+                if (rmProgress && preProgressKey != null)
+                    CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
             }
 
             @Override
@@ -308,11 +305,7 @@ public class PlayFragment extends BaseLazyFragment {
                         }
                     }
                 }
-                if (mVodInfo.reverseSort) {
-                    PlayFragment.this.playNext(false);
-                } else {
-                    PlayFragment.this.playPrevious();
-                }
+                PlayFragment.this.playPrevious();
             }
 
             @Override
@@ -550,6 +543,9 @@ public class PlayFragment extends BaseLazyFragment {
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
         }
+        if (mediaPlayer instanceof AndroidMediaPlayer) {
+            trackInfo = ((AndroidMediaPlayer) mediaPlayer).getTrackInfo();
+        }
 
         if (trackInfo == null) {
             Toast.makeText(mContext, getString(R.string.vod_no_audio), Toast.LENGTH_SHORT).show();
@@ -557,7 +553,10 @@ public class PlayFragment extends BaseLazyFragment {
         }
 
         List<TrackInfoBean> bean = trackInfo.getAudio();
-        if (bean.size() < 1) return;
+        if (bean.size() < 1) {
+            Toast.makeText(mContext, getString(R.string.vod_no_audio), Toast.LENGTH_SHORT).show();
+            return;
+        }
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
         dialog.setTip(getString(R.string.vod_audio));
         dialog.setAdapter(null, new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
@@ -574,6 +573,9 @@ public class PlayFragment extends BaseLazyFragment {
                     }
                     if (mediaPlayer instanceof EXOmPlayer) {
                         ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
+                    }
+                    if (mediaPlayer instanceof AndroidMediaPlayer) {
+                        ((AndroidMediaPlayer) mediaPlayer).setTrack(value.trackId);
                     }
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -1295,6 +1297,8 @@ public class PlayFragment extends BaseLazyFragment {
         String playTitleInfo = mVodInfo.name + " : " + vs.name;
         setTip("正在获取播放信息", true, false);
         mController.setTitle(playTitleInfo);
+        RemoteServer.vodName = mVodInfo.name;
+        RemoteServer.artist = vs.name;
 
         stopParse();
         initParseLoadFound();

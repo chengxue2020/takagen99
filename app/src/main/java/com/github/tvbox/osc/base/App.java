@@ -83,6 +83,13 @@ public class App extends MultiDexApplication {
                 .setSupportDP(false)
                 .setSupportSP(false)
                 .setSupportSubunits(Subunits.MM);
+        // 修复 Android 14+：冷启动时 ScreenUtils 可能获取到竖屏宽度，导致 xdpi 计算错误、UI 变小
+        int screenWidth = AutoSizeConfig.getInstance().getScreenWidth();
+        int screenHeight = AutoSizeConfig.getInstance().getScreenHeight();
+        if (screenWidth < screenHeight) {
+            AutoSizeConfig.getInstance().setScreenWidth(screenHeight);
+            AutoSizeConfig.getInstance().setScreenHeight(screenWidth);
+        }
         PlayerHelper.init();
 
         // Delete Cache

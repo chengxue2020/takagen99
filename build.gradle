@@ -2,12 +2,15 @@
 buildscript {
     ext.kotlin_version = "1.9.25"
     repositories {
-        gradlePluginPortal()
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/releases" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
         google()
         mavenCentral()
+        gradlePluginPortal()
         maven { url "https://jitpack.io" }
-        maven { url "https://maven.aliyun.com/repository/releases" }
-        maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://storage.googleapis.com/r8-releases/raw" }
         maven { url "https://chaquo.com/maven" }
     }
@@ -24,12 +27,15 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/google" }
+        maven { url "https://maven.aliyun.com/repository/releases" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.aliyun.com/repository/releases" }
-        maven { url "https://maven.aliyun.com/repository/public" }
         gradlePluginPortal()
+        maven { url "https://jitpack.io" }
     }
 }
 

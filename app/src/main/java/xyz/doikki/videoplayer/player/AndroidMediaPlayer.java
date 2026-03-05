@@ -9,6 +9,8 @@ import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.github.tvbox.osc.player.TrackInfo;
+import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.util.PlayerHelper;
 
 import java.util.Map;
@@ -289,6 +291,48 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         int videoHeight = mp.getVideoHeight();
         if (videoWidth != 0 && videoHeight != 0) {
             mPlayerEventListener.onVideoSizeChanged(videoWidth, videoHeight);
+        }
+    }
+
+    public TrackInfo getTrackInfo() {
+        try {
+            if (mMediaPlayer == null) return null;
+            MediaPlayer.TrackInfo[] trackInfoArray = mMediaPlayer.getTrackInfo();
+            if (trackInfoArray == null || trackInfoArray.length == 0) return null;
+            TrackInfo data = new TrackInfo();
+            int audioSelected = -1;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                try {
+                    audioSelected = mMediaPlayer.getSelectedTrack(MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO);
+                } catch (Exception ignored) {}
+            }
+            int index = 0;
+            for (MediaPlayer.TrackInfo info : trackInfoArray) {
+                int trackType = info.getTrackType();
+                if (trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO) {
+                    String language = info.getLanguage();
+                    String trackName = (data.getAudio().size() + 1) + "：" + (language != null && !language.isEmpty() && !language.equals("und") ? language : "音轨" + (data.getAudio().size() + 1));
+                    TrackInfoBean t = new TrackInfoBean();
+                    t.name = trackName;
+                    t.language = language != null ? language : "";
+                    t.trackId = index;
+                    t.selected = index == audioSelected;
+                    data.addAudio(t);
+                }
+                index++;
+            }
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setTrack(int trackIndex) {
+        try {
+            mMediaPlayer.selectTrack(trackIndex);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
