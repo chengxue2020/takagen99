@@ -139,7 +139,18 @@ public class ApiConfig {
 
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
         // Embedded Source : Update in Strings.xml if required
-        String apiUrl = Hawk.get(HawkConfig.API_URL, HomeActivity.getRes().getString(R.string.app_source));
+        String apiUrl;
+
+		if(com.github.tvbox.osc.store.StoreManager.get().current != null){
+			apiUrl = com.github.tvbox.osc.store.StoreManager.get().current.sourceUrl;
+		}else{
+
+    apiUrl = Hawk.get(HawkConfig.API_URL,
+        HomeActivity.getRes().getString(R.string.app_source));
+
+}
+
+}
         if (apiUrl.isEmpty()) {
             callback.error("源地址为空");
             return;

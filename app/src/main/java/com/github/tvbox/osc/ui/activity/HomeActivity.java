@@ -143,7 +143,8 @@ public class HomeActivity extends BaseActivity {
         ControlManager.get().startServer();
         App.startWebserver();
         initView();
-        initViewModel();
+		initViewModel();
+		loadStore();
         useCacheConfig = false;
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
@@ -346,7 +347,12 @@ public class HomeActivity extends BaseActivity {
             }
         });
         // Button : Settings >> To go into App Settings ----------------
-        tvMenu.setOnLongClickListener(new View.OnLongClickListener() {
+        tvMenu.setOnLongClickListener(v -> {
+
+    jumpActivity(StoreActivity.class);
+
+    return true;
+});(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", getPackageName(), null)));
@@ -383,6 +389,28 @@ public class HomeActivity extends BaseActivity {
     }
 
     private boolean skipNextUpdate = false;	
+	
+	private void loadStore(){
+
+    new Thread(() -> {
+
+        try{
+
+            String url = "https://你的store.json";
+
+            String json = com.github.catvod.net.OkHttp.string(url);
+
+            com.github.tvbox.osc.store.StoreManager.get().parse(json);
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+        }
+
+    }).start();
+
+
     private void initViewModel() {
         sourceViewModel = new ViewModelProvider(this).get(SourceViewModel.class);
         sourceViewModel.sortResult.observe(this, new Observer<AbsSortXml>() {

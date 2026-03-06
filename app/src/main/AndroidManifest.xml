@@ -100,7 +100,10 @@
         <activity
             android:name=".ui.activity.SettingActivity"
             android:screenOrientation="sensorLandscape" />
-            
+
+		<activity
+			android:name=".ui.activity.StoreActivity"/>
+	
         <service
             android:name=".server.PlayService"
             android:exported="false"
